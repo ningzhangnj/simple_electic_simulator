@@ -1,6 +1,5 @@
 package com.rail.electric.simulator;
 
-import java.nio.ByteBuffer;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -22,6 +21,7 @@ import com.rail.electric.simulator.figures.StateFigure;
 import com.rail.electric.simulator.figures.StateListener;
 import com.rail.electric.simulator.figures.SwitchFigure;
 import com.rail.electric.simulator.figures.ThreePahseTransformerFigure;
+import com.rail.electric.simulator.helpers.CommHelper;
 import com.rail.electric.simulator.helpers.DataTypeConverter;
 
 public class SimulatorFiguresCollections implements StateListener {
@@ -109,6 +109,9 @@ public class SimulatorFiguresCollections implements StateListener {
 	}
 	
 	private FreeformLayer layer;	
+	private byte[] switchStatus = new byte[SWTITCH_NUMBERS]; 
+	private CommHelper commHelper = new CommHelper();
+	private boolean isRunning = true;
 	
 	SimulatorFiguresCollections(FreeformLayer layer) {
 		this.layer = layer;
@@ -130,14 +133,90 @@ public class SimulatorFiguresCollections implements StateListener {
 				id2FigureMap.put(id, figure);				
 			}
 		}
-		((LineFigure)id2FigureMap.get(1)).switchState();
+		commHelper.open("COM1");
+		((LineFigure)id2FigureMap.get(1)).setOn(true);
+		((LineFigure)id2FigureMap.get(2)).setOn(true);
+		((LineFigure)id2FigureMap.get(3)).setOn(true);
+		((LineFigure)id2FigureMap.get(4)).setOn(true);
+		((LineFigure)id2FigureMap.get(5)).setOn(true);
+		((LineFigure)id2FigureMap.get(6)).setOn(true);
+		((LineFigure)id2FigureMap.get(7)).setOn(true);
+		((LineFigure)id2FigureMap.get(8)).setOn(true);
+		switchStatus[1] = 1;
+		switchStatus[2] = 1;
+		switchStatus[4] = 1;
+		switchStatus[6] = 1;
+		switchStatus[26] = 1;
+		switchStatus[28] = 1;
+		switchStatus[30] = 1;
+		((StateFigure)id2FigureMap.get(127)).setHasPower(true);
+		((StateFigure)id2FigureMap.get(129)).setHasPower(true);
+		((StateFigure)id2FigureMap.get(131)).setHasPower(true);
+		((StateFigure)id2FigureMap.get(102)).setHasPower(true);
+		((StateFigure)id2FigureMap.get(103)).setHasPower(true);
+		((StateFigure)id2FigureMap.get(105)).setHasPower(true);
+		((StateFigure)id2FigureMap.get(107)).setHasPower(true);
+		((StateFigure)id2FigureMap.get(127)).setOn(true);
+		((StateFigure)id2FigureMap.get(129)).setOn(true);
+		((StateFigure)id2FigureMap.get(131)).setOn(true);
+		((StateFigure)id2FigureMap.get(102)).setOn(true);
+		((StateFigure)id2FigureMap.get(103)).setOn(true);
+		((StateFigure)id2FigureMap.get(105)).setOn(true);
+		((StateFigure)id2FigureMap.get(107)).setOn(true);
+		
+		readSwitchStatus();
 	}
 
+	public void deactivate() {
+		commHelper.close();
+	}
+	
 	@Override
 	public void onChange(int id, boolean state) {
 		chainReact(id, state);	
+		
+		//sendLineStatus();		
+	}
+	
+	private void sleep(int seconds) {
+		try {
+			Thread.sleep(seconds*1000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	private void sendLineStatus() {
 		byte[] result = getLedLineBytes();
 		System.out.println("bytes: " + DataTypeConverter.bytesToHex(result));
+		for (int i=0; i<3; i++) {
+			commHelper.writeBytes(result);
+			sleep(1);
+			byte[] response = commHelper.readBytes(1);
+			System.out.println("response of line status: " + DataTypeConverter.bytesToHex(response));
+			if (response[0] == (byte)0xf6) break;
+		}		
+	}
+	
+	private void readSwitchStatus() {
+		while (isRunning) {
+			byte[] result = commHelper.readBytes(1);
+			if (result[0] != (byte)0xf5 ) {
+				commHelper.readBytes(1);
+			}
+			byte[] switchStatus = commHelper.readBytes(SWTITCH_NUMBERS);
+			System.out.println("switch status: " + DataTypeConverter.bytesToHex(switchStatus));
+			int pos = getSwtichChangeId(switchStatus);
+			if (pos < 0) continue;
+			System.out.println("pos: " + (pos+101));	
+			System.out.println("end byte: " + DataTypeConverter.bytesToHex(commHelper.readBytes(1)));			
+			
+			commHelper.writeBytes(new byte[]{(byte)0xf6});
+			
+			chainReact(pos+101, (switchStatus[pos] == 1)&((StateFigure)id2FigureMap.get(pos+101)).isHasPower());
+			sendLineStatus();
+		}
 	}
 	
 	private void chainReact(int id, boolean state) {
@@ -162,7 +241,7 @@ public class SimulatorFiguresCollections implements StateListener {
 		}
 	}
 	
-	public byte[] getLedLineBytes() {
+	/*public byte[] getLedLineBytes() {
 		ByteBuffer bb = ByteBuffer.allocate(8);
 		long result = 0;
 		for (Entry<Integer, Figure> entryId2Figure : id2FigureMap.entrySet()) {
@@ -175,9 +254,26 @@ public class SimulatorFiguresCollections implements StateListener {
 		}
 		bb.putLong(result);
 		return bb.array();
+	}*/
+	
+	public byte[] getLedLineBytes() {
+		byte[] result = new byte[LEDLINE_NUMBERS+2];
+		result[0] = (byte)0xf5;
+		result[LEDLINE_NUMBERS+1] = (byte)0xfa;
+		
+		for (Entry<Integer, Figure> entryId2Figure : id2FigureMap.entrySet()) {
+			if (entryId2Figure.getValue() instanceof LineFigure && ((LineFigure)entryId2Figure.getValue()).isOn()) {
+				int index = entryId2Figure.getKey().intValue();
+				if (index < LEDLINE_NUMBERS && index > 0) {
+					result[index] = 1;
+				}				
+			}
+		}
+		return result;
 	}
 	
-	public int getBitPostion(byte[] input) {
+	
+	/*public int getBitPostion(byte[] input) {
 		ByteBuffer bb = ByteBuffer.allocate(16);
 		bb.put(input);
 		long lowValue = bb.getLong(8);
@@ -193,15 +289,30 @@ public class SimulatorFiguresCollections implements StateListener {
 			}
 		}
 		return 0;
+	}*/
+	
+	public int getSwtichChangeId(byte[] input) {
+		if (input.length != SWTITCH_NUMBERS) return -1;
+		for (int i=0; i<SWTITCH_NUMBERS; i++) {
+			if ( i==1 || i==2 || i==4 || i==6 || i==26 || i==28 || i==30) {
+				
+				if (input[i] != switchStatus[i]) {
+					switchStatus[i] = input[i];
+					return i;
+				}
+			}
+		}
+		
+		return -1;
 	}
 	
 	public static void main(String[] args) {
 		SimulatorFiguresCollections inst = new SimulatorFiguresCollections(null);
-		ByteBuffer bb = ByteBuffer.allocate(16);
+		/*ByteBuffer bb = ByteBuffer.allocate(16);
 		bb.putLong(0, 0x0002L);
 		bb.putLong(8, 0x0100L);
 		System.out.println("bytes: " + DataTypeConverter.bytesToHex(bb.array()));
 		int a = inst.getBitPostion(bb.array());
-		System.out.println("Pos: " + a);
+		System.out.println("Pos: " + a);*/
 	}
 }

@@ -8,6 +8,8 @@ import org.eclipse.draw2d.ScalableFreeformLayeredPane;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.DisposeEvent;
+import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Color;
@@ -56,12 +58,21 @@ public class SimulatorView {
 		FigureCanvas canvas = createDiagram(shell);
 		canvas.setLayoutData(new GridData(GridData.FILL_BOTH));
 		
-		new SimulatorFiguresCollections(primary).activate();
+		final SimulatorFiguresCollections sim = new SimulatorFiguresCollections(primary);
+		sim.activate();
 		
 		createMenuBar(shell);
 				
 		
 		Display display = shell.getDisplay();
+		shell.addDisposeListener(new DisposeListener() {
+
+			@Override
+			public void widgetDisposed(DisposeEvent arg0) {
+				sim.deactivate();
+			}
+			
+		});
 		shell.open();
 		while (!shell.isDisposed()) {
 			while (!display.readAndDispatch()) {

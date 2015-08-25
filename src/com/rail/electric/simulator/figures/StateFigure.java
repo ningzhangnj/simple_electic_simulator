@@ -26,12 +26,7 @@ public abstract class StateFigure extends BaseFigure {
 	}
 	
 	public void switchState() {
-		isOn = !isOn;
-		if (isOn) {
-			setIcon(icon_on);
-		} else {
-			setIcon(icon_off);
-		}	
+		setOn(!isOn);		
 		
 		if (listener != null) {
 			listener.onChange(getId(), hasPower&&isOn);
@@ -48,6 +43,11 @@ public abstract class StateFigure extends BaseFigure {
 
 	public void setOn(boolean isOn) {
 		this.isOn = isOn;
+		if (isOn) {
+			setIcon(icon_on);
+		} else {
+			setIcon(icon_off);
+		}	
 	}
 
 	public boolean isHasPower() {
