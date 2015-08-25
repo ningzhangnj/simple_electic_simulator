@@ -12,6 +12,8 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
+import com.rail.electric.simulator.SimulatorMessages;
+
 public class StudentDialog extends TitleAreaDialog {
 
 	private Text txtIp;
@@ -27,8 +29,8 @@ public class StudentDialog extends TitleAreaDialog {
 	@Override
 	public void create() {
 		super.create();
-		setTitle("Input teacher machine ip and port");
-		setMessage("Please input teacher machine ip and port to start work", IMessageProvider.INFORMATION);
+		setTitle(SimulatorMessages.StudentDialog_title);
+		setMessage(SimulatorMessages.StudentDialog_message, IMessageProvider.INFORMATION);
 	}
 
 	@Override
@@ -59,7 +61,7 @@ public class StudentDialog extends TitleAreaDialog {
 	  
 	private void createPort(Composite container) {
 	    Label lbtPort = new Label(container, SWT.NONE);
-	    lbtPort.setText("Port");
+	    lbtPort.setText(SimulatorMessages.Port_label);
 	    
 	    GridData dataPort = new GridData();
 	    dataPort.grabExcessHorizontalSpace = true;
@@ -89,9 +91,9 @@ public class StudentDialog extends TitleAreaDialog {
 	  
 	@Override
 	protected void createButtonsForButtonBar(Composite parent) {
-		createButton(parent, IDialogConstants.OK_ID, "OK", true);
+		createButton(parent, IDialogConstants.OK_ID, SimulatorMessages.OK_label, true);
 	    createButton(parent, IDialogConstants.CANCEL_ID,
-	        IDialogConstants.CANCEL_LABEL, false);
+	    		SimulatorMessages.Cancel_label, false);
 	}
 
 	public String getIp() {

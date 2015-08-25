@@ -10,5 +10,6 @@
 	<classpathentry kind="lib" path="libs/RXTXcomm.jar"/>
 	<classpathentry kind="lib" path="libs/org.eclipse.equinox.common_3.6.200.v20130402-1505.jar"/>
 	<classpathentry kind="lib" path="libs/org.eclipse.core.commands_3.6.100.v20140528-1422.jar"/>
+	<classpathentry kind="lib" path="libs/org.eclipse.osgi_3.10.2.v20150203-1939.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

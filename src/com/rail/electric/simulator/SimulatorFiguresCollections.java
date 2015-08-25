@@ -133,7 +133,7 @@ public class SimulatorFiguresCollections implements StateListener {
 				id2FigureMap.put(id, figure);				
 			}
 		}
-		commHelper.open("COM1");
+		/*commHelper.open("COM1");
 		((LineFigure)id2FigureMap.get(1)).setOn(true);
 		((LineFigure)id2FigureMap.get(2)).setOn(true);
 		((LineFigure)id2FigureMap.get(3)).setOn(true);
@@ -164,7 +164,7 @@ public class SimulatorFiguresCollections implements StateListener {
 		((StateFigure)id2FigureMap.get(105)).setOn(true);
 		((StateFigure)id2FigureMap.get(107)).setOn(true);
 		
-		readSwitchStatus();
+		readSwitchStatus();*/
 	}
 
 	public void deactivate() {
@@ -241,21 +241,6 @@ public class SimulatorFiguresCollections implements StateListener {
 		}
 	}
 	
-	/*public byte[] getLedLineBytes() {
-		ByteBuffer bb = ByteBuffer.allocate(8);
-		long result = 0;
-		for (Entry<Integer, Figure> entryId2Figure : id2FigureMap.entrySet()) {
-			if (entryId2Figure.getValue() instanceof LineFigure && ((LineFigure)entryId2Figure.getValue()).isOn()) {
-				int shiftValue = entryId2Figure.getKey().intValue();
-				if (shiftValue < LEDLINE_NUMBERS) {
-					result |= 1<<shiftValue;
-				}				
-			}
-		}
-		bb.putLong(result);
-		return bb.array();
-	}*/
-	
 	public byte[] getLedLineBytes() {
 		byte[] result = new byte[LEDLINE_NUMBERS+2];
 		result[0] = (byte)0xf5;
@@ -271,25 +256,6 @@ public class SimulatorFiguresCollections implements StateListener {
 		}
 		return result;
 	}
-	
-	
-	/*public int getBitPostion(byte[] input) {
-		ByteBuffer bb = ByteBuffer.allocate(16);
-		bb.put(input);
-		long lowValue = bb.getLong(8);
-		for (int i=1; i<=63; i++) {
-			if ((lowValue&(1<<i)) !=0 ) {
-				return i;
-			}
-		}
-		long highValue = bb.getLong(0);
-		for (int i=0; i<=(SWTITCH_NUMBERS-64); i++) {
-			if ((highValue&(1<<i)) !=0 ) {
-				return i+64;
-			}
-		}
-		return 0;
-	}*/
 	
 	public int getSwtichChangeId(byte[] input) {
 		if (input.length != SWTITCH_NUMBERS) return -1;

@@ -52,7 +52,7 @@ public class SimulatorView {
 	private void run() {
 		Shell shell = new Shell(new Display());
 		shell.setSize(VIEW_WIDTH, VIEW_HEIGHT);
-		shell.setText("Simulator");
+		shell.setText(SimulatorMessages.Simulator_title); //$NON-NLS-1$
 		shell.setLayout(new GridLayout());
 		
 		FigureCanvas canvas = createDiagram(shell);
@@ -86,18 +86,19 @@ public class SimulatorView {
 		// Create menu bar with "File" and "Zoom" menus
 		final Menu menuBar = new Menu(shell, SWT.BAR);
 		shell.setMenuBar(menuBar);
-		MenuItem startMenuItem = new MenuItem(menuBar, SWT.CASCADE);
-		startMenuItem.setText("Start");
-		Menu startMenu = new Menu(shell, SWT.DROP_DOWN);
-		startMenuItem.setMenu(startMenu);
+		MenuItem operateMenuItem = new MenuItem(menuBar, SWT.CASCADE);
+		operateMenuItem.setText(SimulatorMessages.Operate_menu); //$NON-NLS-1$
+		Menu operateMenu = new Menu(shell, SWT.DROP_DOWN);
+		operateMenuItem.setMenu(operateMenu);
 		MenuItem zoomMenuItem = new MenuItem(menuBar, SWT.CASCADE);
-		zoomMenuItem.setText("Zoom");
+		zoomMenuItem.setText(SimulatorMessages.Zoom_menu); //$NON-NLS-1$
 		Menu zoomMenu = new Menu(shell, SWT.DROP_DOWN);
 		zoomMenuItem.setMenu(zoomMenu);
 		
 		// Create the File menu items
-		createStartTeacherMenuItem(startMenu, shell);
-		createStartStudentMenuItem(startMenu, shell);
+		createStartTeacherMenuItem(operateMenu, shell);
+		createStartStudentMenuItem(operateMenu, shell);
+		createStopMenuItem(operateMenu, shell);
 		
 		// Create the "fixed" scale menu items
 		createFixedZoomMenuItem(zoomMenu, "50%", 0.5);
@@ -110,7 +111,7 @@ public class SimulatorView {
 	
 	private void createStartTeacherMenuItem(Menu menu, final Shell shell) {
 		MenuItem menuItem = new MenuItem(menu, SWT.NULL);
-		menuItem.setText("Teacher");
+		menuItem.setText(SimulatorMessages.StartTeacher_menu); //$NON-NLS-1$
 		menuItem.addSelectionListener(new SelectionListener() {
 			public void widgetSelected(SelectionEvent e) {
 				startTeacher(shell);
@@ -121,9 +122,22 @@ public class SimulatorView {
 		});
 	}
 	
+	private void createStopMenuItem(Menu menu, final Shell shell) {
+		MenuItem menuItem = new MenuItem(menu, SWT.NULL);
+		menuItem.setText(SimulatorMessages.Stop_menu); //$NON-NLS-1$
+		menuItem.addSelectionListener(new SelectionListener() {
+			public void widgetSelected(SelectionEvent e) {
+				//TODO
+			}
+			public void widgetDefaultSelected(SelectionEvent e) {
+				widgetSelected(e);
+			}
+		});
+	}
+	
 	private void createStartStudentMenuItem(Menu menu, final Shell shell) {
 		MenuItem menuItem = new MenuItem(menu, SWT.NULL);
-		menuItem.setText("Student");
+		menuItem.setText(SimulatorMessages.StartStudent_menu); //$NON-NLS-1$
 		menuItem.addSelectionListener(new SelectionListener() {
 			public void widgetSelected(SelectionEvent e) {
 				startStudent(shell);
@@ -150,7 +164,7 @@ public class SimulatorView {
 
 	private void createScaleToFitMenuItem(Menu menu) {
 		MenuItem menuItem = new MenuItem(menu, SWT.NULL);
-		menuItem.setText("Scale to fit");
+		menuItem.setText(SimulatorMessages.Scale2Fit_menu); //$NON-NLS-1$
 		menuItem.addSelectionListener(new SelectionListener() {
 			public void widgetSelected(SelectionEvent e) {
 				scaleToFit();

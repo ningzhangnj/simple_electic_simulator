@@ -18,20 +18,21 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
+import com.rail.electric.simulator.SimulatorMessages;
 import com.rail.electric.simulator.helpers.CommHelper;
+import com.rail.electric.simulator.model.TeacherWorkstation;
+import com.rail.electric.simulator.model.TeacherWorkstation.WorkMode;
 
 public class TeacherDialog extends TitleAreaDialog {
 
 	private Text txtPort;
 	private Combo combMode;
 	private Combo combComPort;
-	private Text txtQuizNo;
-
+	
 	private String port;
-	private String mode;
+	private WorkMode mode;
 	private String comPort;
-	private String quizNo;
-
+	
 	public TeacherDialog(Shell parentShell) {
 		super(parentShell);
 	}
@@ -39,8 +40,8 @@ public class TeacherDialog extends TitleAreaDialog {
 	@Override
 	public void create() {
 		super.create();
-		setTitle("Input teacher machine info");
-		setMessage("Please input teacher machine info to start work", IMessageProvider.INFORMATION);
+		setTitle(SimulatorMessages.TeacherDialog_title);
+		setMessage(SimulatorMessages.TeacherDialog_message, IMessageProvider.INFORMATION);
 	}
 
 	@Override
@@ -54,23 +55,10 @@ public class TeacherDialog extends TitleAreaDialog {
 	    createPort(container);
 	    createMode(container);
 	    createComPort(container);
-	    createQuizNo(container); 
-	    
+	  	    
 	    return area;
 	}
 
-	private void createQuizNo(Composite container) {
-		Label lbt = new Label(container, SWT.NONE);
-		lbt.setText("Quiz No");
-	
-	    GridData gd = new GridData();
-	    gd.grabExcessHorizontalSpace = true;
-	    gd.horizontalAlignment = GridData.FILL;
-	
-	    txtQuizNo = new Text (container, SWT.BORDER);
-	    txtQuizNo.setLayoutData(gd);
-	}
-	
 	private void createComPort(Composite container) {
 		List<CommPortIdentifier> ports = new CommHelper().getComPorts();
 		List<String> portNames = new ArrayList<String>();
@@ -78,26 +66,28 @@ public class TeacherDialog extends TitleAreaDialog {
 			portNames.add(port.getName());
 		}
 		Label lbt = new Label(container, SWT.NONE);
-		lbt.setText("Com Port");
+		lbt.setText(SimulatorMessages.CommPort_label);
 	
 	    combComPort = new Combo (container, SWT.READ_ONLY);
 	    combComPort.setItems(portNames.toArray(new String[0]));
-	    combComPort.setText("COM1");
 	}
 	
 	private void createMode(Composite container) {
 		Label lbt = new Label(container, SWT.NONE);
-		lbt.setText("Mode");
+		lbt.setText(SimulatorMessages.Mode_label);
 	
 	    combMode = new Combo (container, SWT.READ_ONLY);
-	    combMode.setItems(new String[] {"PROXY", "RECV"});
-	    combMode.setText("PROXY");
+	    List<String> modeItems = new ArrayList<String>();
+	    for (WorkMode mode : WorkMode.values()) {
+	    	modeItems.add(mode.getLabel());
+	    }
+	    combMode.setItems(modeItems.toArray(new String[0]));
 	}
 	
 	  
 	private void createPort(Composite container) {
 	    Label lbtPort = new Label(container, SWT.NONE);
-	    lbtPort.setText("Port");
+	    lbtPort.setText(SimulatorMessages.Port_label);
 	    
 	    GridData dataPort = new GridData();
 	    dataPort.grabExcessHorizontalSpace = true;
@@ -115,10 +105,9 @@ public class TeacherDialog extends TitleAreaDialog {
 	// save content of the Text fields because they get disposed
 	// as soon as the Dialog closes
 	private void saveInput() {
-	    quizNo = txtQuizNo.getText();
 	    port = txtPort.getText();
 	    comPort = combComPort.getText();
-	    mode = combMode.getText();
+	    mode = WorkMode.getWorkMode(combMode.getSelectionIndex());
 	}
 	
 	@Override
@@ -129,9 +118,9 @@ public class TeacherDialog extends TitleAreaDialog {
 	  
 	@Override
 	protected void createButtonsForButtonBar(Composite parent) {
-		createButton(parent, IDialogConstants.OK_ID, "OK", true);
+		createButton(parent, IDialogConstants.OK_ID, SimulatorMessages.OK_label, true);
 	    createButton(parent, IDialogConstants.CANCEL_ID,
-	        IDialogConstants.CANCEL_LABEL, false);
+	    		SimulatorMessages.Cancel_label, false);
 	}
 
 	public String getPort() {
@@ -142,11 +131,11 @@ public class TeacherDialog extends TitleAreaDialog {
 		this.port = port;
 	}
 
-	public String getMode() {
+	public WorkMode getMode() {
 		return mode;
 	}
 
-	public void setMode(String mode) {
+	public void setMode(WorkMode mode) {
 		this.mode = mode;
 	}
 
@@ -157,14 +146,6 @@ public class TeacherDialog extends TitleAreaDialog {
 	public void setComPort(String comPort) {
 		this.comPort = comPort;
 	}
-
-	public String getQuizNo() {
-		return quizNo;
-	}
-
-	public void setQuizNo(String quizNo) {
-		this.quizNo = quizNo;
-	}
-
+	
 	
 } 
