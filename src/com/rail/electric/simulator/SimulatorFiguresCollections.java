@@ -11,16 +11,24 @@ import org.eclipse.draw2d.FreeformLayer;
 import org.eclipse.draw2d.geometry.Point;
 
 import com.rail.electric.simulator.figures.ComplexCircuitFigure;
+import com.rail.electric.simulator.figures.FlipComplexCircuitFigure;
+import com.rail.electric.simulator.figures.FlipGroundWithResistFigure;
+import com.rail.electric.simulator.figures.FlipMainTransformerFigure;
+import com.rail.electric.simulator.figures.FlipThreePahseTransformerFigure;
 import com.rail.electric.simulator.figures.GroundFigure;
+import com.rail.electric.simulator.figures.GroundWithResistFigure;
 import com.rail.electric.simulator.figures.HighVoltageLineFigure;
 import com.rail.electric.simulator.figures.LeftGroundFigure;
 import com.rail.electric.simulator.figures.LineFigure;
+import com.rail.electric.simulator.figures.LowVoltageLineFigure;
 import com.rail.electric.simulator.figures.MainSwitchFigure;
 import com.rail.electric.simulator.figures.MainTransformerFigure;
+import com.rail.electric.simulator.figures.RightGroundFigure;
 import com.rail.electric.simulator.figures.StateFigure;
 import com.rail.electric.simulator.figures.StateListener;
 import com.rail.electric.simulator.figures.SwitchFigure;
 import com.rail.electric.simulator.figures.ThreePahseTransformerFigure;
+import com.rail.electric.simulator.figures.UpGroundFigure;
 import com.rail.electric.simulator.helpers.CommHelper;
 import com.rail.electric.simulator.helpers.DataTypeConverter;
 
@@ -33,20 +41,20 @@ public class SimulatorFiguresCollections implements StateListener {
 	
 	static {
 		figures = Arrays.asList(
-				
-				new SwitchFigure			(131,  300, 150),
+				//#1 High
+				new SwitchFigure			(131,  "1111", 300, 150),
 				new HighVoltageLineFigure(3, 
 						Arrays.asList(	new Point(322, 198),
 										new Point(322, 230)
 									 )),				
-				new LeftGroundFigure		(130,  200, 192),
-				new MainSwitchFigure		(129,  298, 230),
+				new LeftGroundFigure		(130, "1111E", 200, 192),
+				new MainSwitchFigure		(129,  "111", 298, 230),
 				new HighVoltageLineFigure(2, 
 						Arrays.asList(	new Point(322, 278),
 										new Point(322, 310)
 									 )),				
-				new LeftGroundFigure		(128,  200, 272),
-				new SwitchFigure			(127,  300, 310),
+				new LeftGroundFigure		(128, "1113E", 200, 272),
+				new SwitchFigure			(127, "1113", 300, 310),
 				new HighVoltageLineFigure(1, 
 						Arrays.asList(	new Point(322, 358),
 										new Point(322, 400)
@@ -58,37 +66,252 @@ public class SimulatorFiguresCollections implements StateListener {
 										new Point(622, 210),
 										new Point(680, 210)
 									)),	
-				new ThreePahseTransformerFigure (102, 658, 210),
+				new ThreePahseTransformerFigure (102, "1001", 658, 210),
 				new HighVoltageLineFigure(5, 
 						Arrays.asList(	new Point(698, 240),
 										new Point(732, 240)
 									 )),	
-				new GroundFigure		(101,  708, 242),
-				new SwitchFigure			(103,  600, 210),
+				new GroundFigure		(101, "1001E", 708, 242),
+				new SwitchFigure			(103, "1011", 600, 210),
 				new HighVoltageLineFigure(6, 
 						Arrays.asList(	new Point(622, 258),
 										new Point(622, 290)
 									 )),	
-				new LeftGroundFigure		(104,  500, 252),
-				new MainSwitchFigure		(105,  598, 290),
+				new LeftGroundFigure		(104, "1011E",  500, 252),
+				new MainSwitchFigure		(105,  "101", 598, 290),
 				new HighVoltageLineFigure(7, 
 						Arrays.asList(	new Point(622, 338),
 										new Point(622, 370)
 									 )),
-				new LeftGroundFigure		(106,  500, 332),
-				new SwitchFigure			(107,  600, 370),
+				new LeftGroundFigure		(106, "1013E",  500, 332),
+				new SwitchFigure			(107,  "1013", 600, 370),
 				new HighVoltageLineFigure(8, 
 						Arrays.asList(	new Point(622, 418),
 										new Point(622, 450)
 									 )),
-				new LeftGroundFigure		(108,  500, 412),
+				new LeftGroundFigure		(108, "1014E",  500, 412),
 				new MainTransformerFigure   (0,    588, 450),
 									 
 				new HighVoltageLineFigure(0, 
 						Arrays.asList(	new Point(652, 470),
 										new Point(680, 470)
 									 )),
-				new ComplexCircuitFigure	(109, 680, 467)
+				new ComplexCircuitFigure	(109, "1010", 680, 467),
+				
+				//#1 Low
+				new LowVoltageLineFigure(11, 
+						Arrays.asList(	new Point(322, 550),
+										new Point(322, 590)
+									 )),
+				new MainSwitchFigure		(125,  "331", 298, 590),
+				new LowVoltageLineFigure(10, 
+						Arrays.asList(	new Point(322, 638),
+										new Point(322, 680)
+									 )),
+				new UpGroundFigure			(126, "3311E",  360, 580),
+				new SwitchFigure			(124, "3311", 300, 680),
+				new LowVoltageLineFigure(0, 
+						Arrays.asList(	new Point(622, 512),
+										new Point(622, 590)
+									)),
+				new MainSwitchFigure		(110,  "301", 598, 590),
+				new LowVoltageLineFigure(16, 
+						Arrays.asList(	new Point(622, 638),
+										new Point(622, 680)
+									)),
+				new SwitchFigure			(112, "3011", 598, 680),
+				new GroundFigure			(111, "3011E", 536, 680),
+				new LowVoltageLineFigure(19, 
+						Arrays.asList(	new Point(100, 780),
+										new Point(750, 780)
+									)),
+				new SwitchFigure			(122, "3001", 200, 810),
+				new SwitchFigure			(119, "3131", 350, 810),
+				new SwitchFigure			(116, "3121", 500, 810),
+				new SwitchFigure			(113, "3111", 650, 810),
+				new LowVoltageLineFigure(9, 
+						Arrays.asList(	new Point(222, 858),
+										new Point(222, 874),
+										new Point(172, 874),
+										new Point(282, 874),
+										new Point(282, 890)
+									)),
+				new LowVoltageLineFigure(12, 
+						Arrays.asList(	new Point(372, 858),
+										new Point(372, 890),
+										new Point(372, 874),
+										new Point(432, 874),
+										new Point(432, 890)
+									)),
+				new LowVoltageLineFigure(14, 
+						Arrays.asList(	new Point(522, 858),
+										new Point(522, 890),
+										new Point(522, 874),
+										new Point(582, 874),
+										new Point(582, 890)
+									)),
+				new LowVoltageLineFigure(18, 
+						Arrays.asList(	new Point(672, 858),
+										new Point(672, 890),
+										new Point(672, 874),
+										new Point(732, 874),
+										new Point(732, 890)
+									)),									
+				new FlipGroundWithResistFigure (0, 140, 870),
+				new SwitchFigure			(123, "3001E", 260, 890),
+				new SwitchFigure			(121, "3131E", 410, 890),
+				new SwitchFigure			(118, "3121E", 560, 890),
+				new SwitchFigure			(115, "3111E", 710, 890),
+				new MainSwitchFigure		(120,  "313", 350, 890),
+				new MainSwitchFigure		(117,  "312", 500, 890),
+				new MainSwitchFigure		(114,  "311", 650, 890),
+				new LowVoltageLineFigure(13, 
+						Arrays.asList(	new Point(372, 938),
+										new Point(372, 938)
+									)),
+				new LowVoltageLineFigure(15, 
+						Arrays.asList(	new Point(522, 938),
+										new Point(522, 938)
+									)),
+				new LowVoltageLineFigure(17, 
+						Arrays.asList(	new Point(672, 938),
+										new Point(672, 938)
+									)),
+				//#2 High
+				new SwitchFigure			(137,  "1121", 1454, 150),
+				new HighVoltageLineFigure(38, 
+						Arrays.asList(	new Point(1478, 198),
+										new Point(1478, 230)
+									 )),				
+				new RightGroundFigure		(138, "1121E", 1556, 192),
+				new MainSwitchFigure		(139,  "112", 1456, 230),
+				new HighVoltageLineFigure(39, 
+						Arrays.asList(	new Point(1478, 278),
+										new Point(1478, 310)
+									 )),				
+				new RightGroundFigure		(140, "1123E", 1556, 272),
+				new SwitchFigure			(141, "1123", 1456, 310),
+				new HighVoltageLineFigure(40, 
+						Arrays.asList(	new Point(1478, 358),
+										new Point(1478, 400)
+									 )),
+				new HighVoltageLineFigure(37, 
+						Arrays.asList(	new Point(1478, 150),
+										new Point(1478, 110),
+										new Point(1178, 110),
+										new Point(1178, 210),
+										new Point(1120, 210)
+									)),	
+				new FlipThreePahseTransformerFigure (166, "1002", 1100, 210),
+				new HighVoltageLineFigure(36, 
+						Arrays.asList(	new Point(1102, 240),
+										new Point(1068, 240)
+									 )),	
+				new GroundFigure		(167, "1002E", 1048, 242),
+				new SwitchFigure			(165, "1021", 1156, 210),
+				new HighVoltageLineFigure(35, 
+						Arrays.asList(	new Point(1178, 258),
+										new Point(1178, 290)
+									 )),	
+				new RightGroundFigure		(164, "1021E",  1256, 252),
+				new MainSwitchFigure		(163,  "102", 1156, 290),
+				new HighVoltageLineFigure(34, 
+						Arrays.asList(	new Point(1178, 338),
+										new Point(1178, 370)
+									 )),
+				new RightGroundFigure		(162, "1023E",  1256, 332),
+				new SwitchFigure			(161,  "1023", 1156, 370),
+				new HighVoltageLineFigure(33, 
+						Arrays.asList(	new Point(1178, 418),
+										new Point(1178, 450)
+									 )),
+				new RightGroundFigure		(160, "1024E",  1256, 412),
+				new FlipMainTransformerFigure   (0,    1148, 450),
+									 
+				new HighVoltageLineFigure(0, 
+						Arrays.asList(	new Point(1148, 470),
+										new Point(1120, 470)
+									 )),
+				new FlipComplexCircuitFigure	(159, "1020", 1056, 467),
+				//#2 Low
+				new LowVoltageLineFigure(31, 
+						Arrays.asList(	new Point(1478, 550),
+										new Point(1478, 590)
+									 )),
+				new MainSwitchFigure		(142,  "341", 1450, 590),
+				new LowVoltageLineFigure(30, 
+						Arrays.asList(	new Point(1478, 638),
+										new Point(1478, 680)
+									 )),
+				new UpGroundFigure			(143, "3411E",  1400, 580),
+				new SwitchFigure			(144, "3411", 1454, 680),
+				new LowVoltageLineFigure(0, 
+						Arrays.asList(	new Point(1178, 512),
+										new Point(1178, 590)
+									)),
+				new MainSwitchFigure		(158,  "301", 1160, 590),
+				new LowVoltageLineFigure(25, 
+						Arrays.asList(	new Point(1178, 638),
+										new Point(1178, 680)
+									)),
+				new SwitchFigure			(156, "3021", 1158, 680),
+				new GroundFigure			(157, "3021E",1224, 680),
+				new LowVoltageLineFigure(22, 
+						Arrays.asList(	new Point(1700, 780),
+										new Point(1050, 780)
+									)),
+				new SwitchFigure			(146, "3002", 1556, 810),
+				new SwitchFigure			(149, "3231", 1406, 810),
+				new SwitchFigure			(152, "3221", 1256, 810),
+				new SwitchFigure			(155, "3211", 1106, 810),
+				new LowVoltageLineFigure(32, 
+						Arrays.asList(	new Point(1578, 858),
+										new Point(1578, 874),
+										new Point(1628, 874),
+										new Point(1518, 874),
+										new Point(1518, 890)
+									)),
+				new LowVoltageLineFigure(28, 
+						Arrays.asList(	new Point(1428, 858),
+										new Point(1428, 890),
+										new Point(1428, 874),
+										new Point(1368, 874),
+										new Point(1368, 890)
+									)),
+				new LowVoltageLineFigure(26, 
+						Arrays.asList(	new Point(1278, 858),
+										new Point(1278, 890),
+										new Point(1278, 874),
+										new Point(1218, 874),
+										new Point(1218, 890)
+									)),
+				new LowVoltageLineFigure(23, 
+						Arrays.asList(	new Point(1128, 858),
+										new Point(1128, 890),
+										new Point(1128, 874),
+										new Point(1068, 874),
+										new Point(1068, 890)
+									)),									
+				new GroundWithResistFigure (0, 1630, 870),
+				new SwitchFigure			(145, "3002E", 1496, 890),
+				new SwitchFigure			(147, "3231E", 1346, 890),
+				new SwitchFigure			(151, "3221E", 1196, 890),
+				new SwitchFigure			(153, "3211E", 1046, 890),
+				new MainSwitchFigure		(148,  "323", 1406, 890),
+				new MainSwitchFigure		(150,  "322", 1256, 890),
+				new MainSwitchFigure		(154,  "321", 1106, 890),
+				new LowVoltageLineFigure(29, 
+						Arrays.asList(	new Point(1428, 938),
+										new Point(1428, 938)
+									)),
+				new LowVoltageLineFigure(27, 
+						Arrays.asList(	new Point(1428, 938),
+										new Point(1428, 938)
+									)),
+				new LowVoltageLineFigure(24, 
+						Arrays.asList(	new Point(1128, 938),
+										new Point(1128, 938)
+									))
 			);	
 		
 		relationShip = new HashMap<>();

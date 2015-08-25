@@ -9,10 +9,12 @@ public abstract class StateFigure extends BaseFigure {
 	private Image icon_off;
 	private Image icon_on;
 	private StateListener listener;
-	private boolean hasPower = false;
+	private boolean hasPower = true;
+	private String label;
 	
-	StateFigure(int id, Image icon_off, Image icon_on, int x, int y, int width, int height) {
+	StateFigure(int id, String label, Image icon_off, Image icon_on, int x, int y, int width, int height) {
 		super(id, icon_off, x, y, width, height);
+		this.label = label;
 		this.icon_off = icon_off;
 		this.icon_on = icon_on;
 		this.addMouseListener(new MouseListener.Stub() {
@@ -57,5 +59,15 @@ public abstract class StateFigure extends BaseFigure {
 	public void setHasPower(boolean hasPower) {
 		this.hasPower = hasPower;
 	}
+
+	public String getLabel() {
+		return label;
+	}
+
+	public void setLabel(String label) {
+		this.label = label;
+	}
+	
+	
 	
 }

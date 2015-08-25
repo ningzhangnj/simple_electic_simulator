@@ -8,8 +8,8 @@ import org.eclipse.swt.graphics.Color;
 public class LowVoltageLineFigure extends LineFigure {
 	public LowVoltageLineFigure(int id, List<Point> points) {
 		super( id, points, 
-				new Color(null, 0,0,0), 
-				new Color(null, 0,240,0), 
+				new Color(null, 160,160,0), 
+				new Color(null, 240,240,0), 
 				4);		
 	}
 }

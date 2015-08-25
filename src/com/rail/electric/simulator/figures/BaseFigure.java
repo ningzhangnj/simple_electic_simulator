@@ -11,7 +11,7 @@ public abstract class BaseFigure extends Label {
 		super(icon);
 		this.id = id;
 		setSize(width, height);
-		setLocation(new Point(x, y));
+		setLocation(new Point(x, y-100));
 	}
 
 	public int getId() {

@@ -11,7 +11,7 @@ public class ThreePahseTransformerFigure extends StateFigure {
 	public static final int WIDTH = 40;
 	public static final int HEIGHT = 72;
 	
-	public ThreePahseTransformerFigure(int id, int x, int y) {
-		super(id, LARGE_TRANSFORMER_OFF, LARGE_TRANSFORMER_ON, x, y, WIDTH, HEIGHT);		
+	public ThreePahseTransformerFigure(int id, String label, int x, int y) {
+		super(id, label, LARGE_TRANSFORMER_OFF, LARGE_TRANSFORMER_ON, x, y, WIDTH, HEIGHT);		
 	}
 }

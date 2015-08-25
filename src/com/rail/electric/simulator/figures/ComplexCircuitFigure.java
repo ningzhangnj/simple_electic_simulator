@@ -11,7 +11,7 @@ public class ComplexCircuitFigure extends StateFigure {
 	public static final int WIDTH = 64;
 	public static final int HEIGHT = 64;
 	
-	public ComplexCircuitFigure(int id, int x, int y) {
-		super(id, LARGE_COMPLEX_CIRCUIT_OFF, LARGE_COMPLEX_CIRCUIT_ON, x, y, WIDTH, HEIGHT);		
+	public ComplexCircuitFigure(int id, String label, int x, int y) {
+		super(id, label, LARGE_COMPLEX_CIRCUIT_OFF, LARGE_COMPLEX_CIRCUIT_ON, x, y, WIDTH, HEIGHT);		
 	}
 }

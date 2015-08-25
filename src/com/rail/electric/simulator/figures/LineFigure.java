@@ -18,6 +18,7 @@ public class LineFigure extends Polyline {
 		super();
 		this.id = id;
 		for (Point point : points) {
+			point.y -= 100; 
 			this.addPoint(point);
 		}
 		this.deadColor = deadColor;
