@@ -11,5 +11,8 @@
 	<classpathentry kind="lib" path="libs/org.eclipse.equinox.common_3.6.200.v20130402-1505.jar"/>
 	<classpathentry kind="lib" path="libs/org.eclipse.core.commands_3.6.100.v20140528-1422.jar"/>
 	<classpathentry kind="lib" path="libs/org.eclipse.osgi_3.10.2.v20150203-1939.jar"/>
+	<classpathentry kind="lib" path="libs/log4j.jar"/>
+	<classpathentry kind="lib" path="libs/slf4j-api.jar"/>
+	<classpathentry kind="lib" path="libs/slf4j-log4j12.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

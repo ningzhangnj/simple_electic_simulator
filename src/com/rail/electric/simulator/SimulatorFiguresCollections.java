@@ -9,6 +9,8 @@ import java.util.Map.Entry;
 import org.eclipse.draw2d.Figure;
 import org.eclipse.draw2d.FreeformLayer;
 import org.eclipse.draw2d.geometry.Point;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.rail.electric.simulator.figures.ComplexCircuitFigure;
 import com.rail.electric.simulator.figures.FlipComplexCircuitFigure;
@@ -16,6 +18,7 @@ import com.rail.electric.simulator.figures.FlipGroundWithResistFigure;
 import com.rail.electric.simulator.figures.FlipMainTransformerFigure;
 import com.rail.electric.simulator.figures.FlipThreePahseTransformerFigure;
 import com.rail.electric.simulator.figures.GroundFigure;
+import com.rail.electric.simulator.figures.GroundTransformerFigure;
 import com.rail.electric.simulator.figures.GroundWithResistFigure;
 import com.rail.electric.simulator.figures.HighVoltageLineFigure;
 import com.rail.electric.simulator.figures.LeftGroundFigure;
@@ -24,20 +27,31 @@ import com.rail.electric.simulator.figures.LowVoltageLineFigure;
 import com.rail.electric.simulator.figures.MainSwitchFigure;
 import com.rail.electric.simulator.figures.MainTransformerFigure;
 import com.rail.electric.simulator.figures.RightGroundFigure;
+import com.rail.electric.simulator.figures.SmallThreePhaseTransformerFigure;
 import com.rail.electric.simulator.figures.StateFigure;
 import com.rail.electric.simulator.figures.StateListener;
 import com.rail.electric.simulator.figures.SwitchFigure;
 import com.rail.electric.simulator.figures.ThreePahseTransformerFigure;
+import com.rail.electric.simulator.figures.TwoPhaseTransformerFigure;
 import com.rail.electric.simulator.figures.UpGroundFigure;
 import com.rail.electric.simulator.helpers.CommHelper;
 import com.rail.electric.simulator.helpers.DataTypeConverter;
+import com.rail.electric.simulator.net.TeacherServer;
 
 public class SimulatorFiguresCollections implements StateListener {
+	private final static Logger logger =  LoggerFactory.getLogger(TeacherServer.class);
+	
 	private static List<Figure> figures;
 	public static Map<Integer, List<Integer>> relationShip;
 	public static Map<Integer, Figure> id2FigureMap = new HashMap<Integer, Figure>();
 	public static int SWTITCH_NUMBERS = 67;
 	public static int LEDLINE_NUMBERS = 40;
+	
+	private static final byte BEGIN_BYTE = (byte)0xf5;
+	private static final byte END_BYTE = (byte)0xfa;
+	private static final byte CORRECT_PACKET_BYTE = (byte)0xf6;
+	private static final byte READ_SWITCH_BYTE = (byte)0xf4;
+	
 	
 	static {
 		figures = Arrays.asList(
@@ -45,15 +59,19 @@ public class SimulatorFiguresCollections implements StateListener {
 				new SwitchFigure			(131,  "1111", 300, 150),
 				new HighVoltageLineFigure(3, 
 						Arrays.asList(	new Point(322, 198),
-										new Point(322, 230)
+										new Point(322, 230),
+										new Point(304, 230)
 									 )),				
-				new LeftGroundFigure		(130, "1111E", 200, 192),
+				new LeftGroundFigure		(130, "1111E", 240, 208),
 				new MainSwitchFigure		(129,  "111", 298, 230),
 				new HighVoltageLineFigure(2, 
-						Arrays.asList(	new Point(322, 278),
-										new Point(322, 310)
-									 )),				
-				new LeftGroundFigure		(128, "1113E", 200, 272),
+						Arrays.asList(	new Point(368, 278),
+										new Point(322, 278),
+										new Point(322, 310),
+										new Point(304, 310)
+									 )),	
+				new	TwoPhaseTransformerFigure (0, 350, 278),
+				new LeftGroundFigure		(128, "1113E", 240, 288),
 				new SwitchFigure			(127, "1113", 300, 310),
 				new HighVoltageLineFigure(1, 
 						Arrays.asList(	new Point(322, 358),
@@ -75,21 +93,24 @@ public class SimulatorFiguresCollections implements StateListener {
 				new SwitchFigure			(103, "1011", 600, 210),
 				new HighVoltageLineFigure(6, 
 						Arrays.asList(	new Point(622, 258),
-										new Point(622, 290)
+										new Point(622, 290),
+										new Point(604, 290)
 									 )),	
-				new LeftGroundFigure		(104, "1011E",  500, 252),
+				new LeftGroundFigure		(104, "1011E",  540, 268),
 				new MainSwitchFigure		(105,  "101", 598, 290),
 				new HighVoltageLineFigure(7, 
 						Arrays.asList(	new Point(622, 338),
-										new Point(622, 370)
+										new Point(622, 370),
+										new Point(604, 370)
 									 )),
-				new LeftGroundFigure		(106, "1013E",  500, 332),
+				new LeftGroundFigure		(106, "1013E",  540, 348),
 				new SwitchFigure			(107,  "1013", 600, 370),
 				new HighVoltageLineFigure(8, 
 						Arrays.asList(	new Point(622, 418),
-										new Point(622, 450)
+										new Point(622, 450),
+										new Point(604, 450)
 									 )),
-				new LeftGroundFigure		(108, "1014E",  500, 412),
+				new LeftGroundFigure		(108, "1014E",  540, 428),
 				new MainTransformerFigure   (0,    588, 450),
 									 
 				new HighVoltageLineFigure(0, 
@@ -99,6 +120,7 @@ public class SimulatorFiguresCollections implements StateListener {
 				new ComplexCircuitFigure	(109, "1010", 680, 467),
 				
 				//#1 Low
+				new GroundTransformerFigure(0, 290, 486),
 				new LowVoltageLineFigure(11, 
 						Arrays.asList(	new Point(322, 550),
 										new Point(322, 590)
@@ -123,7 +145,7 @@ public class SimulatorFiguresCollections implements StateListener {
 				new GroundFigure			(111, "3011E", 536, 680),
 				new LowVoltageLineFigure(19, 
 						Arrays.asList(	new Point(100, 780),
-										new Point(750, 780)
+										new Point(850, 780)
 									)),
 				new SwitchFigure			(122, "3001", 200, 810),
 				new SwitchFigure			(119, "3131", 350, 810),
@@ -158,6 +180,7 @@ public class SimulatorFiguresCollections implements StateListener {
 										new Point(732, 890)
 									)),									
 				new FlipGroundWithResistFigure (0, 140, 870),
+				new SmallThreePhaseTransformerFigure(0, 200, 890),
 				new SwitchFigure			(123, "3001E", 260, 890),
 				new SwitchFigure			(121, "3131E", 410, 890),
 				new SwitchFigure			(118, "3121E", 560, 890),
@@ -167,29 +190,41 @@ public class SimulatorFiguresCollections implements StateListener {
 				new MainSwitchFigure		(114,  "311", 650, 890),
 				new LowVoltageLineFigure(13, 
 						Arrays.asList(	new Point(372, 938),
-										new Point(372, 938)
+										new Point(372, 980)
 									)),
 				new LowVoltageLineFigure(15, 
 						Arrays.asList(	new Point(522, 938),
-										new Point(522, 938)
+										new Point(522, 980)
 									)),
 				new LowVoltageLineFigure(17, 
 						Arrays.asList(	new Point(672, 938),
-										new Point(672, 938)
+										new Point(672, 980)
+									)),
+				new SwitchFigure			(133, "3101", 800, 680),
+				new GroundFigure			(134, "3101E", 740, 680),
+				new MainSwitchFigure		(132,  "310", 800, 590),
+				new LowVoltageLineFigure(20, 
+						Arrays.asList(	new Point(822, 638),
+										new Point(822, 680),
+										new Point(762, 680)
 									)),
 				//#2 High
 				new SwitchFigure			(137,  "1121", 1454, 150),
 				new HighVoltageLineFigure(38, 
 						Arrays.asList(	new Point(1478, 198),
-										new Point(1478, 230)
+										new Point(1478, 230),
+										new Point(1492, 230)
 									 )),				
-				new RightGroundFigure		(138, "1121E", 1556, 192),
+				new RightGroundFigure		(138, "1121E", 1492, 206),
 				new MainSwitchFigure		(139,  "112", 1456, 230),
 				new HighVoltageLineFigure(39, 
-						Arrays.asList(	new Point(1478, 278),
-										new Point(1478, 310)
-									 )),				
-				new RightGroundFigure		(140, "1123E", 1556, 272),
+						Arrays.asList(	new Point(1428, 278),
+										new Point(1478, 278),
+										new Point(1478, 310),
+										new Point(1492, 310)
+									 )),	
+				new	TwoPhaseTransformerFigure (0, 1410, 278),
+				new RightGroundFigure		(140, "1123E", 1492, 284),
 				new SwitchFigure			(141, "1123", 1456, 310),
 				new HighVoltageLineFigure(40, 
 						Arrays.asList(	new Point(1478, 358),
@@ -211,21 +246,24 @@ public class SimulatorFiguresCollections implements StateListener {
 				new SwitchFigure			(165, "1021", 1156, 210),
 				new HighVoltageLineFigure(35, 
 						Arrays.asList(	new Point(1178, 258),
-										new Point(1178, 290)
+										new Point(1178, 290),
+										new Point(1192, 290)
 									 )),	
-				new RightGroundFigure		(164, "1021E",  1256, 252),
+				new RightGroundFigure		(164, "1021E",  1192, 264),
 				new MainSwitchFigure		(163,  "102", 1156, 290),
 				new HighVoltageLineFigure(34, 
 						Arrays.asList(	new Point(1178, 338),
-										new Point(1178, 370)
+										new Point(1178, 370),
+										new Point(1192, 370)
 									 )),
-				new RightGroundFigure		(162, "1023E",  1256, 332),
+				new RightGroundFigure		(162, "1023E",  1192, 344),
 				new SwitchFigure			(161,  "1023", 1156, 370),
 				new HighVoltageLineFigure(33, 
 						Arrays.asList(	new Point(1178, 418),
-										new Point(1178, 450)
+										new Point(1178, 450),
+										new Point(1192, 450)
 									 )),
-				new RightGroundFigure		(160, "1024E",  1256, 412),
+				new RightGroundFigure		(160, "1024E",  1192, 424),
 				new FlipMainTransformerFigure   (0,    1148, 450),
 									 
 				new HighVoltageLineFigure(0, 
@@ -234,11 +272,12 @@ public class SimulatorFiguresCollections implements StateListener {
 									 )),
 				new FlipComplexCircuitFigure	(159, "1020", 1056, 467),
 				//#2 Low
+				new GroundTransformerFigure(0, 1446, 486),
 				new LowVoltageLineFigure(31, 
 						Arrays.asList(	new Point(1478, 550),
 										new Point(1478, 590)
 									 )),
-				new MainSwitchFigure		(142,  "341", 1450, 590),
+				new MainSwitchFigure		(142,  "341", 1454, 590),
 				new LowVoltageLineFigure(30, 
 						Arrays.asList(	new Point(1478, 638),
 										new Point(1478, 680)
@@ -258,7 +297,7 @@ public class SimulatorFiguresCollections implements StateListener {
 				new GroundFigure			(157, "3021E",1224, 680),
 				new LowVoltageLineFigure(22, 
 						Arrays.asList(	new Point(1700, 780),
-										new Point(1050, 780)
+										new Point(950, 780)
 									)),
 				new SwitchFigure			(146, "3002", 1556, 810),
 				new SwitchFigure			(149, "3231", 1406, 810),
@@ -293,6 +332,7 @@ public class SimulatorFiguresCollections implements StateListener {
 										new Point(1068, 890)
 									)),									
 				new GroundWithResistFigure (0, 1630, 870),
+				new SmallThreePhaseTransformerFigure(0, 1556, 890),
 				new SwitchFigure			(145, "3002E", 1496, 890),
 				new SwitchFigure			(147, "3231E", 1346, 890),
 				new SwitchFigure			(151, "3221E", 1196, 890),
@@ -302,15 +342,24 @@ public class SimulatorFiguresCollections implements StateListener {
 				new MainSwitchFigure		(154,  "321", 1106, 890),
 				new LowVoltageLineFigure(29, 
 						Arrays.asList(	new Point(1428, 938),
-										new Point(1428, 938)
+										new Point(1428, 980)
 									)),
 				new LowVoltageLineFigure(27, 
 						Arrays.asList(	new Point(1428, 938),
-										new Point(1428, 938)
+										new Point(1428, 980)
 									)),
 				new LowVoltageLineFigure(24, 
 						Arrays.asList(	new Point(1128, 938),
-										new Point(1128, 938)
+										new Point(1128, 980)
+									)),
+				new SwitchFigure			(135, "3102", 1000, 680),
+				new GroundFigure			(136, "3102E", 1060, 680),
+				new LowVoltageLineFigure(21, 
+						Arrays.asList(	new Point(822, 590),
+										new Point(822, 540),
+										new Point(1022, 540),
+										new Point(1022, 680),
+										new Point(1082, 680)
 									))
 			);	
 		
@@ -401,23 +450,13 @@ public class SimulatorFiguresCollections implements StateListener {
 		//sendLineStatus();		
 	}
 	
-	private void sleep(int seconds) {
-		try {
-			Thread.sleep(seconds*1000);
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
-	
 	private void sendLineStatus() {
 		byte[] result = getLedLineBytes();
-		System.out.println("bytes: " + DataTypeConverter.bytesToHex(result));
+		logger.debug("Line status: " + DataTypeConverter.bytesToHex(result));
 		for (int i=0; i<3; i++) {
 			commHelper.writeBytes(result);
-			sleep(1);
 			byte[] response = commHelper.readBytes(1);
-			System.out.println("response of line status: " + DataTypeConverter.bytesToHex(response));
+			logger.debug("Response of line status: " + DataTypeConverter.bytesToHex(response));
 			if (response[0] == (byte)0xf6) break;
 		}		
 	}
@@ -425,17 +464,18 @@ public class SimulatorFiguresCollections implements StateListener {
 	private void readSwitchStatus() {
 		while (isRunning) {
 			byte[] result = commHelper.readBytes(1);
-			if (result[0] != (byte)0xf5 ) {
+			if (result[0] != BEGIN_BYTE ) {
 				commHelper.readBytes(1);
 			}
-			byte[] switchStatus = commHelper.readBytes(SWTITCH_NUMBERS);
-			System.out.println("switch status: " + DataTypeConverter.bytesToHex(switchStatus));
-			int pos = getSwtichChangeId(switchStatus);
+			byte[] scanSwitchStatus = commHelper.readBytes(SWTITCH_NUMBERS);
+			logger.debug("Scanned swtich status is: {}", DataTypeConverter.bytesToHex(scanSwitchStatus));
+			int pos = getSwtichChangeId(scanSwitchStatus);
 			if (pos < 0) continue;
-			System.out.println("pos: " + (pos+101));	
-			System.out.println("end byte: " + DataTypeConverter.bytesToHex(commHelper.readBytes(1)));			
-			
-			commHelper.writeBytes(new byte[]{(byte)0xf6});
+			logger.debug("Swtich {}(id:{}) status changed to {}. ", ((StateFigure)id2FigureMap.get(pos+101)).getLabel(), 
+					pos+101, switchStatus[pos]);
+			byte[] endByte = commHelper.readBytes(1);
+			logger.debug("End byte of switch status is: {}", DataTypeConverter.bytesToHex(endByte));
+			commHelper.writeBytes(new byte[]{CORRECT_PACKET_BYTE});
 			
 			chainReact(pos+101, (switchStatus[pos] == 1)&((StateFigure)id2FigureMap.get(pos+101)).isHasPower());
 			sendLineStatus();

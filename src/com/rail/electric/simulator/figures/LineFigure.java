@@ -10,7 +10,7 @@ public class LineFigure extends Polyline {
 	private int id;
 	private Color deadColor;
 	private Color activeColor;
-	private boolean isOn = false;
+	private int power = 0; ////0 means no power, 1 means #1, 2 means #3
 	private StateListener listener;
 	
 
@@ -43,8 +43,8 @@ public class LineFigure extends Polyline {
 		this.setForegroundColor(deadColor);
 	}
 
-	public boolean isOn() {
-		return isOn;
+	public int getPower() {
+		return power;
 	}
 
 	public void setOn(boolean isOn) {

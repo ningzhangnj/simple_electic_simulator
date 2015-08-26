@@ -3,26 +3,31 @@ package com.rail.electric.simulator.dialogs;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
+import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
 import com.rail.electric.simulator.SimulatorMessages;
 
-public class StudentDialog extends TitleAreaDialog {
+public class StartStudentDialog extends TitleAreaDialog {
 
 	private Text txtIp;
 	private Text txtPort;
+	
+	private Text txtUsername;
+	private Text txtPassword;	
 
 	private String ip;
-	private String port;
+	private String port;	
 
-	public StudentDialog(Shell parentShell) {
+	public StartStudentDialog(Shell parentShell) {
 		super(parentShell);
 	}
 
@@ -43,8 +48,35 @@ public class StudentDialog extends TitleAreaDialog {
 
 	    createIp(container);
 	    createPort(container);
+	    createUsername(container);
+	    createPassword(container);
 
 	    return area;
+	}
+	
+	private void createUsername(Composite container) {
+		Label lbt = new Label(container, SWT.NONE);
+		lbt.setText(SimulatorMessages.Username_label);
+	
+	    GridData dataIp = new GridData();
+	    dataIp.grabExcessHorizontalSpace = true;
+	    dataIp.horizontalAlignment = GridData.FILL;
+	
+	    txtUsername = new Text(container, SWT.BORDER | SWT.READ_ONLY);
+	    txtUsername.setLayoutData(dataIp);
+	    txtUsername.setText("user");
+	}
+	
+	private void createPassword(Composite container) {
+		Label lbt = new Label(container, SWT.NONE);
+		lbt.setText(SimulatorMessages.Password_label);
+	
+	    GridData dataIp = new GridData();
+	    dataIp.grabExcessHorizontalSpace = true;
+	    dataIp.horizontalAlignment = GridData.FILL;
+	
+	    txtPassword = new Text(container, SWT.PASSWORD | SWT.BORDER);
+	    txtPassword.setLayoutData(dataIp);
 	}
 
 	private void createIp(Composite container) {
@@ -78,14 +110,14 @@ public class StudentDialog extends TitleAreaDialog {
 	
 	// save content of the Text fields because they get disposed
 	// as soon as the Dialog closes
-	private void saveInput() {
+	private void validateAndsaveInput() {
 	    ip = txtIp.getText();
 	    port = txtPort.getText();	
 	}
 	
 	@Override
 	protected void okPressed() {
-	    saveInput();
+	    validateAndsaveInput();
 	    super.okPressed();
 	}	
 	  
@@ -110,5 +142,14 @@ public class StudentDialog extends TitleAreaDialog {
 
 	public void setPort(String port) {
 		this.port = port;
+	}
+	
+	public static void main (String[] args) {
+		Shell shell = new Shell(new Display());
+		StartStudentDialog dialog = new StartStudentDialog(shell);
+		if (dialog.open() == Window.CANCEL) {
+			
+		}
+		
 	}
 } 

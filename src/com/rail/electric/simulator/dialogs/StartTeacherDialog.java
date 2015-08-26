@@ -8,32 +8,36 @@ import java.util.List;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
+import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
 import com.rail.electric.simulator.SimulatorMessages;
 import com.rail.electric.simulator.helpers.CommHelper;
-import com.rail.electric.simulator.model.TeacherWorkstation;
 import com.rail.electric.simulator.model.TeacherWorkstation.WorkMode;
 
-public class TeacherDialog extends TitleAreaDialog {
+public class StartTeacherDialog extends TitleAreaDialog {
 
 	private Text txtPort;
 	private Combo combMode;
 	private Combo combComPort;
 	
+	private Text txtUsername;
+	private Text txtPassword;
+	
 	private String port;
 	private WorkMode mode;
 	private String comPort;
 	
-	public TeacherDialog(Shell parentShell) {
+	public StartTeacherDialog(Shell parentShell) {
 		super(parentShell);
 	}
 
@@ -55,10 +59,37 @@ public class TeacherDialog extends TitleAreaDialog {
 	    createPort(container);
 	    createMode(container);
 	    createComPort(container);
+	    createUsername(container);
+	    createPassword(container);
 	  	    
 	    return area;
 	}
 
+	private void createUsername(Composite container) {
+		Label lbt = new Label(container, SWT.NONE);
+		lbt.setText(SimulatorMessages.Username_label);
+	
+	    GridData dataIp = new GridData();
+	    dataIp.grabExcessHorizontalSpace = true;
+	    dataIp.horizontalAlignment = GridData.FILL;
+	
+	    txtUsername = new Text(container, SWT.BORDER | SWT.READ_ONLY);
+	    txtUsername.setLayoutData(dataIp);
+	    txtUsername.setText("admin");
+	}
+	
+	private void createPassword(Composite container) {
+		Label lbt = new Label(container, SWT.NONE);
+		lbt.setText(SimulatorMessages.Password_label);
+	
+	    GridData dataIp = new GridData();
+	    dataIp.grabExcessHorizontalSpace = true;
+	    dataIp.horizontalAlignment = GridData.FILL;
+	
+	    txtPassword = new Text(container, SWT.PASSWORD | SWT.BORDER);
+	    txtPassword.setLayoutData(dataIp);
+	}
+	
 	private void createComPort(Composite container) {
 		List<CommPortIdentifier> ports = new CommHelper().getComPorts();
 		List<String> portNames = new ArrayList<String>();
@@ -104,7 +135,7 @@ public class TeacherDialog extends TitleAreaDialog {
 	
 	// save content of the Text fields because they get disposed
 	// as soon as the Dialog closes
-	private void saveInput() {
+	private void validateAndsaveInput() {
 	    port = txtPort.getText();
 	    comPort = combComPort.getText();
 	    mode = WorkMode.getWorkMode(combMode.getSelectionIndex());
@@ -112,7 +143,7 @@ public class TeacherDialog extends TitleAreaDialog {
 	
 	@Override
 	protected void okPressed() {
-	    saveInput();
+		validateAndsaveInput();
 	    super.okPressed();
 	}	
 	  
@@ -147,5 +178,13 @@ public class TeacherDialog extends TitleAreaDialog {
 		this.comPort = comPort;
 	}
 	
+	public static void main (String[] args) {
+		Shell shell = new Shell(new Display());
+		StartTeacherDialog dialog = new StartTeacherDialog(shell);
+		if (dialog.open() == Window.CANCEL) {
+			
+		}
+		
+	}
 	
 } 

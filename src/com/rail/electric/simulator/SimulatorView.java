@@ -21,8 +21,8 @@ import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.Shell;
 
-import com.rail.electric.simulator.dialogs.StudentDialog;
-import com.rail.electric.simulator.dialogs.TeacherDialog;
+import com.rail.electric.simulator.dialogs.StartStudentDialog;
+import com.rail.electric.simulator.dialogs.StartTeacherDialog;
 
 public class SimulatorView {
 	private ScalableFreeformLayeredPane root;
@@ -176,7 +176,7 @@ public class SimulatorView {
 	}
 	
 	private void startTeacher(Shell shell) {
-		TeacherDialog dialog = new TeacherDialog(shell);
+		StartTeacherDialog dialog = new StartTeacherDialog(shell);
 		
 		if (dialog.open() == Window.OK) {
 			
@@ -184,7 +184,7 @@ public class SimulatorView {
 	}
 	
 	private void startStudent(Shell shell) {
-		StudentDialog dialog = new StudentDialog(shell);
+		StartStudentDialog dialog = new StartStudentDialog(shell);
 		
 		if (dialog.open() == Window.OK) {
 			

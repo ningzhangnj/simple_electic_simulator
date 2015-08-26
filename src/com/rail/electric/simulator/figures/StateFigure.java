@@ -9,7 +9,7 @@ public abstract class StateFigure extends BaseFigure {
 	private Image icon_off;
 	private Image icon_on;
 	private StateListener listener;
-	private boolean hasPower = true;
+	private int power = 0; //0 means no power, 1 means #1, 2 means #2
 	private String label;
 	
 	StateFigure(int id, String label, Image icon_off, Image icon_on, int x, int y, int width, int height) {
@@ -52,12 +52,12 @@ public abstract class StateFigure extends BaseFigure {
 		}	
 	}
 
-	public boolean isHasPower() {
-		return hasPower;
+	public int getPower() {
+		return power;
 	}
 
-	public void setHasPower(boolean hasPower) {
-		this.hasPower = hasPower;
+	public void setPower(int power) {
+		this.power = power;
 	}
 
 	public String getLabel() {
