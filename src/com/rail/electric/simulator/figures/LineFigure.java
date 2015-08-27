@@ -6,15 +6,17 @@ import org.eclipse.draw2d.Polyline;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.swt.graphics.Color;
 
+import com.rail.electric.simulator.listeners.StateListener;
+
 public class LineFigure extends Polyline {
 	private int id;
 	private Color deadColor;
 	private Color activeColor;
-	private int power = 0; ////0 means no power, 1 means #1, 2 means #3
+	private int power; ////0 means no power, 1 means #1(1<<0), 2 means #2(1<<1)
 	private StateListener listener;
 	
 
-	public LineFigure(int id, List<Point> points, Color deadColor, Color activeColor, int width) {
+	public LineFigure(int id, List<Point> points, Color deadColor, Color activeColor, int width, int initPower) {
 		super();
 		this.id = id;
 		for (Point point : points) {
@@ -23,7 +25,8 @@ public class LineFigure extends Polyline {
 		}
 		this.deadColor = deadColor;
 		this.activeColor = activeColor;
-		this.setForegroundColor(deadColor);
+		this.power = initPower;
+		this.setForegroundColor(power>0?activeColor:deadColor);
 		this.setLineWidth(width);
 	}
 
@@ -35,29 +38,21 @@ public class LineFigure extends Polyline {
 		this.id = id;
 	}
 	
-	public void activate() {
-		this.setForegroundColor(activeColor);
-	}
-	
-	public void deactivate() {
-		this.setForegroundColor(deadColor);
-	}
-
 	public int getPower() {
 		return power;
 	}
+	
+	public void setPower(int power) {
+		this.power = power;
 
-	public void setOn(boolean isOn) {
-		this.isOn = isOn;
-		if (isOn) activate();
-		else deactivate();
+		this.setForegroundColor(power>0?activeColor:deadColor);
 	}
 	
-	public void switchState() {
-		setOn(!isOn);		
+	public void triggerPower(int power) {
+		setPower(power);		
 		
 		if (listener != null) {
-			listener.onChange(getId(), isOn);
+			listener.onChange(getId(), power);
 		}
 	}
 	

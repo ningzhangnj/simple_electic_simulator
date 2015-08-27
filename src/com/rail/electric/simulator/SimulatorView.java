@@ -1,5 +1,7 @@
 package com.rail.electric.simulator;
 
+import java.io.File;
+
 import org.eclipse.draw2d.FigureCanvas;
 import org.eclipse.draw2d.FreeformLayer;
 import org.eclipse.draw2d.FreeformLayout;
@@ -17,6 +19,7 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.Shell;
@@ -27,6 +30,7 @@ import com.rail.electric.simulator.dialogs.StartTeacherDialog;
 public class SimulatorView {
 	private ScalableFreeformLayeredPane root;
 	private FreeformLayer primary;
+	private SimulatorFiguresCollections sim;
 	
 	private static final int VIEW_WIDTH = 1800;	
 	private static final int VIEW_HEIGHT = 1000;
@@ -58,7 +62,8 @@ public class SimulatorView {
 		FigureCanvas canvas = createDiagram(shell);
 		canvas.setLayoutData(new GridData(GridData.FILL_BOTH));
 		
-		final SimulatorFiguresCollections sim = new SimulatorFiguresCollections(primary);
+		sim = new SimulatorFiguresCollections(primary);
+		sim.init();
 		sim.activate();
 		
 		createMenuBar(shell);
@@ -90,6 +95,12 @@ public class SimulatorView {
 		operateMenuItem.setText(SimulatorMessages.Operate_menu); //$NON-NLS-1$
 		Menu operateMenu = new Menu(shell, SWT.DROP_DOWN);
 		operateMenuItem.setMenu(operateMenu);
+		
+		MenuItem connectionsMenuItem = new MenuItem(menuBar, SWT.CASCADE);
+		connectionsMenuItem.setText(SimulatorMessages.Connections_menu); //$NON-NLS-1$
+		Menu connectionsMenu = new Menu(shell, SWT.DROP_DOWN);
+		connectionsMenuItem.setMenu(connectionsMenu);
+		
 		MenuItem zoomMenuItem = new MenuItem(menuBar, SWT.CASCADE);
 		zoomMenuItem.setText(SimulatorMessages.Zoom_menu); //$NON-NLS-1$
 		Menu zoomMenu = new Menu(shell, SWT.DROP_DOWN);
@@ -100,6 +111,9 @@ public class SimulatorView {
 		createStartStudentMenuItem(operateMenu, shell);
 		createStopMenuItem(operateMenu, shell);
 		
+		// Create import connections menu items.
+		createImportConnectionsMenuItem(connectionsMenu, shell);
+		
 		// Create the "fixed" scale menu items
 		createFixedZoomMenuItem(zoomMenu, "50%", 0.5);
 		createFixedZoomMenuItem(zoomMenu, "100%", 1);
@@ -107,6 +121,19 @@ public class SimulatorView {
 		
 		// Add "Scale to fit" menu item
 		createScaleToFitMenuItem(zoomMenu);
+	}
+	
+	private void createImportConnectionsMenuItem(Menu menu, final Shell shell) {
+		MenuItem menuItem = new MenuItem(menu, SWT.NULL);
+		menuItem.setText(SimulatorMessages.ImportConnections_menu); //$NON-NLS-1$
+		menuItem.addSelectionListener(new SelectionListener() {
+			public void widgetSelected(SelectionEvent e) {
+				importConnections(shell);
+			}
+			public void widgetDefaultSelected(SelectionEvent e) {
+				widgetSelected(e);
+			}
+		});
 	}
 	
 	private void createStartTeacherMenuItem(Menu menu, final Shell shell) {
@@ -180,6 +207,15 @@ public class SimulatorView {
 		
 		if (dialog.open() == Window.OK) {
 			
+		}
+	}
+	
+	private void importConnections(Shell shell) {
+		FileDialog dialog = new FileDialog(shell);
+		dialog.setFilterExtensions(new String[]{"*.ini"});
+		String path = dialog.open();
+		if (path != null) {
+			sim.importConnections(new File(path));
 		}
 	}
 	

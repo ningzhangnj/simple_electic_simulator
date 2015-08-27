@@ -10,6 +10,8 @@ public class SimulatorMessages extends NLS {
 	public static String Stop_menu;
 	public static String Zoom_menu;
 	public static String Scale2Fit_menu;
+	public static String Connections_menu;
+	public static String ImportConnections_menu;
 	
 	public static String TeacherDialog_title;
 	public static String TeacherDialog_message;
@@ -30,6 +32,11 @@ public class SimulatorMessages extends NLS {
 	public static String Mode_StudentTeacherSimulator_Item;
 	public static String Mode_StudentTeacher_Item;
 	public static String Mode_TeacherSimulator_Item;
+	
+	public static String TurnOn_message;
+	public static String TurnOff_message;
+	
+	public static String ForbiddenOperation_message;
 	
 	static {
 		NLS.initializeMessages(

@@ -11,7 +11,7 @@ public class MainSwitchFigure extends StateFigure {
 	public static final int WIDTH = 48;
 	public static final int HEIGHT = 48;
 	
-	public MainSwitchFigure(int id, String label, int x, int y) {
-		super(id, label, LARGE_SWITCH_OFF, LARGE_SWITCH_ON, x, y, WIDTH, HEIGHT);		
+	public MainSwitchFigure(int id, String label, int x, int y, int initPower) {
+		super(id, label, LARGE_SWITCH_OFF, LARGE_SWITCH_ON, x, y, WIDTH, HEIGHT, initPower);		
 	}
 }
