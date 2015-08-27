@@ -25,6 +25,7 @@ import com.rail.electric.simulator.figures.GroundFigure;
 import com.rail.electric.simulator.figures.GroundTransformerFigure;
 import com.rail.electric.simulator.figures.GroundWithResistFigure;
 import com.rail.electric.simulator.figures.HighVoltageLineFigure;
+import com.rail.electric.simulator.figures.HighVoltagePolyLineFigure;
 import com.rail.electric.simulator.figures.LeftGroundFigure;
 import com.rail.electric.simulator.figures.LineFigure;
 import com.rail.electric.simulator.figures.LowVoltageLineFigure;
@@ -76,8 +77,117 @@ public class SimulatorFiguresCollections implements StateListener, ValidateSwitc
 		relationShips.get(0).put(105, 	Arrays.asList(7));
 		relationShips.get(0).put(7, 	Arrays.asList(107));
 		relationShips.get(0).put(107, 	Arrays.asList(8));
+		relationShips.get(0).put(8, 	Arrays.asList(110));
+		relationShips.get(0).put(110, 	Arrays.asList(16));
+		relationShips.get(0).put(16, 	Arrays.asList(112));
+		relationShips.get(0).put(112, 	Arrays.asList(19));
+		relationShips.get(0).put(19, 	Arrays.asList(124,133,122,119,116,113));
+		relationShips.get(0).put(124, 	Arrays.asList(10));
+		relationShips.get(0).put(10, 	Arrays.asList(125));
+		relationShips.get(0).put(125, 	Arrays.asList(11));
+		relationShips.get(0).put(122, 	Arrays.asList(9));
+		relationShips.get(0).put(119, 	Arrays.asList(12));
+		relationShips.get(0).put(12, 	Arrays.asList(120));
+		relationShips.get(0).put(120, 	Arrays.asList(13));
+		relationShips.get(0).put(116, 	Arrays.asList(14));
+		relationShips.get(0).put(14, 	Arrays.asList(117));
+		relationShips.get(0).put(117, 	Arrays.asList(15));
+		relationShips.get(0).put(113, 	Arrays.asList(18));
+		relationShips.get(0).put(18, 	Arrays.asList(114));
+		relationShips.get(0).put(114, 	Arrays.asList(17));
+		relationShips.get(0).put(133, 	Arrays.asList(20));
+		relationShips.get(0).put(20, 	Arrays.asList(132));
+		relationShips.get(0).put(132, 	Arrays.asList(21));
+		relationShips.get(0).put(21, 	Arrays.asList(135));
+		relationShips.get(0).put(135, 	Arrays.asList(22));
+		relationShips.get(0).put(22, 	Arrays.asList(156,144,155,152,149,146));
+		relationShips.get(0).put(156, 	Arrays.asList(25));
+		relationShips.get(0).put(144, 	Arrays.asList(30));
+		relationShips.get(0).put(30, 	Arrays.asList(142));
+		relationShips.get(0).put(142, 	Arrays.asList(31));
+		relationShips.get(0).put(155, 	Arrays.asList(23));
+		relationShips.get(0).put(23, 	Arrays.asList(154));
+		relationShips.get(0).put(154, 	Arrays.asList(24));
+		relationShips.get(0).put(152, 	Arrays.asList(26));
+		relationShips.get(0).put(26, 	Arrays.asList(150));
+		relationShips.get(0).put(150, 	Arrays.asList(27));
+		relationShips.get(0).put(149, 	Arrays.asList(28));
+		relationShips.get(0).put(28, 	Arrays.asList(148));
+		relationShips.get(0).put(148, 	Arrays.asList(29));
+		relationShips.get(0).put(146, 	Arrays.asList(32));
+		
 		
 		//#2 input
+		relationShips.get(1).put(40, 	Arrays.asList(141));
+		relationShips.get(1).put(141, 	Arrays.asList(39));
+		relationShips.get(1).put(39, 	Arrays.asList(139));
+		relationShips.get(1).put(139, 	Arrays.asList(38));
+		relationShips.get(1).put(38, 	Arrays.asList(137));
+		relationShips.get(1).put(137, 	Arrays.asList(37));
+		relationShips.get(1).put(37, 	Arrays.asList(165,166));
+		relationShips.get(1).put(166, 	Arrays.asList(36));
+		relationShips.get(1).put(165, 	Arrays.asList(35));
+		relationShips.get(1).put(35, 	Arrays.asList(163));
+		relationShips.get(1).put(163, 	Arrays.asList(34));
+		relationShips.get(1).put(34, 	Arrays.asList(161));
+		relationShips.get(1).put(161, 	Arrays.asList(33));
+		relationShips.get(1).put(33, 	Arrays.asList(158));
+		relationShips.get(1).put(158, 	Arrays.asList(25));
+		relationShips.get(1).put(25, 	Arrays.asList(156));
+		relationShips.get(1).put(156, 	Arrays.asList(22));		
+		relationShips.get(1).put(22, 	Arrays.asList(135,144,155,152,149,146));
+		relationShips.get(1).put(144, 	Arrays.asList(30));
+		relationShips.get(1).put(30, 	Arrays.asList(142));
+		relationShips.get(1).put(142, 	Arrays.asList(31));
+		relationShips.get(1).put(155, 	Arrays.asList(23));
+		relationShips.get(1).put(23, 	Arrays.asList(154));
+		relationShips.get(1).put(154, 	Arrays.asList(24));
+		relationShips.get(1).put(152, 	Arrays.asList(26));
+		relationShips.get(1).put(26, 	Arrays.asList(150));
+		relationShips.get(1).put(150, 	Arrays.asList(27));
+		relationShips.get(1).put(149, 	Arrays.asList(28));
+		relationShips.get(1).put(28, 	Arrays.asList(148));
+		relationShips.get(1).put(148, 	Arrays.asList(29));
+		relationShips.get(1).put(146, 	Arrays.asList(32));
+		relationShips.get(1).put(135, 	Arrays.asList(21));
+		relationShips.get(1).put(21, 	Arrays.asList(132));
+		relationShips.get(1).put(132, 	Arrays.asList(20));
+		relationShips.get(1).put(20, 	Arrays.asList(133));
+		relationShips.get(1).put(133, 	Arrays.asList(19));
+		relationShips.get(0).put(19, 	Arrays.asList(124,112,122,119,116,113));
+		relationShips.get(0).put(124, 	Arrays.asList(10));
+		relationShips.get(0).put(10, 	Arrays.asList(125));
+		relationShips.get(0).put(125, 	Arrays.asList(11));
+		relationShips.get(0).put(122, 	Arrays.asList(9));
+		relationShips.get(0).put(119, 	Arrays.asList(12));
+		relationShips.get(0).put(12, 	Arrays.asList(120));
+		relationShips.get(0).put(120, 	Arrays.asList(13));
+		relationShips.get(0).put(116, 	Arrays.asList(14));
+		relationShips.get(0).put(14, 	Arrays.asList(117));
+		relationShips.get(0).put(117, 	Arrays.asList(15));
+		relationShips.get(0).put(113, 	Arrays.asList(18));
+		relationShips.get(0).put(18, 	Arrays.asList(114));
+		relationShips.get(0).put(114, 	Arrays.asList(17));
+		relationShips.get(0).put(19, 	Arrays.asList(124,133,122,119,116,113));
+		relationShips.get(0).put(124, 	Arrays.asList(10));
+		relationShips.get(0).put(10, 	Arrays.asList(125));
+		relationShips.get(0).put(125, 	Arrays.asList(11));
+		relationShips.get(0).put(122, 	Arrays.asList(9));
+		relationShips.get(0).put(119, 	Arrays.asList(12));
+		relationShips.get(0).put(12, 	Arrays.asList(120));
+		relationShips.get(0).put(120, 	Arrays.asList(13));
+		relationShips.get(0).put(116, 	Arrays.asList(14));
+		relationShips.get(0).put(14, 	Arrays.asList(117));
+		relationShips.get(0).put(117, 	Arrays.asList(15));
+		relationShips.get(0).put(113, 	Arrays.asList(18));
+		relationShips.get(0).put(18, 	Arrays.asList(114));
+		relationShips.get(0).put(114, 	Arrays.asList(17));
+		relationShips.get(0).put(133, 	Arrays.asList(20));
+		relationShips.get(0).put(20, 	Arrays.asList(132));
+		relationShips.get(0).put(132, 	Arrays.asList(21));
+		relationShips.get(0).put(21, 	Arrays.asList(135));
+		relationShips.get(0).put(112, 	Arrays.asList(16));
+		
 	}
 	
 	private FreeformLayer layer;	
@@ -114,7 +224,7 @@ public class SimulatorFiguresCollections implements StateListener, ValidateSwitc
 				new	TwoPhaseTransformerFigure (0, 350, 278),
 				new LeftGroundFigure		(128, "1113E", 240, 288, 1),
 				new SwitchFigure			(127, "1113", 300, 310, 1),
-				new HighVoltageLineFigure(1, 
+				new HighVoltagePolyLineFigure(1, 
 						Arrays.asList(	new Point(322, 358),
 										new Point(322, 400)
 									 ), 1),
@@ -243,7 +353,7 @@ public class SimulatorFiguresCollections implements StateListener, ValidateSwitc
 									), 1),
 				new SwitchFigure			(133, "3101", 800, 680, 1),
 				new GroundFigure			(134, "3101E", 740, 680, 1),
-				new MainSwitchFigure		(132,  "310", 800, 590, 3), //Special one
+				new MainSwitchFigure		(132,  "310", 798, 590, 3), //Special one
 				new LowVoltageLineFigure(20, 
 						Arrays.asList(	new Point(822, 638),
 										new Point(822, 680),
@@ -387,8 +497,8 @@ public class SimulatorFiguresCollections implements StateListener, ValidateSwitc
 										new Point(1428, 980)
 									), 2),
 				new LowVoltageLineFigure(27, 
-						Arrays.asList(	new Point(1428, 938),
-										new Point(1428, 980)
+						Arrays.asList(	new Point(1278, 938),
+										new Point(1278, 980)
 									), 2),
 				new LowVoltageLineFigure(24, 
 						Arrays.asList(	new Point(1128, 938),
@@ -404,11 +514,8 @@ public class SimulatorFiguresCollections implements StateListener, ValidateSwitc
 										new Point(1082, 680)
 									), 2)
 				);
-	}
-	
-	public void activate() {
+		
 		for (Figure figure : figures) {
-			layer.add(figure);
 			int id = 0;
 			if (figure instanceof StateFigure) {
 				id = ((StateFigure)figure).getId();		
@@ -423,6 +530,15 @@ public class SimulatorFiguresCollections implements StateListener, ValidateSwitc
 				id2FigureMap.put(id, figure);				
 			}
 		}
+		((StateFigure)id2FigureMap.get(132)).setOn(false);
+	}
+	
+	public void activate() {
+		for (Figure figure : figures) {
+			layer.add(figure);			
+		}
+		
+		
 		/*commHelper.open("COM1");
 		((LineFigure)id2FigureMap.get(1)).setOn(true);
 		((LineFigure)id2FigureMap.get(2)).setOn(true);
@@ -459,7 +575,9 @@ public class SimulatorFiguresCollections implements StateListener, ValidateSwitc
 
 	public void deactivate() {
 		layer.removeAll();
-		commHelper.close();
+		if (commHelper != null) {
+			commHelper.close();
+		}
 	}
 	
 	@Override
@@ -517,9 +635,11 @@ public class SimulatorFiguresCollections implements StateListener, ValidateSwitc
 						if (id2FigureMap.containsKey(child)) {
 							Figure childFigure = id2FigureMap.get(child);
 							if (childFigure instanceof LineFigure) {
+								LineFigure childState = (LineFigure)childFigure;
+								if (childState.getPower() != (1<<relationshipIndex) && childState.getPower() > 0) return;
 								LineFigure childLine = (LineFigure)childFigure;
 								childLine.setPower(state);
-								chainReact(child, state);
+								iterateChildren(relationshipIndex, child, state);
 							}
 						}				
 					}
@@ -539,7 +659,7 @@ public class SimulatorFiguresCollections implements StateListener, ValidateSwitc
 									childState.setPower(state | childState.getPower());
 								} 
 								if (childState.isOn()) {
-									chainReact(child, childState.getPower());
+									iterateChildren(relationshipIndex, child, childState.getPower());
 								}
 							}
 						}				

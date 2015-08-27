@@ -53,7 +53,9 @@ public class CommHelper {
 	}
 	
 	public void close() {
-		serialPort.close();
+		if (serialPort != null) {
+			serialPort.close();
+		}		
 	}
 
 	public void writeBytes(byte[] bytes) {

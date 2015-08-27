@@ -11,7 +11,7 @@ import com.rail.electric.simulator.listeners.StateListener;
 import com.rail.electric.simulator.listeners.ValidateSwitchListener;
 
 public abstract class StateFigure extends BaseFigure {
-	protected boolean isOn = false;
+	protected boolean isOn = true;
 	private Image icon_off;
 	private Image icon_on;
 	private StateListener statelistener;
@@ -25,19 +25,20 @@ public abstract class StateFigure extends BaseFigure {
 		this.icon_off = icon_off;
 		this.icon_on = icon_on;
 		this.power = initialPower;
-		setIcon(power>0?icon_on:icon_off);
+		setIcon(isOn?icon_on:icon_off);
 		this.addMouseListener(new MouseListener.Stub() {
 			public void mousePressed(MouseEvent me) {
 				if (me.button == 1) {
 					String message = SimulatorMessages.TurnOn_message;
 					if (isOn) message = SimulatorMessages.TurnOff_message;
-					OperateConfirmationDialog dialog = new OperateConfirmationDialog(null, 
+					/*OperateConfirmationDialog dialog = new OperateConfirmationDialog(null, 
 							message + " " + getLabel(), true);
-					if (dialog.open() == Window.OK) {
+					if (dialog.open() == Window.OK) {*/
 						String result = validateOperation();
-						if (result == null)
+						if (result == null) {
 							switchState();
-					}
+						}	
+					//}
 				}
 				me.consume();
 			}
@@ -82,7 +83,7 @@ public abstract class StateFigure extends BaseFigure {
 	public void setOn(boolean isOn) {
 		this.isOn = isOn;
 		
-		setIcon(power>0?icon_on:icon_off);			
+		setIcon(isOn?icon_on:icon_off);			
 	}
 
 	public int getPower() {
