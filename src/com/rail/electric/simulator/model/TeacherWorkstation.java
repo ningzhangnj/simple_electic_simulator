@@ -2,61 +2,36 @@ package com.rail.electric.simulator.model;
 
 import com.rail.electric.simulator.SimulatorMessages;
 
-public class TeacherWorkstation {
-	private int port;
-	private WorkMode mode;
-	private int quizNo;
-	private String comPort;
-	
-	
-	
+public class TeacherWorkstation extends AbstractBaseModel {
+		
 	public int getPort() {
-		return port;
+		return Integer.parseInt(getProperty("port", "9876"));
 	}
-
-
 
 	public void setPort(int port) {
-		this.port = port;
+		setProperty("port", Integer.toString(port));
 	}
-
-
-
+	
 	public WorkMode getMode() {
-		return mode;
+		return WorkMode.valueOf(getProperty("mode", "STUDENT_TEACHER"));
 	}
-
-
-
+	
 	public void setMode(WorkMode mode) {
-		this.mode = mode;
+		setProperty("mode", mode.name());
 	}
-
-
-
-	public int getQuizNo() {
-		return quizNo;
-	}
-
-
-
-	public void setQuizNo(int quizNo) {
-		this.quizNo = quizNo;
-	}
-
-
-
+		
 	public String getComPort() {
-		return comPort;
+		return getProperty("comPort", "COM1");
 	}
-
-
 
 	public void setComPort(String comPort) {
-		this.comPort = comPort;
+		setProperty("comPort", comPort);
 	}
 
-
+	@Override
+	protected String getConfFileName() {
+		return "teacher";
+	}
 
 	public enum WorkMode {
 		STUDENT_TEACHER_SIMULATOR(0, SimulatorMessages.Mode_StudentTeacherSimulator_Item),
@@ -86,5 +61,5 @@ public class TeacherWorkstation {
 			return null;
 		}
 		
-	}
+	}	
 }

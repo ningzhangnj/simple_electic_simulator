@@ -2,3 +2,4 @@ target/
 bin/
 workspace/
 .settings/
+.log

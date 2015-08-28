@@ -15,6 +15,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
 import com.rail.electric.simulator.SimulatorMessages;
+import com.rail.electric.simulator.model.StudentWorkstation;
 
 public class StartStudentDialog extends TitleAreaDialog {
 
@@ -23,12 +24,12 @@ public class StartStudentDialog extends TitleAreaDialog {
 	
 	private Text txtUsername;
 	private Text txtPassword;	
-
-	private String ip;
-	private String port;	
+	
+	private StudentWorkstation model;
 
 	public StartStudentDialog(Shell parentShell) {
 		super(parentShell);
+		model = new StudentWorkstation();
 	}
 
 	@Override
@@ -87,8 +88,9 @@ public class StartStudentDialog extends TitleAreaDialog {
 	    dataIp.grabExcessHorizontalSpace = true;
 	    dataIp.horizontalAlignment = GridData.FILL;
 	
-	    txtIp = new Text(container, SWT.BORDER);
+	    txtIp = new Text(container, SWT.BORDER );
 	    txtIp.setLayoutData(dataIp);
+	    txtIp.setText(model.getIp());
 	}
 	  
 	private void createPort(Composite container) {
@@ -98,8 +100,10 @@ public class StartStudentDialog extends TitleAreaDialog {
 	    GridData dataPort = new GridData();
 	    dataPort.grabExcessHorizontalSpace = true;
 	    dataPort.horizontalAlignment = GridData.FILL;
-	    txtPort = new Text(container, SWT.BORDER);
+	    
+	    txtPort = new Text(container, SWT.BORDER );
 	    txtPort.setLayoutData(dataPort);
+	    txtPort.setText(Integer.toString(model.getPort()));
 	}
 		
 	
@@ -111,8 +115,9 @@ public class StartStudentDialog extends TitleAreaDialog {
 	// save content of the Text fields because they get disposed
 	// as soon as the Dialog closes
 	private void validateAndsaveInput() {
-	    ip = txtIp.getText();
-	    port = txtPort.getText();	
+	    model.setIp(txtIp.getText());
+	    model.setPort(Integer.parseInt(txtPort.getText()));	
+	    model.save();
 	}
 	
 	@Override
@@ -129,19 +134,12 @@ public class StartStudentDialog extends TitleAreaDialog {
 	}
 
 	public String getIp() {
-		return ip;
+		return model.getIp();
 	}
 
-	public void setIp(String ip) {
-		this.ip = ip;
-	}
 
-	public String getPort() {
-		return port;
-	}
-
-	public void setPort(String port) {
-		this.port = port;
+	public int getPort() {
+		return model.getPort();
 	}
 	
 	public static void main (String[] args) {

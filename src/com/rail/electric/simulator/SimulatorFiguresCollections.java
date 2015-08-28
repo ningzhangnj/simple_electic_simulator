@@ -1,8 +1,13 @@
 package com.rail.electric.simulator;
 
+import static com.rail.electric.simulator.SimulatorManager.BEGIN_BYTE;
+import static com.rail.electric.simulator.SimulatorManager.END_BYTE;
+
+import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -38,22 +43,18 @@ import com.rail.electric.simulator.figures.SwitchFigure;
 import com.rail.electric.simulator.figures.ThreePahseTransformerFigure;
 import com.rail.electric.simulator.figures.TwoPhaseTransformerFigure;
 import com.rail.electric.simulator.figures.UpGroundFigure;
-import com.rail.electric.simulator.helpers.CommHelper;
 import com.rail.electric.simulator.helpers.DataTypeConverter;
 import com.rail.electric.simulator.listeners.StateListener;
 import com.rail.electric.simulator.listeners.ValidateSwitchListener;
-import com.rail.electric.simulator.net.TeacherServer;
+import com.rail.electric.simulator.model.StateModel;
+import com.rail.electric.simulator.model.StateSequenceModel;
 
 public class SimulatorFiguresCollections implements StateListener, ValidateSwitchListener {
-	private final static Logger logger =  LoggerFactory.getLogger(TeacherServer.class);
+	private final static Logger logger =  LoggerFactory.getLogger(SimulatorFiguresCollections.class);
 	
-	public static int SWTITCH_NUMBERS = 67;
-	public static int LEDLINE_NUMBERS = 40;
-	
-	private static final byte BEGIN_BYTE = (byte)0xf5;
-	private static final byte END_BYTE = (byte)0xfa;
-	private static final byte CORRECT_PACKET_BYTE = (byte)0xf6;
-	private static final byte READ_SWITCH_BYTE = (byte)0xf4;
+	public static final int SWITCH_NUMBERS = 67;
+	public static final int LEDLINE_NUMBERS = 40;
+	public static final int SWITCH_OFFSET = 101;	
 	
 	private static final int ALL_POWER_ON = (1<<0)|(1<<1);
 	
@@ -190,21 +191,30 @@ public class SimulatorFiguresCollections implements StateListener, ValidateSwitc
 		
 	}
 	
-	private FreeformLayer layer;	
-	private byte[] switchStatus = new byte[SWTITCH_NUMBERS]; 
-	private CommHelper commHelper = new CommHelper();
+	private FreeformLayer layer;
+	private SimulatorManager manager;
+	private byte[] switchStatus = new byte[SWITCH_NUMBERS]; 
 	private boolean isRunning = true;
 	
 	private List<Figure> figures;
 	
 	private Map<Integer, Figure> id2FigureMap = new HashMap<Integer, Figure>();
 	
-	SimulatorFiguresCollections(FreeformLayer layer) {
+	private StateSequenceModel initState;
+	private StateSequenceModel operationSeq;
+	private int operationIndex;
+	private String quizName;
+	
+	SimulatorFiguresCollections(FreeformLayer layer, SimulatorManager manager) {
+		this.manager = manager;
 		this.layer = layer;
-		init();
 	}
 	
 	public void init() {
+		initState = null;
+		operationSeq = null;
+		quizName = null;
+		
 		this.figures = Arrays.asList(
 				//#1 High
 				new SwitchFigure			(131,  "1111", 300, 150, 1),
@@ -531,93 +541,26 @@ public class SimulatorFiguresCollections implements StateListener, ValidateSwitc
 			}
 		}
 		((StateFigure)id2FigureMap.get(132)).setOn(false);
+		
+		activate();
 	}
 	
 	public void activate() {
 		for (Figure figure : figures) {
 			layer.add(figure);			
 		}
-		
-		
-		/*commHelper.open("COM1");
-		((LineFigure)id2FigureMap.get(1)).setOn(true);
-		((LineFigure)id2FigureMap.get(2)).setOn(true);
-		((LineFigure)id2FigureMap.get(3)).setOn(true);
-		((LineFigure)id2FigureMap.get(4)).setOn(true);
-		((LineFigure)id2FigureMap.get(5)).setOn(true);
-		((LineFigure)id2FigureMap.get(6)).setOn(true);
-		((LineFigure)id2FigureMap.get(7)).setOn(true);
-		((LineFigure)id2FigureMap.get(8)).setOn(true);
-		switchStatus[1] = 1;
-		switchStatus[2] = 1;
-		switchStatus[4] = 1;
-		switchStatus[6] = 1;
-		switchStatus[26] = 1;
-		switchStatus[28] = 1;
-		switchStatus[30] = 1;
-		((StateFigure)id2FigureMap.get(127)).setHasPower(true);
-		((StateFigure)id2FigureMap.get(129)).setHasPower(true);
-		((StateFigure)id2FigureMap.get(131)).setHasPower(true);
-		((StateFigure)id2FigureMap.get(102)).setHasPower(true);
-		((StateFigure)id2FigureMap.get(103)).setHasPower(true);
-		((StateFigure)id2FigureMap.get(105)).setHasPower(true);
-		((StateFigure)id2FigureMap.get(107)).setHasPower(true);
-		((StateFigure)id2FigureMap.get(127)).setOn(true);
-		((StateFigure)id2FigureMap.get(129)).setOn(true);
-		((StateFigure)id2FigureMap.get(131)).setOn(true);
-		((StateFigure)id2FigureMap.get(102)).setOn(true);
-		((StateFigure)id2FigureMap.get(103)).setOn(true);
-		((StateFigure)id2FigureMap.get(105)).setOn(true);
-		((StateFigure)id2FigureMap.get(107)).setOn(true);
-		
-		readSwitchStatus();*/
 	}
 
 	public void deactivate() {
 		layer.removeAll();
-		if (commHelper != null) {
-			commHelper.close();
-		}
 	}
 	
 	@Override
-	public void onChange(int id, int state) {
+	public void onChange(int id, int state) {		
 		chainReact(id, state);	
 		
 		//sendLineStatus();		
-	}
-	
-	private void sendLineStatus() {
-		byte[] result = getLedLineBytes();
-		logger.debug("Line status: " + DataTypeConverter.bytesToHex(result));
-		for (int i=0; i<3; i++) {
-			commHelper.writeBytes(result);
-			byte[] response = commHelper.readBytes(1);
-			logger.debug("Response of line status: " + DataTypeConverter.bytesToHex(response));
-			if (response[0] == CORRECT_PACKET_BYTE) break;
-		}		
-	}
-	
-	private void readSwitchStatus() {
-		while (isRunning) {
-			byte[] result = commHelper.readBytes(1);
-			if (result[0] != BEGIN_BYTE ) {
-				commHelper.readBytes(1);
-			}
-			byte[] scanSwitchStatus = commHelper.readBytes(SWTITCH_NUMBERS);
-			logger.debug("Scanned swtich status is: {}", DataTypeConverter.bytesToHex(scanSwitchStatus));
-			int pos = getSwtichChangeId(scanSwitchStatus);
-			if (pos < 0) continue;
-			logger.debug("Swtich {}(id:{}) status changed to {}. ", ((StateFigure)id2FigureMap.get(pos+101)).getLabel(), 
-					pos+101, switchStatus[pos]);
-			byte[] endByte = commHelper.readBytes(1);
-			logger.debug("End byte of switch status is: {}", DataTypeConverter.bytesToHex(endByte));
-			commHelper.writeBytes(new byte[]{CORRECT_PACKET_BYTE});
-			
-			chainReact(pos+101, switchStatus[pos] == 1?((StateFigure)id2FigureMap.get(pos+101)).getPower():0);
-			sendLineStatus();
-		}
-	}
+	}	
 	
 	private void chainReact(int id, int state) {
 		iterateChildren( 0, id, state);
@@ -686,10 +629,12 @@ public class SimulatorFiguresCollections implements StateListener, ValidateSwitc
 	}
 	
 	public int getSwtichChangeId(byte[] input) {
-		if (input.length != SWTITCH_NUMBERS) return -1;
-		for (int i=0; i<SWTITCH_NUMBERS; i++) {
+		if (input.length != SWITCH_NUMBERS) return -1;
+		for (int i=0; i<SWITCH_NUMBERS; i++) {
 			if (input[i] != switchStatus[i]) {
 					switchStatus[i] = input[i];
+					logger.debug("Swtich {}(id:{}) status changed to {}. ", ((StateFigure)id2FigureMap.get(i+SWITCH_OFFSET)).getLabel(), 
+							i+SWITCH_OFFSET, switchStatus[i]);
 					return i;
 			}
 		}
@@ -698,7 +643,7 @@ public class SimulatorFiguresCollections implements StateListener, ValidateSwitc
 	}
 	
 	public static void main(String[] args) {
-		SimulatorFiguresCollections inst = new SimulatorFiguresCollections(null);
+		SimulatorFiguresCollections inst = new SimulatorFiguresCollections(null, null);
 		/*ByteBuffer bb = ByteBuffer.allocate(16);
 		bb.putLong(0, 0x0002L);
 		bb.putLong(8, 0x0100L);
@@ -717,18 +662,123 @@ public class SimulatorFiguresCollections implements StateListener, ValidateSwitc
 				}
 			}
 		}
+		if (!manager.validate(id, state)) return SimulatorMessages.ForbiddenOperation_message;
 		return null;
+	}
+	
+	public boolean validate(byte[] switchBytes) {
+		int id = switchBytes[0] + SWITCH_OFFSET;
+		boolean isOn = false;
+		if (switchBytes[1] == 1) isOn = true;
+		boolean isMatched = false;
+		List<StateModel> currentStates = operationSeq.getSeqs().get(operationIndex);
+		if (currentStates.size() > 0) {
+			for (StateModel state : currentStates) {
+				if (state.getId() == id && state.isOn() == isOn) {
+					currentStates.remove(state);
+					isMatched = true;
+					if (currentStates.isEmpty()) operationIndex ++;
+					break;
+				}
+			}
+		}
+		return isMatched;
 	}
 	
 	public void importConnections(File connectionsFile) {
 		Properties props = new Properties();
 		try {
 			props.load(new FileInputStream(connectionsFile));
-			String initState = props.getProperty("init");
-			String operationSeq = props.getProperty("operation");
+			initState = StateSequenceModel.parseStateString(props.getProperty("init"));
+			operationSeq = StateSequenceModel.parseStateString(props.getProperty("operation"));
+			operationIndex = 0;
+			updatInitState(getInitStateBytes());
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			logger.error("Failed to load connections ini file {},  caused by {}", connectionsFile.getName(), e.toString());
 		}
+	}
+	
+	private byte[] getQuizNameBytes() {
+		if (quizName == null) {
+			quizName = "Unknown";
+		}		
+		return quizName.getBytes();
+	}
+	
+	private byte[] getInitStateBytes() {
+		List<Byte> result = new ArrayList<Byte>();
+		for (List<StateModel> stateList : initState.getSeqs()) {
+			for (StateModel state : stateList) {
+				result.add((byte)(state.getId()-SWITCH_OFFSET));
+				result.add(state.isOn()?(byte)1:(byte)0);
+			}
+		}
+		byte[] bytes = new byte[result.size()];
+		for (int i=0; i<bytes.length; i++) {
+			bytes[i] = result.get(i);
+		}
+		return bytes;
+	}
+	
+	public void writeInitStateBytes(DataOutputStream output, byte head) {
+		byte[] nameBytes = getInitStateBytes();
+		try {
+			output.writeInt(nameBytes.length + 1);
+			output.writeByte(head);
+			output.write(nameBytes);
+			output.flush();
+		} catch (IOException e) {
+			logger.error("Failed to send out init states: {}. caused by {}",DataTypeConverter.bytesToHex(nameBytes),
+					e.toString());
+		}	
+	}
+	
+	public void writeQuizNameBytes(DataOutputStream output, byte head) {
+		byte[] nameBytes = getQuizNameBytes();
+		try {
+			output.writeInt(nameBytes.length + 1);
+			output.writeByte(head);
+			output.write(nameBytes);
+			output.flush();
+		} catch (IOException e) {
+			logger.error("Failed to send out quiz name: {}. caused by {}",DataTypeConverter.bytesToHex(nameBytes),
+					e.toString());
+		}		
+	}	
+	
+	public void updatInitState(byte[] initStateBytes) {
+		for (int i=0; i<initStateBytes.length;) {
+			int id = initStateBytes[i] + SWITCH_OFFSET;
+			i++;
+			boolean isOn = false;
+			if (initStateBytes[i] == 1) isOn = true;
+			if (id2FigureMap.containsKey(id)) {
+				Figure stateFigure = id2FigureMap.get(id);
+				if (stateFigure instanceof StateFigure) {
+					if (isOn != ((StateFigure)stateFigure).isOn()) {
+						((StateFigure)stateFigure).switchState();
+					}
+				}
+			}
+			i++;
+		}
+	}
+	
+	public void updateSwitchStatus(byte[] switchBytes) {
+		int id = switchBytes[0] + SWITCH_OFFSET;
+		boolean isOn = false;
+		if (switchBytes[1] == 1) isOn = true;
+		if (id2FigureMap.containsKey(id)) {
+			Figure stateFigure = id2FigureMap.get(id);
+			if (stateFigure instanceof StateFigure) {
+				if (isOn != ((StateFigure)stateFigure).isOn()) {
+					((StateFigure)stateFigure).switchState();
+				}
+			}
+		}
+	}
+	
+	public void updateChain(int pos) {
+		chainReact(pos+SWITCH_OFFSET, switchStatus[pos] == 1?((StateFigure)id2FigureMap.get(pos+SWITCH_OFFSET)).getPower():0);
 	}
 }

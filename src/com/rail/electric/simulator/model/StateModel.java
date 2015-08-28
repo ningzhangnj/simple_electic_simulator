@@ -2,12 +2,12 @@ package com.rail.electric.simulator.model;
 
 public class StateModel {
 	private int id;
-	private boolean state;	
+	private boolean on;	
 	
-	public StateModel(int id, boolean state) {
+	public StateModel(int id, boolean on) {
 		super();
 		this.id = id;
-		this.state = state;
+		this.on = on;
 	}
 	public int getId() {
 		return id;
@@ -15,11 +15,11 @@ public class StateModel {
 	public void setId(int id) {
 		this.id = id;
 	}
-	public boolean isState() {
-		return state;
+	public boolean isOn() {
+		return on;
 	}
-	public void setState(boolean state) {
-		this.state = state;
+	public void setOn(boolean on) {
+		this.on = on;
 	}
 	
 	

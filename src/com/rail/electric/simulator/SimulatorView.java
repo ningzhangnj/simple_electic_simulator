@@ -23,17 +23,27 @@ import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.Shell;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import com.rail.electric.simulator.SimulatorManager.WorkStatus;
 import com.rail.electric.simulator.dialogs.StartStudentDialog;
 import com.rail.electric.simulator.dialogs.StartTeacherDialog;
 
 public class SimulatorView {
-	private ScalableFreeformLayeredPane root;
-	private FreeformLayer primary;
-	private SimulatorFiguresCollections sim;
+	private final static Logger logger =  LoggerFactory.getLogger(SimulatorView.class);
 	
 	private static final int VIEW_WIDTH = 1800;	
 	private static final int VIEW_HEIGHT = 1000;
+	private ScalableFreeformLayeredPane root;
+	private FreeformLayer primary;
+	private SimulatorManager simManager;
+	
+	private MenuItem	startTeacherMenuItem;
+	private MenuItem	startStudentMenuItem;
+	private MenuItem	stopMenuItem;
+	private MenuItem	importMenuItem;
+	
 	
 	private FigureCanvas createDiagram(Composite parent) {
 		
@@ -62,19 +72,19 @@ public class SimulatorView {
 		FigureCanvas canvas = createDiagram(shell);
 		canvas.setLayoutData(new GridData(GridData.FILL_BOTH));
 		
-		sim = new SimulatorFiguresCollections(primary);
-		sim.init();
-		sim.activate();
-		
+		simManager = SimulatorManager.getInstance(primary,
+			WorkStatus.IDLE);
+				
 		createMenuBar(shell);
 				
+		updateMenuItems();
 		
 		Display display = shell.getDisplay();
 		shell.addDisposeListener(new DisposeListener() {
 
 			@Override
 			public void widgetDisposed(DisposeEvent arg0) {
-				sim.deactivate();
+				simManager.deactivate();
 			}
 			
 		});
@@ -124,9 +134,9 @@ public class SimulatorView {
 	}
 	
 	private void createImportConnectionsMenuItem(Menu menu, final Shell shell) {
-		MenuItem menuItem = new MenuItem(menu, SWT.NULL);
-		menuItem.setText(SimulatorMessages.ImportConnections_menu); //$NON-NLS-1$
-		menuItem.addSelectionListener(new SelectionListener() {
+		importMenuItem = new MenuItem(menu, SWT.NULL);
+		importMenuItem.setText(SimulatorMessages.ImportConnections_menu); //$NON-NLS-1$
+		importMenuItem.addSelectionListener(new SelectionListener() {
 			public void widgetSelected(SelectionEvent e) {
 				importConnections(shell);
 			}
@@ -137,35 +147,35 @@ public class SimulatorView {
 	}
 	
 	private void createStartTeacherMenuItem(Menu menu, final Shell shell) {
-		MenuItem menuItem = new MenuItem(menu, SWT.NULL);
-		menuItem.setText(SimulatorMessages.StartTeacher_menu); //$NON-NLS-1$
-		menuItem.addSelectionListener(new SelectionListener() {
+		startTeacherMenuItem = new MenuItem(menu, SWT.NULL);
+		startTeacherMenuItem.setText(SimulatorMessages.StartTeacher_menu); //$NON-NLS-1$
+		startTeacherMenuItem.addSelectionListener(new SelectionListener() {
 			public void widgetSelected(SelectionEvent e) {
 				startTeacher(shell);
 			}
 			public void widgetDefaultSelected(SelectionEvent e) {
 				widgetSelected(e);
 			}
-		});
+		});		
 	}
 	
 	private void createStopMenuItem(Menu menu, final Shell shell) {
-		MenuItem menuItem = new MenuItem(menu, SWT.NULL);
-		menuItem.setText(SimulatorMessages.Stop_menu); //$NON-NLS-1$
-		menuItem.addSelectionListener(new SelectionListener() {
+		stopMenuItem = new MenuItem(menu, SWT.NULL);
+		stopMenuItem.setText(SimulatorMessages.Stop_menu); //$NON-NLS-1$
+		stopMenuItem.addSelectionListener(new SelectionListener() {
 			public void widgetSelected(SelectionEvent e) {
-				//TODO
+				stop();
 			}
 			public void widgetDefaultSelected(SelectionEvent e) {
 				widgetSelected(e);
 			}
-		});
+		});		
 	}
 	
 	private void createStartStudentMenuItem(Menu menu, final Shell shell) {
-		MenuItem menuItem = new MenuItem(menu, SWT.NULL);
-		menuItem.setText(SimulatorMessages.StartStudent_menu); //$NON-NLS-1$
-		menuItem.addSelectionListener(new SelectionListener() {
+		startStudentMenuItem = new MenuItem(menu, SWT.NULL);
+		startStudentMenuItem.setText(SimulatorMessages.StartStudent_menu); //$NON-NLS-1$
+		startStudentMenuItem.addSelectionListener(new SelectionListener() {
 			public void widgetSelected(SelectionEvent e) {
 				startStudent(shell);
 			}
@@ -202,12 +212,49 @@ public class SimulatorView {
 		});
 	}
 	
+	private void updateMenuItems() {
+		if (simManager != null) {
+			switch (simManager.getStatus()) {
+				case IDLE:
+					startTeacherMenuItem.setEnabled(true);
+					startStudentMenuItem.setEnabled(true);
+					stopMenuItem.setEnabled(false);
+					importMenuItem.setEnabled(false);
+					break;
+				case RUNNING_TEACHER:
+					startTeacherMenuItem.setEnabled(false);
+					startStudentMenuItem.setEnabled(false);
+					stopMenuItem.setEnabled(true);
+					importMenuItem.setEnabled(true);;
+					break;
+				case RUNNING_STUDENT:
+					startTeacherMenuItem.setEnabled(false);
+					startStudentMenuItem.setEnabled(false);
+					stopMenuItem.setEnabled(true);
+					importMenuItem.setEnabled(false);
+					break;
+				default:
+					break;
+			}
+		}
+	}
+	
+	private void stop() {
+		simManager.setStatus(WorkStatus.IDLE);
+		simManager.stop();
+		updateMenuItems();
+		
+	}
+	
 	private void startTeacher(Shell shell) {
+		
 		StartTeacherDialog dialog = new StartTeacherDialog(shell);
 		
 		if (dialog.open() == Window.OK) {
-			
+			simManager.setStatus(WorkStatus.RUNNING_TEACHER);
+			simManager.startTeacher(dialog.getPort(), dialog.getMode(), dialog.getComPort());
 		}
+		updateMenuItems();
 	}
 	
 	private void importConnections(Shell shell) {
@@ -215,7 +262,7 @@ public class SimulatorView {
 		dialog.setFilterExtensions(new String[]{"*.ini"});
 		String path = dialog.open();
 		if (path != null) {
-			sim.importConnections(new File(path));
+			simManager.importConnections(new File(path));
 		}
 	}
 	
@@ -223,8 +270,10 @@ public class SimulatorView {
 		StartStudentDialog dialog = new StartStudentDialog(shell);
 		
 		if (dialog.open() == Window.OK) {
-			
+			simManager.setStatus(WorkStatus.RUNNING_STUDENT);
+			simManager.startStudent(dialog.getIp(), dialog.getPort());
 		}
+		updateMenuItems();		
 	}
 	
 	private void scaleToFit() {

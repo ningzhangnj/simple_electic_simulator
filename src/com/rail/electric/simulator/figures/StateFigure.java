@@ -5,6 +5,8 @@ import org.eclipse.draw2d.MouseListener;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.graphics.Image;
 
+import com.rail.electric.simulator.SimulatorManager;
+import com.rail.electric.simulator.SimulatorManager.WorkStatus;
 import com.rail.electric.simulator.SimulatorMessages;
 import com.rail.electric.simulator.dialogs.OperateConfirmationDialog;
 import com.rail.electric.simulator.listeners.StateListener;
@@ -26,23 +28,25 @@ public abstract class StateFigure extends BaseFigure {
 		this.icon_on = icon_on;
 		this.power = initialPower;
 		setIcon(isOn?icon_on:icon_off);
-		this.addMouseListener(new MouseListener.Stub() {
-			public void mousePressed(MouseEvent me) {
-				if (me.button == 1) {
-					String message = SimulatorMessages.TurnOn_message;
-					if (isOn) message = SimulatorMessages.TurnOff_message;
-					/*OperateConfirmationDialog dialog = new OperateConfirmationDialog(null, 
-							message + " " + getLabel(), true);
-					if (dialog.open() == Window.OK) {*/
-						String result = validateOperation();
-						if (result == null) {
-							switchState();
-						}	
-					//}
+		if (SimulatorManager.getInstance().getStatus() == WorkStatus.RUNNING_STUDENT) {
+			this.addMouseListener(new MouseListener.Stub() {
+				public void mousePressed(MouseEvent me) {
+					if (me.button == 1) {
+						String message = SimulatorMessages.TurnOn_message;
+						if (isOn) message = SimulatorMessages.TurnOff_message;
+						/*OperateConfirmationDialog dialog = new OperateConfirmationDialog(null, 
+								message + " " + getLabel(), true);
+						if (dialog.open() == Window.OK) {*/
+							String result = validateOperation();
+							if (result == null) {
+								switchState();
+							}	
+						//}
+					}
+					me.consume();
 				}
-				me.consume();
-			}
-		});
+			});
+		}
 	}
 	
 	private String validateOperation() {

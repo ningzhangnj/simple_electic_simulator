@@ -22,6 +22,7 @@ import org.eclipse.swt.widgets.Text;
 
 import com.rail.electric.simulator.SimulatorMessages;
 import com.rail.electric.simulator.helpers.CommHelper;
+import com.rail.electric.simulator.model.TeacherWorkstation;
 import com.rail.electric.simulator.model.TeacherWorkstation.WorkMode;
 
 public class StartTeacherDialog extends TitleAreaDialog {
@@ -31,14 +32,13 @@ public class StartTeacherDialog extends TitleAreaDialog {
 	private Combo combComPort;
 	
 	private Text txtUsername;
-	private Text txtPassword;
-	
-	private String port;
-	private WorkMode mode;
-	private String comPort;
+	private Text txtPassword;	
+		
+	private TeacherWorkstation model;
 	
 	public StartTeacherDialog(Shell parentShell) {
 		super(parentShell);
+		model = new TeacherWorkstation();
 	}
 
 	@Override
@@ -101,6 +101,11 @@ public class StartTeacherDialog extends TitleAreaDialog {
 	
 	    combComPort = new Combo (container, SWT.READ_ONLY);
 	    combComPort.setItems(portNames.toArray(new String[0]));
+	    if (portNames.contains(model.getComPort())) {
+	    	combComPort.setText(model.getComPort());
+	    } else {
+	    	combComPort.select(0);
+	    }
 	}
 	
 	private void createMode(Composite container) {
@@ -113,6 +118,7 @@ public class StartTeacherDialog extends TitleAreaDialog {
 	    	modeItems.add(mode.getLabel());
 	    }
 	    combMode.setItems(modeItems.toArray(new String[0]));
+	    combMode.select(model.getMode().getIndex());
 	}
 	
 	  
@@ -125,6 +131,7 @@ public class StartTeacherDialog extends TitleAreaDialog {
 	    dataPort.horizontalAlignment = GridData.FILL;
 	    txtPort = new Text(container, SWT.BORDER);
 	    txtPort.setLayoutData(dataPort);
+	    txtPort.setText(Integer.toString(model.getPort()));
 	}
 		
 	
@@ -136,9 +143,10 @@ public class StartTeacherDialog extends TitleAreaDialog {
 	// save content of the Text fields because they get disposed
 	// as soon as the Dialog closes
 	private void validateAndsaveInput() {
-	    port = txtPort.getText();
-	    comPort = combComPort.getText();
-	    mode = WorkMode.getWorkMode(combMode.getSelectionIndex());
+	    model.setPort(Integer.parseInt(txtPort.getText()));
+	    model.setComPort(combComPort.getText());
+	    model.setMode(WorkMode.getWorkMode(combMode.getSelectionIndex()));
+	    model.save();
 	}
 	
 	@Override
@@ -154,28 +162,16 @@ public class StartTeacherDialog extends TitleAreaDialog {
 	    		SimulatorMessages.Cancel_label, false);
 	}
 
-	public String getPort() {
-		return port;
-	}
-
-	public void setPort(String port) {
-		this.port = port;
+	public int getPort() {
+		return model.getPort();
 	}
 
 	public WorkMode getMode() {
-		return mode;
-	}
-
-	public void setMode(WorkMode mode) {
-		this.mode = mode;
+		return model.getMode();
 	}
 
 	public String getComPort() {
-		return comPort;
-	}
-
-	public void setComPort(String comPort) {
-		this.comPort = comPort;
+		return model.getComPort();
 	}
 	
 	public static void main (String[] args) {

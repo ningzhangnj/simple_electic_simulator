@@ -10,6 +10,10 @@ public class StateSequenceModel {
 		seqs.add(stateModels);
 	}
 	
+	public List<List<StateModel>> getSeqs() {
+		return seqs;
+	}
+
 	public static StateSequenceModel parseStateString(String input) {
 		StateSequenceModel stateSequenceModel = new StateSequenceModel();
 		String[] seqStates = input.split(";");
