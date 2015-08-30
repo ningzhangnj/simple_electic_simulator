@@ -72,7 +72,7 @@ public class SimulatorView {
 		FigureCanvas canvas = createDiagram(shell);
 		canvas.setLayoutData(new GridData(GridData.FILL_BOTH));
 		
-		simManager = SimulatorManager.getInstance(primary,
+		simManager = SimulatorManager.getInstance(this, primary,
 			WorkStatus.IDLE);
 				
 		createMenuBar(shell);
@@ -212,7 +212,7 @@ public class SimulatorView {
 		});
 	}
 	
-	private void updateMenuItems() {
+	public void updateMenuItems() {
 		if (simManager != null) {
 			switch (simManager.getStatus()) {
 				case IDLE:
@@ -239,9 +239,8 @@ public class SimulatorView {
 		}
 	}
 	
-	private void stop() {
-		simManager.setStatus(WorkStatus.IDLE);
-		simManager.stop();
+	private void stop() {		
+		simManager.deactivate();
 		updateMenuItems();
 		
 	}

@@ -12,6 +12,7 @@ public class FlipComplexCircuitFigure extends StateFigure {
 	public static final int HEIGHT = 64;
 	
 	public FlipComplexCircuitFigure(int id, String label, int x, int y, int initPower) {
-		super(id, label, LARGE_COMPLEX_CIRCUIT_OFF, LARGE_COMPLEX_CIRCUIT_ON, x, y, WIDTH, HEIGHT, initPower);		
+		super(id, label, LARGE_COMPLEX_CIRCUIT_OFF, LARGE_COMPLEX_CIRCUIT_ON, x, y, WIDTH, HEIGHT, initPower);
+		this.setOn(false);
 	}
 }

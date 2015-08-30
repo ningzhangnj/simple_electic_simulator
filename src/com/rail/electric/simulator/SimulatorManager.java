@@ -26,9 +26,11 @@ public class SimulatorManager {
 	public static final byte QUIZ_INITSTATE_HEAD_BYTE = (byte)0xf2;
 	public static final byte QUIZ_CORRECT_HEAD_BYTE = (byte)0xf7;
 	public static final byte QUIZ_WRONG_HEAD_BYTE = (byte)0xf8;
+	public static final byte QUIZ_PASS_HEAD_BYTE = (byte)0xf3;
 	public static final byte SWITCH_STATUS_HEAD_BYTE = (byte)0xf9;
 	
 	private SimulatorFiguresCollections simModel;
+	private SimulatorView simView;
 	private WorkStatus status;
 	private FreeformLayer primaryLayer;	
 	
@@ -37,10 +39,10 @@ public class SimulatorManager {
 	
 	private static  SimulatorManager instance;
 	
-	public static SimulatorManager getInstance(FreeformLayer layer,
+	public static SimulatorManager getInstance(SimulatorView view, FreeformLayer layer,
 			WorkStatus status) {
 		if (instance == null) {
-			instance = new SimulatorManager(layer, status);
+			instance = new SimulatorManager(view, layer, status);
 		}
 		return instance;
 	}
@@ -49,16 +51,19 @@ public class SimulatorManager {
 		return instance;
 	}
 	
-	private SimulatorManager(FreeformLayer layer,
+	private SimulatorManager(SimulatorView view, FreeformLayer layer,
 			WorkStatus status) {
+		this.simView = view;
 		this.primaryLayer = layer;
 		this.status = status;
 		simModel = new SimulatorFiguresCollections(primaryLayer, this);
 	}
 
-	public void deactivate() {
+	public void deactivate() {		
 		stop();
-		simModel.deactivate();
+		setStatus(WorkStatus.IDLE);
+		simModel.deactivate();		
+		simView.updateMenuItems();		
 	}
 
 	public void importConnections(File file) {
@@ -68,24 +73,23 @@ public class SimulatorManager {
 	public void startTeacher(int port, WorkMode mode, String commPort) {
 		simModel.init();
 		simModel.activate();
-		if (teacherWorker == null) {
-			teacherWorker = new TeacherWorker(port, mode, commPort, this);
-		}
+		
+		teacherWorker = new TeacherWorker(port, mode, commPort, this);
+
 		teacherWorker.start();
 	}
 	
 	public void stopTeacher() {
-		simModel.init();
-		simModel.activate();
 		if (teacherWorker != null) {
 			teacherWorker.stop();
 		}
 	}
 	
 	public void startStudent(String ip, int port) {
-		if (studentWorker == null) {
-			studentWorker = new StudentWorker(ip, port, this);
-		}
+		simModel.init();
+		simModel.activate();
+		studentWorker = new StudentWorker(ip, port, this);
+		
 		studentWorker.start();
 	}
 	
@@ -98,6 +102,7 @@ public class SimulatorManager {
 	public void stop() {
 		if (status == WorkStatus.RUNNING_STUDENT) stopStudent();
 		else if (status == WorkStatus.RUNNING_TEACHER) stopTeacher();
+		
 	}
 	
 	public void updateSwitchStatus(byte[] switchStatusBytes) {
@@ -113,10 +118,10 @@ public class SimulatorManager {
 	}
 	
 	public void writeQuizNameBytes(DataOutputStream output) {
-		simModel.writeInitStateBytes(output, QUIZ_SUBJECT_HEAD_BYTE);
+		simModel.writeQuizNameBytes(output, QUIZ_SUBJECT_HEAD_BYTE);
 	}
 	
-	public boolean validate(int id, boolean state) {
+	public int validate(int id, boolean state) {
 		if (status == WorkStatus.RUNNING_STUDENT) {
 			ByteBuffer bb = ByteBuffer.allocate(7);
 			bb.putInt(3);
@@ -125,14 +130,16 @@ public class SimulatorManager {
 			bb.put(6, state?(byte)1:(byte)0);
 			return studentWorker.sendMessageAndWaitBooleanResult(bb.array());
 		}
-		else if (status == WorkStatus.RUNNING_TEACHER) return true;
-		return true;
+		else if (status == WorkStatus.RUNNING_TEACHER) return 1;
+		return 1;
 	}
 	
-	public void validateAndUpdateSwitchStatus(byte[] switchStatusBytes) {
-		if (simModel.validate(switchStatusBytes)) {
+	public int validateAndUpdateSwitchStatus(byte[] switchStatusBytes) {
+		int result = simModel.validate(switchStatusBytes);
+		if (result >= 0) {
 			simModel.updateSwitchStatus(switchStatusBytes);
 		}
+		return result;
 	}
 	
 	public byte[] getLedLineBytes() {
@@ -145,6 +152,16 @@ public class SimulatorManager {
 	
 	public void updateChain(int pos) {
 		simModel.updateChain(pos);
+	}
+	
+	public boolean checkSwitchStatus(byte[] input) {
+		return simModel.checkSwitchStatus(input);
+	}
+	
+	public void sendLineStatus() {
+		if (teacherWorker != null && teacherWorker.getMode() == WorkMode.STUDENT_TEACHER_SIMULATOR) {
+			teacherWorker.sendLineStatus();
+		}
 	}
 	
 	public WorkStatus getStatus() {

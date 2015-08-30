@@ -6,8 +6,6 @@ import java.io.IOException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.rail.electric.simulator.worker.StudentWorker;
-
 public class DataTypeConverter {
 	private final static Logger logger =  LoggerFactory.getLogger(DataTypeConverter.class);
 	
@@ -26,8 +24,14 @@ public class DataTypeConverter {
     public static byte[] readBytes(DataInputStream input) {
 		try {
 			int length = input.readInt();
+			int byteLeft = length;
+	        int offset = 0;
 			byte[] bb = new byte[length];
-			input.read(bb);
+			while (byteLeft > 0) {
+                int len = input.read(bb, offset, byteLeft);
+                offset += len;
+                byteLeft -= len;
+            }
 			return bb;
 		} catch (IOException e) {
 			logger.error("Failed to read bytes. caused by {}", e.toString());

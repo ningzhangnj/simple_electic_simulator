@@ -2,6 +2,7 @@ package com.rail.electric.simulator.worker;
 
 import static com.rail.electric.simulator.SimulatorManager.QUIZ_CORRECT_HEAD_BYTE;
 import static com.rail.electric.simulator.SimulatorManager.QUIZ_INITSTATE_HEAD_BYTE;
+import static com.rail.electric.simulator.SimulatorManager.QUIZ_PASS_HEAD_BYTE;
 import static com.rail.electric.simulator.SimulatorManager.QUIZ_SUBJECT_HEAD_BYTE;
 import static com.rail.electric.simulator.SimulatorManager.QUIZ_WRONG_HEAD_BYTE;
 
@@ -15,6 +16,8 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.LinkedBlockingQueue;
 
+import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.swt.widgets.Display;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -30,7 +33,7 @@ public class StudentWorker {
 	private boolean isRunning = false;
 	@SuppressWarnings("rawtypes")
 	private Future clientFuture; 
-	private BlockingQueue<Boolean> resultQueue = new LinkedBlockingQueue<Boolean>();
+	private BlockingQueue<Integer> resultQueue = new LinkedBlockingQueue<Integer>();
 
 	private Socket serverSocket;
 	
@@ -75,17 +78,32 @@ public class StudentWorker {
 			byte[] receivedBytes = DataTypeConverter.readBytes(dataIn);
 			switch(receivedBytes[0]) {
 				case QUIZ_SUBJECT_HEAD_BYTE:
-					logger.info("Start quiz: {}", new String(ByteBuffer.wrap(receivedBytes, 1, receivedBytes.length-1).array()));
+					ByteBuffer bb = ByteBuffer.allocate(receivedBytes.length-1);
+					bb.put(receivedBytes, 1, receivedBytes.length-1);
+					logger.info("Start quiz: {}", new String(bb.array()));
 					break;
 				case QUIZ_INITSTATE_HEAD_BYTE:
-					ByteBuffer bb = ByteBuffer.wrap(receivedBytes, 1, receivedBytes.length-1);
-					manager.updateInitState(bb.array());
+					final ByteBuffer bb1 = ByteBuffer.allocate(receivedBytes.length-1);
+					bb1.put(receivedBytes, 1, receivedBytes.length-1);
+					logger.info("Received switch init state bytes: {}", DataTypeConverter.bytesToHex(receivedBytes));
+					Display.getDefault().syncExec(new Runnable() {
+
+						@Override
+						public void run() {
+							manager.updateInitState(bb1.array());
+						}
+						
+					});
+					
 					break;	
 				case QUIZ_CORRECT_HEAD_BYTE:
-					resultQueue.offer(true);
+					resultQueue.offer(0);
 					break;
 				case QUIZ_WRONG_HEAD_BYTE:
-					resultQueue.offer(false);
+					resultQueue.offer(-1);
+					break;
+				case QUIZ_PASS_HEAD_BYTE:
+					resultQueue.offer(1);
 					break;
 				default:
 					break;
@@ -93,38 +111,58 @@ public class StudentWorker {
 		}
 	}
 	
-	public boolean sendMessageAndWaitBooleanResult(byte[] message) {
+	public int sendMessageAndWaitBooleanResult(byte[] message) {
 		if (serverSocket != null) {
 			try {
+				logger.debug("sendMessageAndWaitBooleanResult: {}", DataTypeConverter.bytesToHex(message));
 				serverSocket.getOutputStream().write(message);
 				serverSocket.getOutputStream().flush();
 			} catch (IOException e) {
 				logger.error("Failed to write socket on student workstation. Caused by {}", e.toString());
 			}
 			try {
-				return this.resultQueue.take();
+				int result = this.resultQueue.take();
+				if (result < 0) {
+					Display.getDefault().syncExec(new Runnable() {
+
+						@Override
+						public void run() {
+							MessageDialog.openError(Display.getCurrent().getActiveShell(), "Wrong operation", "Wrong operation, please retry.");							
+						}						
+						
+					});
+				} else if (result >= 1) {
+					Display.getDefault().syncExec(new Runnable() {
+
+						@Override
+						public void run() {
+							MessageDialog.openInformation(Display.getCurrent().getActiveShell(), "Quiz passed", "Congratulations! You have passed the quiz.");							
+						}						
+						
+					});
+					manager.deactivate();
+				}
+				return result;
 			} catch (InterruptedException e) {
 				logger.error("Failed to take result from queue. Caused by {}", e.toString());
 			}
 		}
-		return false;
+		return -1;
 	}
 	
 	public void stop() {
 		setRunning(false);
-		if (clientFuture != null) {
-			try {
-				clientFuture.wait();
-			} catch (InterruptedException e1) {
-				logger.error("Failed to wait future to end. Caused by {}", e1.toString());
-			}
-		}
 		if (serverSocket != null && serverSocket.isConnected()) {
 			try {
 				serverSocket.close();
 			} catch (IOException e) {
 				logger.error("Failed to close socket on student workstation. Caused by {}", e.toString());
 			}
+		}		
+		
+		if (clientFuture != null) {
+			clientFuture.cancel(true);			
 		}
+		
 	}
 }

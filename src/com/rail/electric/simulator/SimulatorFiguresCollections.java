@@ -77,7 +77,7 @@ public class SimulatorFiguresCollections implements StateListener, ValidateSwitc
 		relationShips.get(0).put(6, 	Arrays.asList(105));
 		relationShips.get(0).put(105, 	Arrays.asList(7));
 		relationShips.get(0).put(7, 	Arrays.asList(107));
-		relationShips.get(0).put(107, 	Arrays.asList(8));
+		relationShips.get(0).put(107, 	Arrays.asList(8,51));
 		relationShips.get(0).put(8, 	Arrays.asList(110));
 		relationShips.get(0).put(110, 	Arrays.asList(16));
 		relationShips.get(0).put(16, 	Arrays.asList(112));
@@ -131,7 +131,7 @@ public class SimulatorFiguresCollections implements StateListener, ValidateSwitc
 		relationShips.get(1).put(35, 	Arrays.asList(163));
 		relationShips.get(1).put(163, 	Arrays.asList(34));
 		relationShips.get(1).put(34, 	Arrays.asList(161));
-		relationShips.get(1).put(161, 	Arrays.asList(33));
+		relationShips.get(1).put(161, 	Arrays.asList(33,52));
 		relationShips.get(1).put(33, 	Arrays.asList(158));
 		relationShips.get(1).put(158, 	Arrays.asList(25));
 		relationShips.get(1).put(25, 	Arrays.asList(156));
@@ -155,46 +155,27 @@ public class SimulatorFiguresCollections implements StateListener, ValidateSwitc
 		relationShips.get(1).put(132, 	Arrays.asList(20));
 		relationShips.get(1).put(20, 	Arrays.asList(133));
 		relationShips.get(1).put(133, 	Arrays.asList(19));
-		relationShips.get(0).put(19, 	Arrays.asList(124,112,122,119,116,113));
-		relationShips.get(0).put(124, 	Arrays.asList(10));
-		relationShips.get(0).put(10, 	Arrays.asList(125));
-		relationShips.get(0).put(125, 	Arrays.asList(11));
-		relationShips.get(0).put(122, 	Arrays.asList(9));
-		relationShips.get(0).put(119, 	Arrays.asList(12));
-		relationShips.get(0).put(12, 	Arrays.asList(120));
-		relationShips.get(0).put(120, 	Arrays.asList(13));
-		relationShips.get(0).put(116, 	Arrays.asList(14));
-		relationShips.get(0).put(14, 	Arrays.asList(117));
-		relationShips.get(0).put(117, 	Arrays.asList(15));
-		relationShips.get(0).put(113, 	Arrays.asList(18));
-		relationShips.get(0).put(18, 	Arrays.asList(114));
-		relationShips.get(0).put(114, 	Arrays.asList(17));
-		relationShips.get(0).put(19, 	Arrays.asList(124,133,122,119,116,113));
-		relationShips.get(0).put(124, 	Arrays.asList(10));
-		relationShips.get(0).put(10, 	Arrays.asList(125));
-		relationShips.get(0).put(125, 	Arrays.asList(11));
-		relationShips.get(0).put(122, 	Arrays.asList(9));
-		relationShips.get(0).put(119, 	Arrays.asList(12));
-		relationShips.get(0).put(12, 	Arrays.asList(120));
-		relationShips.get(0).put(120, 	Arrays.asList(13));
-		relationShips.get(0).put(116, 	Arrays.asList(14));
-		relationShips.get(0).put(14, 	Arrays.asList(117));
-		relationShips.get(0).put(117, 	Arrays.asList(15));
-		relationShips.get(0).put(113, 	Arrays.asList(18));
-		relationShips.get(0).put(18, 	Arrays.asList(114));
-		relationShips.get(0).put(114, 	Arrays.asList(17));
-		relationShips.get(0).put(133, 	Arrays.asList(20));
-		relationShips.get(0).put(20, 	Arrays.asList(132));
-		relationShips.get(0).put(132, 	Arrays.asList(21));
-		relationShips.get(0).put(21, 	Arrays.asList(135));
-		relationShips.get(0).put(112, 	Arrays.asList(16));
+		relationShips.get(1).put(19, 	Arrays.asList(124,112,122,119,116,113));
+		relationShips.get(1).put(124, 	Arrays.asList(10));
+		relationShips.get(1).put(10, 	Arrays.asList(125));
+		relationShips.get(1).put(125, 	Arrays.asList(11));
+		relationShips.get(1).put(122, 	Arrays.asList(9));
+		relationShips.get(1).put(119, 	Arrays.asList(12));
+		relationShips.get(1).put(12, 	Arrays.asList(120));
+		relationShips.get(1).put(120, 	Arrays.asList(13));
+		relationShips.get(1).put(116, 	Arrays.asList(14));
+		relationShips.get(1).put(14, 	Arrays.asList(117));
+		relationShips.get(1).put(117, 	Arrays.asList(15));
+		relationShips.get(1).put(113, 	Arrays.asList(18));
+		relationShips.get(1).put(18, 	Arrays.asList(114));
+		relationShips.get(1).put(114, 	Arrays.asList(17));
+		relationShips.get(1).put(112, 	Arrays.asList(16));
 		
 	}
 	
 	private FreeformLayer layer;
 	private SimulatorManager manager;
 	private byte[] switchStatus = new byte[SWITCH_NUMBERS]; 
-	private boolean isRunning = true;
 	
 	private List<Figure> figures;
 	
@@ -281,6 +262,10 @@ public class SimulatorFiguresCollections implements StateListener, ValidateSwitc
 				new ComplexCircuitFigure	(109, "1010", 680, 467, 1),
 				
 				//#1 Low
+				new LowVoltageLineFigure(51, 
+						Arrays.asList(	new Point(622, 512),
+										new Point(622, 590)
+									 ), 1),
 				new GroundTransformerFigure(0, 290, 486),
 				new LowVoltageLineFigure(11, 
 						Arrays.asList(	new Point(322, 550),
@@ -293,10 +278,6 @@ public class SimulatorFiguresCollections implements StateListener, ValidateSwitc
 									 ), 1),
 				new UpGroundFigure			(126, "3311E",  360, 580, 1),
 				new SwitchFigure			(124, "3311", 300, 680, 1),
-				new LowVoltageLineFigure(0, 
-						Arrays.asList(	new Point(622, 512),
-										new Point(622, 590)
-									), 1),
 				new MainSwitchFigure		(110,  "301", 598, 590, 1),
 				new LowVoltageLineFigure(16, 
 						Arrays.asList(	new Point(622, 638),
@@ -342,10 +323,10 @@ public class SimulatorFiguresCollections implements StateListener, ValidateSwitc
 									), 1),									
 				new FlipGroundWithResistFigure (0, 140, 870),
 				new SmallThreePhaseTransformerFigure(0, 200, 890),
-				new SwitchFigure			(123, "3001E", 260, 890, 1),
-				new SwitchFigure			(121, "3131E", 410, 890, 1),
-				new SwitchFigure			(118, "3121E", 560, 890, 1),
-				new SwitchFigure			(115, "3111E", 710, 890, 1),
+				new GroundFigure			(123, "3001E", 260, 890, 1),
+				new GroundFigure			(121, "3131E", 410, 890, 1),
+				new GroundFigure			(118, "3121E", 560, 890, 1),
+				new GroundFigure			(115, "3111E", 710, 890, 1),
 				new MainSwitchFigure		(120,  "313", 350, 890, 1),
 				new MainSwitchFigure		(117,  "312", 500, 890, 1),
 				new MainSwitchFigure		(114,  "311", 650, 890, 1),
@@ -434,6 +415,10 @@ public class SimulatorFiguresCollections implements StateListener, ValidateSwitc
 									 ), 2),
 				new FlipComplexCircuitFigure	(159, "1020", 1056, 467, 2),
 				//#2 Low
+				new LowVoltageLineFigure(52, 
+						Arrays.asList(	new Point(1178, 512),
+										new Point(1178, 590)
+									 ), 2),
 				new GroundTransformerFigure(0, 1446, 486),
 				new LowVoltageLineFigure(31, 
 						Arrays.asList(	new Point(1478, 550),
@@ -446,11 +431,7 @@ public class SimulatorFiguresCollections implements StateListener, ValidateSwitc
 									 ), 2),
 				new UpGroundFigure			(143, "3411E",  1400, 580, 2),
 				new SwitchFigure			(144, "3411", 1454, 680, 2),
-				new LowVoltageLineFigure(0, 
-						Arrays.asList(	new Point(1178, 512),
-										new Point(1178, 590)
-									), 2),
-				new MainSwitchFigure		(158,  "301", 1160, 590, 2),
+				new MainSwitchFigure		(158,  "302", 1156, 590, 2),
 				new LowVoltageLineFigure(25, 
 						Arrays.asList(	new Point(1178, 638),
 										new Point(1178, 680)
@@ -495,10 +476,10 @@ public class SimulatorFiguresCollections implements StateListener, ValidateSwitc
 									), 2),									
 				new GroundWithResistFigure (0, 1630, 870),
 				new SmallThreePhaseTransformerFigure(0, 1556, 890),
-				new SwitchFigure			(145, "3002E", 1496, 890, 2),
-				new SwitchFigure			(147, "3231E", 1346, 890, 2),
-				new SwitchFigure			(151, "3221E", 1196, 890, 2),
-				new SwitchFigure			(153, "3211E", 1046, 890, 2),
+				new GroundFigure			(145, "3002E", 1496, 890, 2),
+				new GroundFigure			(147, "3231E", 1346, 890, 2),
+				new GroundFigure			(151, "3221E", 1196, 890, 2),
+				new GroundFigure			(153, "3211E", 1046, 890, 2),
 				new MainSwitchFigure		(148,  "323", 1406, 890, 2),
 				new MainSwitchFigure		(150,  "322", 1256, 890, 2),
 				new MainSwitchFigure		(154,  "321", 1106, 890, 2),
@@ -547,7 +528,17 @@ public class SimulatorFiguresCollections implements StateListener, ValidateSwitc
 	
 	public void activate() {
 		for (Figure figure : figures) {
-			layer.add(figure);			
+			layer.add(figure);	
+			
+			if (figure instanceof StateFigure) {
+				StateFigure stateFigure = ((StateFigure)figure);
+				int id = stateFigure.getId();
+				if (stateFigure.isOn()) {
+					switchStatus[id - SWITCH_OFFSET] = 1;
+				} else {
+					switchStatus[id - SWITCH_OFFSET] = 0;
+				}
+			}
 		}
 	}
 
@@ -559,7 +550,6 @@ public class SimulatorFiguresCollections implements StateListener, ValidateSwitc
 	public void onChange(int id, int state) {		
 		chainReact(id, state);	
 		
-		//sendLineStatus();		
 	}	
 	
 	private void chainReact(int id, int state) {
@@ -620,7 +610,7 @@ public class SimulatorFiguresCollections implements StateListener, ValidateSwitc
 		for (Entry<Integer, Figure> entryId2Figure : id2FigureMap.entrySet()) {
 			if (entryId2Figure.getValue() instanceof LineFigure && ((LineFigure)entryId2Figure.getValue()).getPower()>0) {
 				int index = entryId2Figure.getKey().intValue();
-				if (index < LEDLINE_NUMBERS && index > 0) {
+				if (index <= LEDLINE_NUMBERS && index > 0) {
 					result[index] = 1;
 				}				
 			}
@@ -643,13 +633,14 @@ public class SimulatorFiguresCollections implements StateListener, ValidateSwitc
 	}
 	
 	public static void main(String[] args) {
-		SimulatorFiguresCollections inst = new SimulatorFiguresCollections(null, null);
+		//SimulatorFiguresCollections inst = new SimulatorFiguresCollections(null, null);
 		/*ByteBuffer bb = ByteBuffer.allocate(16);
 		bb.putLong(0, 0x0002L);
 		bb.putLong(8, 0x0100L);
 		System.out.println("bytes: " + DataTypeConverter.bytesToHex(bb.array()));
 		int a = inst.getBitPostion(bb.array());
 		System.out.println("Pos: " + a);*/
+		
 	}
 
 	@Override
@@ -662,11 +653,12 @@ public class SimulatorFiguresCollections implements StateListener, ValidateSwitc
 				}
 			}
 		}
-		if (!manager.validate(id, state)) return SimulatorMessages.ForbiddenOperation_message;
+		if (manager.validate(id, state) < 0) return SimulatorMessages.ForbiddenOperation_message;
 		return null;
 	}
 	
-	public boolean validate(byte[] switchBytes) {
+	// Fail:-1, Correct:0, Finish: 1
+	public int validate(byte[] switchBytes) {
 		int id = switchBytes[0] + SWITCH_OFFSET;
 		boolean isOn = false;
 		if (switchBytes[1] == 1) isOn = true;
@@ -674,7 +666,7 @@ public class SimulatorFiguresCollections implements StateListener, ValidateSwitc
 		List<StateModel> currentStates = operationSeq.getSeqs().get(operationIndex);
 		if (currentStates.size() > 0) {
 			for (StateModel state : currentStates) {
-				if (state.getId() == id && state.isOn() == isOn) {
+				if (state.getId() == id && state.isOn() != isOn) {
 					currentStates.remove(state);
 					isMatched = true;
 					if (currentStates.isEmpty()) operationIndex ++;
@@ -682,7 +674,11 @@ public class SimulatorFiguresCollections implements StateListener, ValidateSwitc
 				}
 			}
 		}
-		return isMatched;
+		if (!isMatched) return -1;
+		else if (operationIndex >= operationSeq.getSeqs().size()) {
+			return 1;
+		}
+		return 0;
 	}
 	
 	public void importConnections(File connectionsFile) {
@@ -693,6 +689,7 @@ public class SimulatorFiguresCollections implements StateListener, ValidateSwitc
 			operationSeq = StateSequenceModel.parseStateString(props.getProperty("operation"));
 			operationIndex = 0;
 			updatInitState(getInitStateBytes());
+			manager.sendLineStatus();
 		} catch (IOException e) {
 			logger.error("Failed to load connections ini file {},  caused by {}", connectionsFile.getName(), e.toString());
 		}
@@ -721,14 +718,15 @@ public class SimulatorFiguresCollections implements StateListener, ValidateSwitc
 	}
 	
 	public void writeInitStateBytes(DataOutputStream output, byte head) {
-		byte[] nameBytes = getInitStateBytes();
+		byte[] initBytes = getInitStateBytes();
 		try {
-			output.writeInt(nameBytes.length + 1);
+			output.writeInt(initBytes.length + 1);
 			output.writeByte(head);
-			output.write(nameBytes);
+			output.write(initBytes);
+			logger.debug("Send out init state bytes: {}", DataTypeConverter.bytesToHex(initBytes));
 			output.flush();
 		} catch (IOException e) {
-			logger.error("Failed to send out init states: {}. caused by {}",DataTypeConverter.bytesToHex(nameBytes),
+			logger.error("Failed to send out init states: {}. caused by {}", DataTypeConverter.bytesToHex(initBytes),
 					e.toString());
 		}	
 	}
@@ -739,9 +737,10 @@ public class SimulatorFiguresCollections implements StateListener, ValidateSwitc
 			output.writeInt(nameBytes.length + 1);
 			output.writeByte(head);
 			output.write(nameBytes);
+			logger.debug("Send out quiz name bytes: {}", DataTypeConverter.bytesToHex(nameBytes));
 			output.flush();
 		} catch (IOException e) {
-			logger.error("Failed to send out quiz name: {}. caused by {}",DataTypeConverter.bytesToHex(nameBytes),
+			logger.error("Failed to send out quiz name: {}. caused by {}", DataTypeConverter.bytesToHex(nameBytes),
 					e.toString());
 		}		
 	}	
@@ -761,7 +760,8 @@ public class SimulatorFiguresCollections implements StateListener, ValidateSwitc
 				}
 			}
 			i++;
-		}
+		}		
+		
 	}
 	
 	public void updateSwitchStatus(byte[] switchBytes) {
@@ -771,7 +771,7 @@ public class SimulatorFiguresCollections implements StateListener, ValidateSwitc
 		if (id2FigureMap.containsKey(id)) {
 			Figure stateFigure = id2FigureMap.get(id);
 			if (stateFigure instanceof StateFigure) {
-				if (isOn != ((StateFigure)stateFigure).isOn()) {
+				if (isOn == ((StateFigure)stateFigure).isOn()) {
 					((StateFigure)stateFigure).switchState();
 				}
 			}
@@ -779,6 +779,28 @@ public class SimulatorFiguresCollections implements StateListener, ValidateSwitc
 	}
 	
 	public void updateChain(int pos) {
-		chainReact(pos+SWITCH_OFFSET, switchStatus[pos] == 1?((StateFigure)id2FigureMap.get(pos+SWITCH_OFFSET)).getPower():0);
+		if (id2FigureMap.containsKey(pos+SWITCH_OFFSET)) {
+			Figure stateFigure = id2FigureMap.get(pos+SWITCH_OFFSET);
+			if (stateFigure instanceof StateFigure) {
+				boolean isOn = switchStatus[pos] == 1?true:false;
+				if (isOn != ((StateFigure)stateFigure).isOn()) {
+					((StateFigure)stateFigure).switchState();
+				}
+			}			
+		}		
+	}
+	
+	public boolean checkSwitchStatus(byte[] input) {
+		if (input.length != switchStatus.length) {
+			return false;
+		}
+		
+		for (int i=0; i<input.length; i++) {
+			if(input[i] != switchStatus[i]) {
+				logger.info("Switch {} status does not match. Scanned: {}, Expected: {}.", i + SWITCH_OFFSET, input[i], switchStatus[i]);
+				return false;
+			}
+		}
+		return true;
 	}
 }

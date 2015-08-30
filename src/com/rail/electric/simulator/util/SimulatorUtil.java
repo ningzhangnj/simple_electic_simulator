@@ -9,4 +9,13 @@ public class SimulatorUtil {
 			e.printStackTrace();
 		}
 	}
+	
+	public static void sleepMilliSeconds(int milliSeconds) {
+		try {
+			Thread.sleep(milliSeconds);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
 }

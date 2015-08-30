@@ -13,5 +13,6 @@ public class ComplexCircuitFigure extends StateFigure {
 	
 	public ComplexCircuitFigure(int id, String label, int x, int y, int initPower) {
 		super(id, label, LARGE_COMPLEX_CIRCUIT_OFF, LARGE_COMPLEX_CIRCUIT_ON, x, y, WIDTH, HEIGHT, initPower);		
+		this.setOn(false);
 	}
 }

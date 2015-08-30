@@ -1,28 +1,33 @@
 package com.rail.electric.simulator.worker;
 
+import static com.rail.electric.simulator.SimulatorFiguresCollections.SWITCH_NUMBERS;
 import static com.rail.electric.simulator.SimulatorManager.BEGIN_BYTE;
 import static com.rail.electric.simulator.SimulatorManager.CORRECT_PACKET_BYTE;
+import static com.rail.electric.simulator.SimulatorManager.QUIZ_CORRECT_HEAD_BYTE;
+import static com.rail.electric.simulator.SimulatorManager.QUIZ_PASS_HEAD_BYTE;
+import static com.rail.electric.simulator.SimulatorManager.QUIZ_WRONG_HEAD_BYTE;
+import static com.rail.electric.simulator.SimulatorManager.READ_SWITCH_BYTE;
 import static com.rail.electric.simulator.SimulatorManager.SWITCH_STATUS_HEAD_BYTE;
-import static com.rail.electric.simulator.SimulatorFiguresCollections.*;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.nio.ByteBuffer;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
+import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.swt.widgets.Display;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.rail.electric.simulator.SimulatorManager;
-import com.rail.electric.simulator.figures.StateFigure;
 import com.rail.electric.simulator.helpers.CommHelper;
 import com.rail.electric.simulator.helpers.DataTypeConverter;
 import com.rail.electric.simulator.model.TeacherWorkstation.WorkMode;
+import com.rail.electric.simulator.util.SimulatorUtil;
 
 public class TeacherWorker {
 private final static Logger logger =  LoggerFactory.getLogger(TeacherWorker.class);
@@ -33,6 +38,8 @@ private final static Logger logger =  LoggerFactory.getLogger(TeacherWorker.clas
 	private SimulatorManager manager;
 	private boolean isRunning = false;
 	private CommHelper commHelper = new CommHelper();
+	
+	private boolean hasInitSwitchStatus =  false;
 
 	private Socket clientSocket;
 	private ServerSocket serverSocket;
@@ -59,46 +66,71 @@ private final static Logger logger =  LoggerFactory.getLogger(TeacherWorker.clas
 	public void start() {
 		setRunning(true);
 		if (mode != WorkMode.STUDENT_TEACHER) {
-			commHelper.open(commPort);
+			commHelper.open(commPort);			
 			commFuture = Executors.newCachedThreadPool().submit(new Runnable() {
 
 				@Override
 				public void run() {
+					if (mode == WorkMode.TEACHER_SIMULATOR) {
+						sendSwitchInitStatusRequest();
+					}
 					commMessageHandlingLoop();
 				}
 				
 			});
 		}
-		serverFuture = Executors.newCachedThreadPool().submit(new Runnable() {
-
-			@Override
-			public void run() {
-				try {
-					serverSocket = new ServerSocket(port);
-					
-					clientSocket = serverSocket.accept();
-					DataOutputStream dataOut = new DataOutputStream(clientSocket.getOutputStream());
-					manager.writeQuizNameBytes(dataOut);
-					manager.writeInitStateBytes(dataOut);
-					serverMessageHandlingLoop(clientSocket.getInputStream());
-					
-				} catch (IOException e) {
-					logger.error("Failed to create socket on teacher workstation. Caused by {}", e.toString());
-				}				
-			}
-			
-		});
+		if (mode != WorkMode.TEACHER_SIMULATOR) {
+			serverFuture = Executors.newCachedThreadPool().submit(new Runnable() {
+	
+				@Override
+				public void run() {
+					try {
+						serverSocket = new ServerSocket(port);
+						serverSocket.setReuseAddress(true);
+						
+						clientSocket = serverSocket.accept();
+						DataOutputStream dataOut = new DataOutputStream(clientSocket.getOutputStream());
+						DataInputStream dataIn = new DataInputStream(clientSocket.getInputStream());
+						//manager.writeQuizNameBytes(dataOut);
+						manager.writeInitStateBytes(dataOut);
+						serverMessageHandlingLoop(dataIn, dataOut);
+						
+					} catch (IOException e) {
+						logger.error("Failed to create socket on teacher workstation. Caused by {}", e.toString());
+					}				
+				}
+				
+			});
+		}
 		
 	}	
 	
-	private void serverMessageHandlingLoop(InputStream input) {
-		DataInputStream dataIn = new DataInputStream(input);
+	private void serverMessageHandlingLoop(DataInputStream dataIn, final DataOutputStream dataOut) {
 		while (isRunning()) {
 			byte[] receivedBytes = DataTypeConverter.readBytes(dataIn);
 			switch(receivedBytes[0]) {
 				case SWITCH_STATUS_HEAD_BYTE:
-					ByteBuffer bb = ByteBuffer.wrap(receivedBytes, 1, receivedBytes.length-1);
-					manager.validateAndUpdateSwitchStatus(bb.array());
+					final ByteBuffer bb = ByteBuffer.allocate(receivedBytes.length-1);
+					bb.put(receivedBytes, 1, receivedBytes.length-1);
+					logger.debug("Received switch status: {}", DataTypeConverter.bytesToHex(bb.array()));
+					
+					
+					Display.getDefault().asyncExec(new Runnable() {
+
+						@Override
+						public void run() {
+							int result = manager.validateAndUpdateSwitchStatus(bb.array());
+							respondSwitchValidation(result, dataOut);
+							sendLineStatus();
+							if (result > 0) {
+								MessageDialog.openInformation(Display.getCurrent().getActiveShell(), "Quiz passed", 
+										"The student have passed the quiz.");
+								manager.deactivate();
+							}
+						}
+						
+					});
+					
 					break;				
 				default:
 					break;
@@ -106,9 +138,61 @@ private final static Logger logger =  LoggerFactory.getLogger(TeacherWorker.clas
 	    }
 	}
 	
+	private void respondSwitchValidation(int flag, DataOutputStream dataOut) {
+		ByteBuffer bb = ByteBuffer.allocate(5);
+		bb.putInt(1);
+		if (flag == 0 ) {			
+			bb.put(4, QUIZ_CORRECT_HEAD_BYTE);			
+		} else if (flag == -1){			
+			bb.put(4, QUIZ_WRONG_HEAD_BYTE);
+		} else {
+			bb.put(4, QUIZ_PASS_HEAD_BYTE);
+		}
+		
+		try {
+			dataOut.write(bb.array());
+			dataOut.flush();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
 	private void commMessageHandlingLoop() {
 		while (isRunning()) {
-			readSwitchStatus();
+			if (mode == WorkMode.STUDENT_TEACHER_SIMULATOR) {
+				while (commHelper.isDataAvailable()) {
+					readSwitchInitStatus();
+					SimulatorUtil.sleepMilliSeconds(100);
+				}
+				
+			} else {				
+				if (hasInitSwitchStatus) {
+					if(commHelper.isDataAvailable()) {
+						readSwitchStatus();
+					}
+				} else {
+					if (readSwitchInitStatus()) {
+						sendLineStatus();
+						hasInitSwitchStatus = true;
+					} else {
+						Display.getDefault().syncExec(new Runnable() {
+							
+							@Override
+							public void run() {
+								MessageDialog.openError(Display.getCurrent().getActiveShell(), "Error switch init status", "Error switch init status, please make sure status is correct.");
+							}
+							
+						});
+						
+						while (commHelper.isDataAvailable()) {
+							readSwitchInitStatus();
+							SimulatorUtil.sleepMilliSeconds(100);
+						}
+						sendSwitchInitStatusRequest();
+					}
+				}
+			}
 		}
 	}
 	
@@ -123,6 +207,26 @@ private final static Logger logger =  LoggerFactory.getLogger(TeacherWorker.clas
 		}		
 	}
 	
+	public void sendSwitchInitStatusRequest() {
+		byte[] request = new byte[] {READ_SWITCH_BYTE};
+		commHelper.writeBytes(request);
+		logger.debug("Request switch init status : {}", DataTypeConverter.bytesToHex(request));
+	}
+	
+	private boolean readSwitchInitStatus() {
+		byte[] result = commHelper.readBytes(1);
+		if (result[0] != BEGIN_BYTE ) {
+			commHelper.readBytes(1);
+		}
+		byte[] scanSwitchStatus = commHelper.readBytes(SWITCH_NUMBERS);
+		logger.debug("Read swtich init status is: {}", DataTypeConverter.bytesToHex(scanSwitchStatus));
+		boolean flag = manager.checkSwitchStatus(scanSwitchStatus);
+		
+		byte[] endByte = commHelper.readBytes(1);
+		logger.debug("End byte of switch status is: {}", DataTypeConverter.bytesToHex(endByte));
+		return flag;
+	}
+	
 	private void readSwitchStatus() {
 		
 		byte[] result = commHelper.readBytes(1);
@@ -131,7 +235,7 @@ private final static Logger logger =  LoggerFactory.getLogger(TeacherWorker.clas
 		}
 		byte[] scanSwitchStatus = commHelper.readBytes(SWITCH_NUMBERS);
 		logger.debug("Scanned swtich status is: {}", DataTypeConverter.bytesToHex(scanSwitchStatus));
-		int pos = manager.getSwtichChangeId(scanSwitchStatus);
+		final int pos = manager.getSwtichChangeId(scanSwitchStatus);
 		if (pos < 0) return;
 		
 		byte[] endByte = commHelper.readBytes(1);
@@ -139,28 +243,23 @@ private final static Logger logger =  LoggerFactory.getLogger(TeacherWorker.clas
 		commHelper.writeBytes(new byte[]{CORRECT_PACKET_BYTE});
 		
 		if (mode == WorkMode.TEACHER_SIMULATOR) {
-			manager.updateChain(pos);
-		}
-		
-		sendLineStatus();		
+			Display.getDefault().syncExec(new Runnable() {
+
+				@Override
+				public void run() {
+					manager.updateChain(pos);
+					sendLineStatus();
+				}
+				
+			});			
+		}				
 	}
 	
 	public void stop() {
-		if (commFuture != null) {
-			try {
-				commFuture.wait();
-			} catch (InterruptedException e1) {
-				logger.error("Failed to wait comm future to end. Caused by {}", e1.toString());
-			}
-		}
+		setRunning(false);
 		
-		if (serverFuture != null) {
-			try {
-				serverFuture.wait();
-			} catch (InterruptedException e1) {
-				logger.error("Failed to wait server future to end. Caused by {}", e1.toString());
-			}
-		}
+		SimulatorUtil.sleepSeconds(1);
+		
 		if (clientSocket != null && clientSocket.isConnected()) {
 			try {
 				clientSocket.close();
@@ -175,6 +274,20 @@ private final static Logger logger =  LoggerFactory.getLogger(TeacherWorker.clas
 				logger.error("Failed to close server socket on teacher workstation. Caused by {}", e.toString());
 			}
 		}
+		if (commFuture != null) {
+			commFuture.cancel(true);
+		}
+		
+		if (serverFuture != null) {
+			serverFuture.cancel(true);
+		}
+		
 		if (commHelper != null) commHelper.close();
 	}
+
+	public WorkMode getMode() {
+		return mode;
+	}
+	
+	
 }

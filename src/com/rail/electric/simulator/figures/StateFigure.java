@@ -34,14 +34,14 @@ public abstract class StateFigure extends BaseFigure {
 					if (me.button == 1) {
 						String message = SimulatorMessages.TurnOn_message;
 						if (isOn) message = SimulatorMessages.TurnOff_message;
-						/*OperateConfirmationDialog dialog = new OperateConfirmationDialog(null, 
+						OperateConfirmationDialog dialog = new OperateConfirmationDialog(null, 
 								message + " " + getLabel(), true);
-						if (dialog.open() == Window.OK) {*/
+						if (dialog.open() == Window.OK) {
 							String result = validateOperation();
 							if (result == null) {
 								switchState();
 							}	
-						//}
+						}
 					}
 					me.consume();
 				}

@@ -88,4 +88,14 @@ public class CommHelper {
         return  null;
 		
 	}
+	
+	public boolean isDataAvailable() {
+		try {
+			return serialPort.getInputStream().available() > 0;
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return false;
+	}
 }
