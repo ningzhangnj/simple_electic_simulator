@@ -9,4 +9,10 @@ public class SimulatorLabel extends Label {
 		setSize(60, 12);
 		setLocation(new Point(x, y-100));
 	}
+	
+	public SimulatorLabel(String text, int x, int y, int width, int height) {
+		super(text);
+		setSize(width, height);
+		setLocation(new Point(x, y-100));
+	}
 }

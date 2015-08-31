@@ -7,6 +7,7 @@ import java.util.List;
 
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.IMessageProvider;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
@@ -142,17 +143,23 @@ public class StartTeacherDialog extends TitleAreaDialog {
 	
 	// save content of the Text fields because they get disposed
 	// as soon as the Dialog closes
-	private void validateAndsaveInput() {
-	    model.setPort(Integer.parseInt(txtPort.getText()));
-	    model.setComPort(combComPort.getText());
-	    model.setMode(WorkMode.getWorkMode(combMode.getSelectionIndex()));
-	    model.save();
+	private boolean validateAndsaveInput() {
+		if ("admin".equals(txtPassword.getText())) {
+		    model.setPort(Integer.parseInt(txtPort.getText()));
+		    model.setComPort(combComPort.getText());
+		    model.setMode(WorkMode.getWorkMode(combMode.getSelectionIndex()));
+		    model.save();
+		    return true;
+		} else return false;
 	}
 	
 	@Override
 	protected void okPressed() {
-		validateAndsaveInput();
-	    super.okPressed();
+		if (validateAndsaveInput()) super.okPressed();
+		else {
+			MessageDialog.openError(getParentShell(), SimulatorMessages.ErrorPassword_title, SimulatorMessages.ErrorPassword_message);
+			super.cancelPressed();
+		}
 	}	
 	  
 	@Override

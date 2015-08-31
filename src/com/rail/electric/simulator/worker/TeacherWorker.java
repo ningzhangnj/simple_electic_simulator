@@ -12,6 +12,7 @@ import static com.rail.electric.simulator.SimulatorManager.SWITCH_STATUS_HEAD_BY
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.net.InetSocketAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.nio.ByteBuffer;
@@ -24,6 +25,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.rail.electric.simulator.SimulatorManager;
+import com.rail.electric.simulator.SimulatorMessages;
+import com.rail.electric.simulator.dialogs.OperationInfoDialog;
 import com.rail.electric.simulator.helpers.CommHelper;
 import com.rail.electric.simulator.helpers.DataTypeConverter;
 import com.rail.electric.simulator.model.TeacherWorkstation.WorkMode;
@@ -56,28 +59,33 @@ private final static Logger logger =  LoggerFactory.getLogger(TeacherWorker.clas
 		this.manager = manager;
 	}
 	
-	public boolean isRunning() {
+	public synchronized boolean isRunning() {
 		return isRunning;
 	}
 	
-	public void setRunning(boolean isRunning) {
+	private synchronized void setRunning(boolean isRunning) {
 		this.isRunning = isRunning;
-	}
+	}	
+
 	public void start() {
 		setRunning(true);
 		if (mode != WorkMode.STUDENT_TEACHER) {
-			commHelper.open(commPort);			
-			commFuture = Executors.newCachedThreadPool().submit(new Runnable() {
-
-				@Override
-				public void run() {
-					if (mode == WorkMode.TEACHER_SIMULATOR) {
-						sendSwitchInitStatusRequest();
+			if (commHelper.open(commPort)) {
+				commFuture = Executors.newCachedThreadPool().submit(new Runnable() {
+	
+					@Override
+					public void run() {
+						if (mode == WorkMode.TEACHER_SIMULATOR) {
+							sendSwitchInitStatusRequest();
+						}
+						commMessageHandlingLoop();
 					}
-					commMessageHandlingLoop();
-				}
-				
-			});
+					
+				});
+			} else {
+				MessageDialog.openError(Display.getCurrent().getActiveShell(), SimulatorMessages.ErrorDialog_title, 
+						SimulatorMessages.OpenCommError_message + commPort);
+			}
 		}
 		if (mode != WorkMode.TEACHER_SIMULATOR) {
 			serverFuture = Executors.newCachedThreadPool().submit(new Runnable() {
@@ -85,13 +93,14 @@ private final static Logger logger =  LoggerFactory.getLogger(TeacherWorker.clas
 				@Override
 				public void run() {
 					try {
-						serverSocket = new ServerSocket(port);
+						serverSocket = new ServerSocket();
 						serverSocket.setReuseAddress(true);
+						serverSocket.bind(new InetSocketAddress(port));
 						
 						clientSocket = serverSocket.accept();
 						DataOutputStream dataOut = new DataOutputStream(clientSocket.getOutputStream());
 						DataInputStream dataIn = new DataInputStream(clientSocket.getInputStream());
-						//manager.writeQuizNameBytes(dataOut);
+						manager.writeQuizNameBytes(dataOut);
 						manager.writeInitStateBytes(dataOut);
 						serverMessageHandlingLoop(dataIn, dataOut);
 						
@@ -123,8 +132,11 @@ private final static Logger logger =  LoggerFactory.getLogger(TeacherWorker.clas
 							respondSwitchValidation(result, dataOut);
 							sendLineStatus();
 							if (result > 0) {
-								MessageDialog.openInformation(Display.getCurrent().getActiveShell(), "Quiz passed", 
-										"The student have passed the quiz.");
+								OperationInfoDialog dialog = new OperationInfoDialog(Display.getCurrent().getActiveShell(), 
+										SimulatorMessages.OperationFinished_Title, 
+										SimulatorMessages.QuizPassedTeacher_message,
+										manager.getOperationList());
+								dialog.open();
 								manager.deactivate();
 							}
 						}
@@ -152,9 +164,10 @@ private final static Logger logger =  LoggerFactory.getLogger(TeacherWorker.clas
 		try {
 			dataOut.write(bb.array());
 			dataOut.flush();
+			logger.debug("Respond switch validation result {}", DataTypeConverter.bytesToHex(bb.array()));
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			logger.error("Failed to respond switch validation result {}, caused by {}", DataTypeConverter.bytesToHex(bb.array()), 
+					e.toString());
 		}
 	}
 	
@@ -172,24 +185,26 @@ private final static Logger logger =  LoggerFactory.getLogger(TeacherWorker.clas
 						readSwitchStatus();
 					}
 				} else {
-					if (readSwitchInitStatus()) {
+					final String status = readSwitchInitStatus();
+					if (status == null) {
 						sendLineStatus();
 						hasInitSwitchStatus = true;
 					} else {
-						Display.getDefault().syncExec(new Runnable() {
+						Display.getDefault().asyncExec(new Runnable() {
 							
 							@Override
 							public void run() {
-								MessageDialog.openError(Display.getCurrent().getActiveShell(), "Error switch init status", "Error switch init status, please make sure status is correct.");
+								MessageDialog.openError(Display.getCurrent().getActiveShell(), 
+										SimulatorMessages.ErrorDialog_title, 
+										SimulatorMessages.ErrorSwitchStatus_message + status);
+								while (commHelper.isDataAvailable()) {
+									readSwitchInitStatus();
+									SimulatorUtil.sleepMilliSeconds(100);
+								}
+								sendSwitchInitStatusRequest();
 							}
 							
-						});
-						
-						while (commHelper.isDataAvailable()) {
-							readSwitchInitStatus();
-							SimulatorUtil.sleepMilliSeconds(100);
-						}
-						sendSwitchInitStatusRequest();
+						});							
 					}
 				}
 			}
@@ -197,6 +212,7 @@ private final static Logger logger =  LoggerFactory.getLogger(TeacherWorker.clas
 	}
 	
 	public void sendLineStatus() {
+		if (!commHelper.isCommPortConnected()) return;
 		byte[] result = manager.getLedLineBytes();
 		logger.debug("Line status: " + DataTypeConverter.bytesToHex(result));
 		for (int i=0; i<3; i++) {
@@ -207,20 +223,20 @@ private final static Logger logger =  LoggerFactory.getLogger(TeacherWorker.clas
 		}		
 	}
 	
-	public void sendSwitchInitStatusRequest() {
+	private void sendSwitchInitStatusRequest() {
 		byte[] request = new byte[] {READ_SWITCH_BYTE};
 		commHelper.writeBytes(request);
 		logger.debug("Request switch init status : {}", DataTypeConverter.bytesToHex(request));
 	}
 	
-	private boolean readSwitchInitStatus() {
+	private String readSwitchInitStatus() {
 		byte[] result = commHelper.readBytes(1);
 		if (result[0] != BEGIN_BYTE ) {
 			commHelper.readBytes(1);
 		}
 		byte[] scanSwitchStatus = commHelper.readBytes(SWITCH_NUMBERS);
 		logger.debug("Read swtich init status is: {}", DataTypeConverter.bytesToHex(scanSwitchStatus));
-		boolean flag = manager.checkSwitchStatus(scanSwitchStatus);
+		String flag = manager.checkSwitchStatus(scanSwitchStatus);
 		
 		byte[] endByte = commHelper.readBytes(1);
 		logger.debug("End byte of switch status is: {}", DataTypeConverter.bytesToHex(endByte));
@@ -282,7 +298,7 @@ private final static Logger logger =  LoggerFactory.getLogger(TeacherWorker.clas
 			serverFuture.cancel(true);
 		}
 		
-		if (commHelper != null) commHelper.close();
+		if (commHelper != null ) commHelper.close();
 	}
 
 	public WorkMode getMode() {

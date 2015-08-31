@@ -5,6 +5,7 @@ import static com.rail.electric.simulator.SimulatorFiguresCollections.SWITCH_OFF
 import java.io.DataOutputStream;
 import java.io.File;
 import java.nio.ByteBuffer;
+import java.util.List;
 
 import org.eclipse.draw2d.FreeformLayer;
 import org.slf4j.Logger;
@@ -104,11 +105,7 @@ public class SimulatorManager {
 		else if (status == WorkStatus.RUNNING_TEACHER) stopTeacher();
 		
 	}
-	
-	public void updateSwitchStatus(byte[] switchStatusBytes) {
-		simModel.updateSwitchStatus(switchStatusBytes);
-	}
-	
+		
 	public void updateInitState(byte[] initStateBytes) {
 		simModel.updatInitState(initStateBytes);
 	}
@@ -154,8 +151,12 @@ public class SimulatorManager {
 		simModel.updateChain(pos);
 	}
 	
-	public boolean checkSwitchStatus(byte[] input) {
+	public String checkSwitchStatus(byte[] input) {
 		return simModel.checkSwitchStatus(input);
+	}
+	
+	public List<String> getOperationList() {
+		return simModel.getOperationList();
 	}
 	
 	public void sendLineStatus() {

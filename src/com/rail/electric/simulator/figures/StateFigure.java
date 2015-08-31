@@ -4,6 +4,7 @@ import org.eclipse.draw2d.MouseEvent;
 import org.eclipse.draw2d.MouseListener;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.widgets.Display;
 
 import com.rail.electric.simulator.SimulatorManager;
 import com.rail.electric.simulator.SimulatorManager.WorkStatus;
@@ -34,7 +35,7 @@ public abstract class StateFigure extends BaseFigure {
 					if (me.button == 1) {
 						String message = SimulatorMessages.TurnOn_message;
 						if (isOn) message = SimulatorMessages.TurnOff_message;
-						OperateConfirmationDialog dialog = new OperateConfirmationDialog(null, 
+						OperateConfirmationDialog dialog = new OperateConfirmationDialog(Display.getCurrent().getActiveShell(), 
 								message + " " + getLabel(), true);
 						if (dialog.open() == Window.OK) {
 							String result = validateOperation();

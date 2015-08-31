@@ -95,8 +95,7 @@ public class OperateConfirmationDialog extends TitleAreaDialog {
 		if (!isPwdCorrect) {
 			MessageDialog.openError(getParentShell(), SimulatorMessages.ErrorPassword_title, SimulatorMessages.ErrorPassword_message);
 			super.cancelPressed();
-		}
-	    super.okPressed();
+		} else   super.okPressed();
 	}	
 	  
 	@Override

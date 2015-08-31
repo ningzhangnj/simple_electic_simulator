@@ -7,6 +7,7 @@ import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -77,7 +78,7 @@ public class SimulatorFiguresCollections implements StateListener, ValidateSwitc
 		relationShips.get(0).put(6, 	Arrays.asList(105));
 		relationShips.get(0).put(105, 	Arrays.asList(7));
 		relationShips.get(0).put(7, 	Arrays.asList(107));
-		relationShips.get(0).put(107, 	Arrays.asList(8,51));
+		relationShips.get(0).put(107, 	Arrays.asList(8,51,53));
 		relationShips.get(0).put(8, 	Arrays.asList(110));
 		relationShips.get(0).put(110, 	Arrays.asList(16));
 		relationShips.get(0).put(16, 	Arrays.asList(112));
@@ -131,7 +132,7 @@ public class SimulatorFiguresCollections implements StateListener, ValidateSwitc
 		relationShips.get(1).put(35, 	Arrays.asList(163));
 		relationShips.get(1).put(163, 	Arrays.asList(34));
 		relationShips.get(1).put(34, 	Arrays.asList(161));
-		relationShips.get(1).put(161, 	Arrays.asList(33,52));
+		relationShips.get(1).put(161, 	Arrays.asList(33,52,54));
 		relationShips.get(1).put(33, 	Arrays.asList(158));
 		relationShips.get(1).put(158, 	Arrays.asList(25));
 		relationShips.get(1).put(25, 	Arrays.asList(156));
@@ -185,6 +186,7 @@ public class SimulatorFiguresCollections implements StateListener, ValidateSwitc
 	private StateSequenceModel operationSeq;
 	private int operationIndex;
 	private String quizName;
+	private List<String> operationList;
 	
 	SimulatorFiguresCollections(FreeformLayer layer, SimulatorManager manager) {
 		this.manager = manager;
@@ -224,6 +226,7 @@ public class SimulatorFiguresCollections implements StateListener, ValidateSwitc
 						Arrays.asList(	new Point(322, 358),
 										new Point(322, 400)
 									 ), 1),
+				new SimulatorLabel			("110Kv1#" + SimulatorMessages.InputLine_Label, 280, 410, 80, 12),
 				new HighVoltageLineFigure(4, 
 						Arrays.asList(	new Point(322, 150),
 										new Point(322, 110),
@@ -267,8 +270,8 @@ public class SimulatorFiguresCollections implements StateListener, ValidateSwitc
 				new LeftGroundFigure		(108, "1014E",  540, 428, 1),
 				new SimulatorLabel			("1014E", 500, 428),
 				new MainTransformerFigure   (0,    588, 450),
-									 
-				new HighVoltageLineFigure(0, 
+				new SimulatorLabel			("1#" + SimulatorMessages.MainTransformer_Label, 540, 470),					 
+				new HighVoltageLineFigure(53, 
 						Arrays.asList(	new Point(652, 470),
 										new Point(680, 470)
 									 ), 1),
@@ -332,6 +335,7 @@ public class SimulatorFiguresCollections implements StateListener, ValidateSwitc
 										new Point(822, 780),
 										new Point(850, 780)
 									), 1),
+				new SimulatorLabel			("35kvI" + SimulatorMessages.MotherLine_Label, 100, 760, 80, 12),
 				new SwitchFigure			(122, "3001", 200, 810, 1),
 				new SimulatorLabel			("3001", 240, 810),
 				new SwitchFigure			(119, "3131", 350, 810, 1),
@@ -388,14 +392,17 @@ public class SimulatorFiguresCollections implements StateListener, ValidateSwitc
 						Arrays.asList(	new Point(372, 938),
 										new Point(372, 980)
 									), 1),
+				new SimulatorLabel			("35kv" + SimulatorMessages.FeedBackLine_Label + "5", 362, 990),
 				new LowVoltageLineFigure(15, 
 						Arrays.asList(	new Point(522, 938),
 										new Point(522, 980)
 									), 1),
+				new SimulatorLabel			("35kv" + SimulatorMessages.FeedBackLine_Label + "5", 512, 990),
 				new LowVoltageLineFigure(17, 
 						Arrays.asList(	new Point(672, 938),
 										new Point(672, 980)
 									), 1),
+				new SimulatorLabel			("35kv" + SimulatorMessages.FeedBackLine_Label + "1", 662, 990),
 				new SwitchFigure			(133, "3101", 800, 680, 1),
 				new SimulatorLabel			("3101", 840, 680),
 				new GroundFigure			(134, "3101E", 740, 680, 1),
@@ -435,6 +442,7 @@ public class SimulatorFiguresCollections implements StateListener, ValidateSwitc
 						Arrays.asList(	new Point(1478, 358),
 										new Point(1478, 400)
 									 ), 2),
+				new SimulatorLabel			("110Kv2#" + SimulatorMessages.InputLine_Label, 1458, 410, 80, 12),
 				new HighVoltageLineFigure(37, 
 						Arrays.asList(	new Point(1478, 150),
 										new Point(1478, 110),
@@ -478,8 +486,8 @@ public class SimulatorFiguresCollections implements StateListener, ValidateSwitc
 				new RightGroundFigure		(160, "1024E",  1192, 424, 2),
 				new SimulatorLabel			("1024E", 1232, 424),
 				new FlipMainTransformerFigure   (0,    1148, 450),
-									 
-				new HighVoltageLineFigure(0, 
+				new SimulatorLabel			("2#" + SimulatorMessages.MainTransformer_Label, 1188, 470),									 
+				new HighVoltageLineFigure(54, 
 						Arrays.asList(	new Point(1148, 470),
 										new Point(1120, 470)
 									 ), 2),
@@ -542,6 +550,7 @@ public class SimulatorFiguresCollections implements StateListener, ValidateSwitc
 										new Point(1022, 780),
 										new Point(1000, 780)
 									), 2),
+				new SimulatorLabel			("35kvII" + SimulatorMessages.MotherLine_Label, 1620, 760, 80, 12),
 				new SwitchFigure			(146, "3002", 1554, 810, 2),
 				new SimulatorLabel			("3002", 1594, 810),
 				new SwitchFigure			(149, "3231", 1404, 810, 2),
@@ -598,14 +607,17 @@ public class SimulatorFiguresCollections implements StateListener, ValidateSwitc
 						Arrays.asList(	new Point(1428, 938),
 										new Point(1428, 980)
 									), 2),
+				new SimulatorLabel			("35kv" + SimulatorMessages.FeedBackLine_Label + "6", 1418, 990),
 				new LowVoltageLineFigure(27, 
 						Arrays.asList(	new Point(1278, 938),
 										new Point(1278, 980)
 									), 2),
+				new SimulatorLabel			("35kv" + SimulatorMessages.FeedBackLine_Label + "4", 1268, 990),
 				new LowVoltageLineFigure(24, 
 						Arrays.asList(	new Point(1128, 938),
 										new Point(1128, 980)
 									), 2),
+				new SimulatorLabel			("35kv" + SimulatorMessages.FeedBackLine_Label + "2", 1118, 990),
 				new SwitchFigure			(135, "3102", 1000, 680, 2),
 				new SimulatorLabel			("3102", 960, 680),
 				new GroundFigure			(136, "3102E", 1060, 680, 2),
@@ -773,8 +785,15 @@ public class SimulatorFiguresCollections implements StateListener, ValidateSwitc
 	// Fail:-1, Correct:0, Finish: 1
 	public int validate(byte[] switchBytes) {
 		int id = switchBytes[0] + SWITCH_OFFSET;
-		boolean isOn = false;
-		if (switchBytes[1] == 1) isOn = true;
+		boolean isOn = (switchBytes[1] == 1)?true:false;
+		if (id2FigureMap.containsKey(id)) {
+			Figure stateFigure = id2FigureMap.get(id);
+			if (stateFigure instanceof StateFigure) {
+				String message = isOn?SimulatorMessages.TurnOff_message:SimulatorMessages.TurnOn_message;
+				operationList.add( message + " " + ((StateFigure)stateFigure).getLabel());
+				
+			}
+		}		
 		boolean isMatched = false;
 		List<StateModel> currentStates = operationSeq.getSeqs().get(operationIndex);
 		if (currentStates.size() > 0) {
@@ -793,14 +812,19 @@ public class SimulatorFiguresCollections implements StateListener, ValidateSwitc
 		}
 		return 0;
 	}
+	public List<String> getOperationList() {
+		return operationList;
+	}
 	
 	public void importConnections(File connectionsFile) {
 		Properties props = new Properties();
 		try {
 			props.load(new FileInputStream(connectionsFile));
-			initState = StateSequenceModel.parseStateString(props.getProperty("init"));
+			initState = StateSequenceModel.parseStateString(props.getProperty("init", ""));
 			operationSeq = StateSequenceModel.parseStateString(props.getProperty("operation"));
 			operationIndex = 0;
+			operationList = new ArrayList<String>();
+			quizName = connectionsFile.getName();
 			updatInitState(getInitStateBytes());
 			manager.sendLineStatus();
 		} catch (IOException e) {
@@ -812,7 +836,14 @@ public class SimulatorFiguresCollections implements StateListener, ValidateSwitc
 		if (quizName == null) {
 			quizName = "Unknown";
 		}		
-		return quizName.getBytes();
+		try {
+			int lastIndex = quizName.lastIndexOf(".");
+			if (lastIndex > 0) return quizName.substring(0, lastIndex).getBytes("UTF-8");
+			return quizName.getBytes("UTF-8");
+		} catch (UnsupportedEncodingException e) {
+			logger.error("UTF-8 charset is not supported. Caused by {}", e.toString());
+		}
+		return null;
 	}
 	
 	private byte[] getInitStateBytes() {
@@ -832,6 +863,7 @@ public class SimulatorFiguresCollections implements StateListener, ValidateSwitc
 	
 	public void writeInitStateBytes(DataOutputStream output, byte head) {
 		byte[] initBytes = getInitStateBytes();
+		if (initBytes.length <= 0) return;
 		try {
 			output.writeInt(initBytes.length + 1);
 			output.writeByte(head);
@@ -862,12 +894,13 @@ public class SimulatorFiguresCollections implements StateListener, ValidateSwitc
 		for (int i=0; i<initStateBytes.length;) {
 			int id = initStateBytes[i] + SWITCH_OFFSET;
 			i++;
-			boolean isOn = false;
-			if (initStateBytes[i] == 1) isOn = true;
 			if (id2FigureMap.containsKey(id)) {
 				Figure stateFigure = id2FigureMap.get(id);
 				if (stateFigure instanceof StateFigure) {
+					boolean isOn = initStateBytes[i] == 1?true:false;
 					if (isOn != ((StateFigure)stateFigure).isOn()) {
+						logger.debug("Will update switch {}:{} init status to {}.", ((StateFigure)stateFigure).getLabel(), 
+								id, isOn?"On":"Off");
 						((StateFigure)stateFigure).switchState();
 					}
 				}
@@ -879,12 +912,13 @@ public class SimulatorFiguresCollections implements StateListener, ValidateSwitc
 	
 	public void updateSwitchStatus(byte[] switchBytes) {
 		int id = switchBytes[0] + SWITCH_OFFSET;
-		boolean isOn = false;
-		if (switchBytes[1] == 1) isOn = true;
 		if (id2FigureMap.containsKey(id)) {
 			Figure stateFigure = id2FigureMap.get(id);
 			if (stateFigure instanceof StateFigure) {
+				boolean isOn = switchBytes[1] == 1?true:false;
 				if (isOn == ((StateFigure)stateFigure).isOn()) {
+					logger.debug("Will update switch {}:{} status to {}.", ((StateFigure)stateFigure).getLabel(), 
+							id, isOn?"Off":"On");
 					((StateFigure)stateFigure).switchState();
 				}
 			}
@@ -897,23 +931,25 @@ public class SimulatorFiguresCollections implements StateListener, ValidateSwitc
 			if (stateFigure instanceof StateFigure) {
 				boolean isOn = switchStatus[pos] == 1?true:false;
 				if (isOn != ((StateFigure)stateFigure).isOn()) {
+					logger.debug("Will update switch {}:{} chain to {}.", ((StateFigure)stateFigure).getLabel(), 
+							pos+SWITCH_OFFSET, isOn?"On":"Off");
 					((StateFigure)stateFigure).switchState();
 				}
 			}			
 		}		
 	}
 	
-	public boolean checkSwitchStatus(byte[] input) {
+	public String checkSwitchStatus(byte[] input) {
 		if (input.length != switchStatus.length) {
-			return false;
+			return SimulatorMessages.ErrorSwitchRead_message;
 		}
 		
 		for (int i=0; i<input.length; i++) {
 			if(input[i] != switchStatus[i]) {
 				logger.info("Switch {} status does not match. Scanned: {}, Expected: {}.", i + SWITCH_OFFSET, input[i], switchStatus[i]);
-				return false;
+				return String.format(SimulatorMessages.ErrorSwitchRead_message, i + SWITCH_OFFSET, input[i], switchStatus[i]);
 			}
 		}
-		return true;
+		return null;
 	}
 }

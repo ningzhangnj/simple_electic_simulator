@@ -2,6 +2,7 @@ package com.rail.electric.simulator.dialogs;
 
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.IMessageProvider;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
@@ -114,16 +115,22 @@ public class StartStudentDialog extends TitleAreaDialog {
 	
 	// save content of the Text fields because they get disposed
 	// as soon as the Dialog closes
-	private void validateAndsaveInput() {
-	    model.setIp(txtIp.getText());
-	    model.setPort(Integer.parseInt(txtPort.getText()));	
-	    model.save();
+	private boolean validateAndsaveInput() {
+		if ("user".equals(txtPassword.getText())) {			
+			model.setIp(txtIp.getText());
+			model.setPort(Integer.parseInt(txtPort.getText()));	
+			model.save();
+			return true;
+		} else return false;
 	}
 	
 	@Override
 	protected void okPressed() {
-	    validateAndsaveInput();
-	    super.okPressed();
+	    if (validateAndsaveInput())  super.okPressed();
+	    else {
+	    	MessageDialog.openError(getParentShell(), SimulatorMessages.ErrorPassword_title, SimulatorMessages.ErrorPassword_message);
+	    	super.cancelPressed();
+	    }
 	}	
 	  
 	@Override

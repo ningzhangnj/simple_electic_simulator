@@ -20,6 +20,8 @@ public class SimulatorMessages extends NLS {
 	public static String OperateConfirmationDialog_title;
 	public static String ErrorPassword_title;
 	public static String ErrorPassword_message;
+	public static String ErrorDialog_title;
+	public static String InfoDialog_title;
 	
 	public static String Port_label;
 	public static String CommPort_label;
@@ -37,6 +39,24 @@ public class SimulatorMessages extends NLS {
 	public static String TurnOff_message;
 	
 	public static String ForbiddenOperation_message;
+	
+	public static String ConectionRefused_message;
+	public static String WrongOperation_message;
+	public static String QuizPassedStudent_message;
+	public static String QuizPassedTeacher_message;
+	public static String OpenCommError_message;
+	public static String ReadyToStartQuiz_message;
+	public static String ErrorSwitchStatus_message;
+	public static String ErrorSwitchReadLength_message;
+	public static String ErrorSwitchRead_message;
+	
+	public static String InputLine_Label;
+	public static String FeedBackLine_Label;
+	public static String MotherLine_Label;
+	public static String MainTransformer_Label;
+	
+	public static String OperationHistory_Label;
+	public static String OperationFinished_Title;
 	
 	static {
 		NLS.initializeMessages(

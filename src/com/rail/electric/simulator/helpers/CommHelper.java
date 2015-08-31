@@ -13,11 +13,19 @@ import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public class CommHelper {
+	private final static Logger logger =  LoggerFactory.getLogger(CommHelper.class);	
+	
 	private SerialPort serialPort;
+	
+	private boolean isCommPortConnected = false;
 	
 	public List<CommPortIdentifier> getComPorts() {
 		List<CommPortIdentifier> ports = new ArrayList<CommPortIdentifier>();
+		@SuppressWarnings("rawtypes")
 		Enumeration portList = CommPortIdentifier.getPortIdentifiers(); 
 		while (portList.hasMoreElements()) {
 			CommPortIdentifier portId = (CommPortIdentifier) portList.nextElement();
@@ -28,44 +36,42 @@ public class CommHelper {
 		return ports;
 	}
 	
-	public void open(String  portName) {		
+	public boolean open(String  portName) {		
 		try {
 			CommPortIdentifier portId = CommPortIdentifier.getPortIdentifier(portName);
 			if (portId.getPortType() == CommPortIdentifier.PORT_SERIAL && portId.getName().equals(portName)) {
 		    	try {
 		    		serialPort = (SerialPort)portId.open("Teacher", 5000);//timeout- 5000ms
-		    		serialPort.setSerialPortParams(9600, SerialPort.DATABITS_8, SerialPort.STOPBITS_1, SerialPort.PARITY_NONE);			
+		    		serialPort.setSerialPortParams(9600, SerialPort.DATABITS_8, SerialPort.STOPBITS_1, SerialPort.PARITY_NONE);
+		    		isCommPortConnected = true;
+		    		return true;
 				} catch (UnsupportedCommOperationException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+					logger.error("Unsupported comm operation. Caused by {}", e.toString());
 				} catch (PortInUseException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
+					logger.error("Port {} is already in use. Caused by {}", portName, e1.toString());
 				} 
-		    	return;
 		    }
 		} catch (NoSuchPortException e2) {
-			// TODO Auto-generated catch block
-			e2.printStackTrace();
+			logger.error("Port {} is not found. Caused by {}", portName, e2.toString());;
 		}
 	    
-		
+		return false;
 	}
 	
 	public void close() {
 		if (serialPort != null) {
+			isCommPortConnected = false;
 			serialPort.close();
 		}		
 	}
 
 	public void writeBytes(byte[] bytes) {
 		try {        	
-			OutputStream out=serialPort.getOutputStream();
+			OutputStream out = serialPort.getOutputStream();
 			out.write(bytes);
 			out.flush();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			logger.error("Failed to write out bytes {}, caused by {}", DataTypeConverter.bytesToHex(bytes), e.toString());
 		}
 	}
 	
@@ -82,8 +88,7 @@ public class CommHelper {
             }
             return bytes;
         } catch (IOException e) {
-            //TODO
-            e.printStackTrace();
+        	logger.error("Failed to operate on serial port, caused by {}", e.toString());
         }
         return  null;
 		
@@ -93,9 +98,22 @@ public class CommHelper {
 		try {
 			return serialPort.getInputStream().available() > 0;
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			logger.error("Failed to operate on serial port, caused by {}", e.toString());
 		}
 		return false;
 	}
+
+	public static Logger getLogger() {
+		return logger;
+	}
+
+	public SerialPort getSerialPort() {
+		return serialPort;
+	}
+
+	public boolean isCommPortConnected() {
+		return isCommPortConnected;
+	}
+	
+	
 }

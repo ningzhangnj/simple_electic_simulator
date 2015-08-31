@@ -9,6 +9,7 @@ import static com.rail.electric.simulator.SimulatorManager.QUIZ_WRONG_HEAD_BYTE;
 import java.io.DataInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
 import java.net.Socket;
 import java.nio.ByteBuffer;
 import java.util.concurrent.BlockingQueue;
@@ -22,6 +23,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.rail.electric.simulator.SimulatorManager;
+import com.rail.electric.simulator.SimulatorMessages;
 import com.rail.electric.simulator.helpers.DataTypeConverter;
 
 public class StudentWorker {
@@ -43,13 +45,11 @@ public class StudentWorker {
 		this.manager = manager;
 	}
 	
-	public boolean isRunning() {
+	public synchronized boolean isRunning() {
 		return isRunning;
 	}
 
-
-
-	public void setRunning(boolean isRunning) {
+	public synchronized void setRunning(boolean isRunning) {
 		this.isRunning = isRunning;
 	}
 
@@ -64,8 +64,18 @@ public class StudentWorker {
 					clientMessageHandlingLoop(serverSocket.getInputStream());
 				} catch (IOException e) {
 					logger.error("Failed to create socket on student workstation. Caused by {}", e.toString());
-				}
-				
+					Display.getDefault().asyncExec(new Runnable() {
+
+						@Override
+						public void run() {
+							MessageDialog.openError(Display.getCurrent().getActiveShell(), 
+									SimulatorMessages.ErrorDialog_title, SimulatorMessages.ConectionRefused_message);
+							manager.deactivate();
+						}
+						
+					});
+					
+				}				
 			}
 			
 		});
@@ -80,13 +90,27 @@ public class StudentWorker {
 				case QUIZ_SUBJECT_HEAD_BYTE:
 					ByteBuffer bb = ByteBuffer.allocate(receivedBytes.length-1);
 					bb.put(receivedBytes, 1, receivedBytes.length-1);
-					logger.info("Start quiz: {}", new String(bb.array()));
+					try {
+						final String quizName = new String(bb.array(), "UTF-8");
+						logger.info("Start quiz: {}", quizName);
+						Display.getDefault().asyncExec(new Runnable() {
+
+							@Override
+							public void run() {
+								MessageDialog.openInformation(Display.getCurrent().getActiveShell(), 
+										SimulatorMessages.InfoDialog_title, SimulatorMessages.ReadyToStartQuiz_message + "\n" + quizName);	
+							}
+							
+						});
+					} catch (UnsupportedEncodingException e) {
+						logger.error("UTF-8 charset is not supported. Caused by {}", e.toString());
+					}
 					break;
 				case QUIZ_INITSTATE_HEAD_BYTE:
 					final ByteBuffer bb1 = ByteBuffer.allocate(receivedBytes.length-1);
 					bb1.put(receivedBytes, 1, receivedBytes.length-1);
 					logger.info("Received switch init state bytes: {}", DataTypeConverter.bytesToHex(receivedBytes));
-					Display.getDefault().syncExec(new Runnable() {
+					Display.getDefault().asyncExec(new Runnable() {
 
 						@Override
 						public void run() {
@@ -123,24 +147,27 @@ public class StudentWorker {
 			try {
 				int result = this.resultQueue.take();
 				if (result < 0) {
-					Display.getDefault().syncExec(new Runnable() {
+					Display.getDefault().asyncExec(new Runnable() {
 
 						@Override
 						public void run() {
-							MessageDialog.openError(Display.getCurrent().getActiveShell(), "Wrong operation", "Wrong operation, please retry.");							
+							MessageDialog.openError(Display.getCurrent().getActiveShell(), 
+									SimulatorMessages.ErrorDialog_title, SimulatorMessages.WrongOperation_message);							
 						}						
 						
 					});
 				} else if (result >= 1) {
-					Display.getDefault().syncExec(new Runnable() {
+					Display.getDefault().asyncExec(new Runnable() {
 
 						@Override
 						public void run() {
-							MessageDialog.openInformation(Display.getCurrent().getActiveShell(), "Quiz passed", "Congratulations! You have passed the quiz.");							
+							MessageDialog.openInformation(Display.getCurrent().getActiveShell(), 
+									SimulatorMessages.InfoDialog_title, SimulatorMessages.QuizPassedStudent_message);
+
+							manager.deactivate();
 						}						
 						
 					});
-					manager.deactivate();
 				}
 				return result;
 			} catch (InterruptedException e) {
