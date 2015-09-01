@@ -22,6 +22,7 @@ public class SimulatorMessages extends NLS {
 	public static String ErrorPassword_message;
 	public static String ErrorDialog_title;
 	public static String InfoDialog_title;
+	public static String QuestionDialog_title;
 	
 	public static String Port_label;
 	public static String CommPort_label;
@@ -30,6 +31,7 @@ public class SimulatorMessages extends NLS {
 	public static String Cancel_label;
 	public static String Username_label;
 	public static String Password_label;
+	public static String Score_label;
 	
 	public static String Mode_StudentTeacherSimulator_Item;
 	public static String Mode_StudentTeacher_Item;

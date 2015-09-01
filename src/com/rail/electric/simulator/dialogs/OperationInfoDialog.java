@@ -14,6 +14,7 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.swt.widgets.Text;
 
 import com.rail.electric.simulator.SimulatorMessages;
 
@@ -23,12 +24,14 @@ public class OperationInfoDialog extends TitleAreaDialog {
 	private String title;
 	private String message;
 	private List<String> operations;
+	private String score;
 	
-	public OperationInfoDialog(Shell parentShell, String title, String message, List<String> operations) {
+	public OperationInfoDialog(Shell parentShell, String title, String message, List<String> operations, String score) {
 		super(parentShell);
 		this.title = title;
 		this.message = message;
 		this.operations = operations;
+		this.score = score;
 	}
 
 	@Override
@@ -46,9 +49,23 @@ public class OperationInfoDialog extends TitleAreaDialog {
 		GridLayout layout = new GridLayout(2, false);
 		container.setLayout(layout);
 	    
+		createScore(container);
 	    createOperationInfo(container);	    
 
 	    return area;
+	}
+	
+	private void createScore(Composite container) {
+		Label lbt = new Label(container, SWT.NONE);
+		lbt.setText(SimulatorMessages.Score_label);
+	
+	    GridData dataIp = new GridData();
+	    dataIp.grabExcessHorizontalSpace = true;
+	    dataIp.horizontalAlignment = GridData.FILL;
+	
+	    Text txtScore = new Text(container, SWT.BORDER | SWT.READ_ONLY);
+	    txtScore.setLayoutData(dataIp);
+	    txtScore.setText(score);
 	}
 	
 	private void createOperationInfo(Composite container) {
@@ -73,7 +90,7 @@ public class OperationInfoDialog extends TitleAreaDialog {
 	public static void main (String[] args) {
 		Shell shell = new Shell(new Display());
 		OperationInfoDialog dialog = new OperationInfoDialog(shell, "Operation finished", "The student has passed the quiz.", Arrays.asList(
-				"Turn off k1zzzzzz", "Turn On k2", "Turn off k1", "Turn On k2", "Turn off k1", "Turn On k2"));
+				"Turn off k1zzzzzz", "Turn On k2", "Turn off k1", "Turn On k2", "Turn off k1", "Turn On k2"), "100");
 		dialog.open();
 		
 	}

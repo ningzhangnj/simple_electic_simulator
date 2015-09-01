@@ -187,6 +187,7 @@ public class SimulatorFiguresCollections implements StateListener, ValidateSwitc
 	private int operationIndex;
 	private String quizName;
 	private List<String> operationList;
+	private String operationScore = "100";
 	
 	SimulatorFiguresCollections(FreeformLayer layer, SimulatorManager manager) {
 		this.manager = manager;
@@ -806,14 +807,22 @@ public class SimulatorFiguresCollections implements StateListener, ValidateSwitc
 				}
 			}
 		}
-		if (!isMatched) return -1;
+		if (!isMatched) {
+			operationScore = "0";
+			return -1;
+		}
 		else if (operationIndex >= operationSeq.getSeqs().size()) {
 			return 1;
 		}
 		return 0;
 	}
+	
 	public List<String> getOperationList() {
 		return operationList;
+	}
+	
+	public String getOperationScore() {
+		return operationScore;
 	}
 	
 	public void importConnections(File connectionsFile) {
@@ -824,6 +833,7 @@ public class SimulatorFiguresCollections implements StateListener, ValidateSwitc
 			operationSeq = StateSequenceModel.parseStateString(props.getProperty("operation"));
 			operationIndex = 0;
 			operationList = new ArrayList<String>();
+			operationScore = "100";
 			quizName = connectionsFile.getName();
 			updatInitState(getInitStateBytes());
 			manager.sendLineStatus();
@@ -941,7 +951,7 @@ public class SimulatorFiguresCollections implements StateListener, ValidateSwitc
 	
 	public String checkSwitchStatus(byte[] input) {
 		if (input.length != switchStatus.length) {
-			return SimulatorMessages.ErrorSwitchRead_message;
+			return SimulatorMessages.ErrorSwitchReadLength_message;
 		}
 		
 		for (int i=0; i<input.length; i++) {

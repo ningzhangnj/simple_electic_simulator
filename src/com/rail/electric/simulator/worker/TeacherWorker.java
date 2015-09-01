@@ -20,6 +20,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Display;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -135,7 +136,7 @@ private final static Logger logger =  LoggerFactory.getLogger(TeacherWorker.clas
 								OperationInfoDialog dialog = new OperationInfoDialog(Display.getCurrent().getActiveShell(), 
 										SimulatorMessages.OperationFinished_Title, 
 										SimulatorMessages.QuizPassedTeacher_message,
-										manager.getOperationList());
+										manager.getOperationList(), manager.getOperationScore());
 								dialog.open();
 								manager.deactivate();
 							}
@@ -194,14 +195,17 @@ private final static Logger logger =  LoggerFactory.getLogger(TeacherWorker.clas
 							
 							@Override
 							public void run() {
-								MessageDialog.openError(Display.getCurrent().getActiveShell(), 
-										SimulatorMessages.ErrorDialog_title, 
-										SimulatorMessages.ErrorSwitchStatus_message + status);
-								while (commHelper.isDataAvailable()) {
-									readSwitchInitStatus();
-									SimulatorUtil.sleepMilliSeconds(100);
+								if (MessageDialog.openQuestion(Display.getCurrent().getActiveShell(), 
+										SimulatorMessages.QuestionDialog_title, 
+										SimulatorMessages.ErrorSwitchStatus_message + "\n" + status)) {
+									while (commHelper.isDataAvailable()) {
+										readSwitchInitStatus();
+										SimulatorUtil.sleepMilliSeconds(100);
+									}
+									sendSwitchInitStatusRequest();
+								} else {
+									manager.deactivate();
 								}
-								sendSwitchInitStatusRequest();
 							}
 							
 						});							

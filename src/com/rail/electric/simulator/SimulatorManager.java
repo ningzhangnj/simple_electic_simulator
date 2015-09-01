@@ -159,6 +159,10 @@ public class SimulatorManager {
 		return simModel.getOperationList();
 	}
 	
+	public String getOperationScore() {
+		return simModel.getOperationScore();
+	}
+	
 	public void sendLineStatus() {
 		if (teacherWorker != null && teacherWorker.getMode() == WorkMode.STUDENT_TEACHER_SIMULATOR) {
 			teacherWorker.sendLineStatus();

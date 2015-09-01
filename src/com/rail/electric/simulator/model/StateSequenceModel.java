@@ -21,7 +21,9 @@ public class StateSequenceModel {
 			String[] parallelStates = seqState.split(",");
 			List<StateModel> stateModels = new ArrayList<StateModel>();
 			for (String parallelState : parallelStates) {
-				stateModels.add(extractStateModel(parallelState));
+				StateModel stateModel = extractStateModel(parallelState);
+				if (stateModel != null)
+					stateModels.add(stateModel);
 			}
 			stateSequenceModel.addStates(stateModels);
 		}
@@ -30,6 +32,7 @@ public class StateSequenceModel {
 	
 	private static StateModel extractStateModel(String input) {
 		String[] states = input.split(":");
+		if (states.length < 2) return null;
 		int id = Integer.parseInt(states[0]);
 		boolean state = "1".equals(states[1])?true:false;
 		return new StateModel(id, state);
