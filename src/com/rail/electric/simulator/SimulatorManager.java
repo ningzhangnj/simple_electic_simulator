@@ -8,6 +8,7 @@ import java.nio.ByteBuffer;
 import java.util.List;
 
 import org.eclipse.draw2d.FreeformLayer;
+import org.eclipse.swt.widgets.Display;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -131,12 +132,23 @@ public class SimulatorManager {
 		return 1;
 	}
 	
-	public int validateAndUpdateSwitchStatus(byte[] switchStatusBytes) {
+	public int validateAndUpdateSwitchStatus(final byte[] switchStatusBytes) {
 		int result = simModel.validate(switchStatusBytes);
 		if (result >= 0) {
-			simModel.updateSwitchStatus(switchStatusBytes);
+			Display.getDefault().syncExec(new Runnable() {
+
+				@Override
+				public void run() {	
+					simModel.updateSwitchStatus(switchStatusBytes);
+				}
+			});
+			
 		}
 		return result;
+	}
+	
+	public void updateSwitchStatus(byte[] switchStatusBytes) {
+		simModel.updateSwitchStatus(switchStatusBytes);
 	}
 	
 	public byte[] getLedLineBytes() {

@@ -23,6 +23,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.rail.electric.simulator.figures.ComplexCircuitFigure;
+import com.rail.electric.simulator.figures.CoverFigure;
 import com.rail.electric.simulator.figures.FlipComplexCircuitFigure;
 import com.rail.electric.simulator.figures.FlipGroundWithResistFigure;
 import com.rail.electric.simulator.figures.FlipMainTransformerFigure;
@@ -192,6 +193,11 @@ public class SimulatorFiguresCollections implements StateListener, ValidateSwitc
 	SimulatorFiguresCollections(FreeformLayer layer, SimulatorManager manager) {
 		this.manager = manager;
 		this.layer = layer;
+		loadCover();
+	}
+	
+	private void loadCover() {
+		layer.add(new CoverFigure(0, 210, 200));
 	}
 	
 	public void init() {
@@ -201,7 +207,7 @@ public class SimulatorFiguresCollections implements StateListener, ValidateSwitc
 		
 		this.figures = Arrays.asList(
 				//#1 High
-				new SwitchFigure			(131,  "1111", 300, 150, 1),
+				new SwitchFigure			(131,  "1111", 299, 150, 1),
 				new SimulatorLabel			("1111", 340, 150),
 				new HighVoltageLineFigure(3, 
 						Arrays.asList(	new Point(322, 198),
@@ -221,13 +227,13 @@ public class SimulatorFiguresCollections implements StateListener, ValidateSwitc
 				new	TwoPhaseTransformerFigure (0, 350, 278),
 				new LeftGroundFigure		(128, "1113E", 240, 288, 1),
 				new SimulatorLabel			("1113E", 200, 288),
-				new SwitchFigure			(127, "1113", 300, 310, 1),
+				new SwitchFigure			(127, "1113", 299, 310, 1),
 				new SimulatorLabel			("1113", 340, 330),
 				new HighVoltageLineFigure(1, 
 						Arrays.asList(	new Point(322, 358),
 										new Point(322, 400)
 									 ), 1),
-				new SimulatorLabel			("110Kv1#" + SimulatorMessages.InputLine_Label, 280, 410, 80, 12),
+				new SimulatorLabel			("110kV1#" + SimulatorMessages.InputLine_Label, 280, 410, 80, 12),
 				new HighVoltageLineFigure(4, 
 						Arrays.asList(	new Point(322, 150),
 										new Point(322, 110),
@@ -243,7 +249,7 @@ public class SimulatorFiguresCollections implements StateListener, ValidateSwitc
 									 ), 1),	
 				new GroundFigure		(101, "1001E", 708, 242, 1),
 				new SimulatorLabel			("1001E", 748, 242),
-				new SwitchFigure			(103, "1011", 600, 210, 1),
+				new SwitchFigure			(103, "1011", 599, 210, 1),
 				new SimulatorLabel			("1011", 560, 210),
 				new HighVoltageLineFigure(6, 
 						Arrays.asList(	new Point(622, 258),
@@ -261,7 +267,7 @@ public class SimulatorFiguresCollections implements StateListener, ValidateSwitc
 									 ), 1),
 				new LeftGroundFigure		(106, "1013E",  540, 348, 1),
 				new SimulatorLabel			("1013E", 500, 348),
-				new SwitchFigure			(107,  "1013", 600, 370, 1),
+				new SwitchFigure			(107,  "1013", 599, 370, 1),
 				new SimulatorLabel			("1013", 640, 370),
 				new HighVoltageLineFigure(8, 
 						Arrays.asList(	new Point(622, 418),
@@ -336,7 +342,7 @@ public class SimulatorFiguresCollections implements StateListener, ValidateSwitc
 										new Point(822, 780),
 										new Point(850, 780)
 									), 1),
-				new SimulatorLabel			("35kvI" + SimulatorMessages.MotherLine_Label, 100, 760, 80, 12),
+				new SimulatorLabel			("35kVI" + SimulatorMessages.MotherLine_Label, 100, 760, 80, 12),
 				new SwitchFigure			(122, "3001", 200, 810, 1),
 				new SimulatorLabel			("3001", 240, 810),
 				new SwitchFigure			(119, "3131", 350, 810, 1),
@@ -376,34 +382,34 @@ public class SimulatorFiguresCollections implements StateListener, ValidateSwitc
 				new FlipGroundWithResistFigure (0, 140, 870),
 				new SmallThreePhaseTransformerFigure(0, 198, 874),
 				new GroundFigure			(123, "3001E", 260, 890, 1),
-				new SimulatorLabel			("3001E", 300, 890),
+				new SimulatorLabel			("3001E", 280, 890),
 				new GroundFigure			(121, "3131E", 410, 890, 1),
-				new SimulatorLabel			("3131E", 450, 890),
+				new SimulatorLabel			("3131E", 430, 890),
 				new GroundFigure			(118, "3121E", 560, 890, 1),
-				new SimulatorLabel			("3121E", 600, 890),
+				new SimulatorLabel			("3121E", 580, 890),
 				new GroundFigure			(115, "3111E", 710, 890, 1),
-				new SimulatorLabel			("3111E", 750, 890),
+				new SimulatorLabel			("3111E", 730, 890),
 				new MainSwitchFigure		(120,  "313", 348, 890, 1),
-				new SimulatorLabel			("313", 388, 890),
+				new SimulatorLabel			("313", 368, 890),
 				new MainSwitchFigure		(117,  "312", 498, 890, 1),
-				new SimulatorLabel			("312", 538, 890),
+				new SimulatorLabel			("312", 518, 890),
 				new MainSwitchFigure		(114,  "311", 648, 890, 1),
-				new SimulatorLabel			("311", 688, 890),
+				new SimulatorLabel			("311", 668, 890),
 				new LowVoltageLineFigure(13, 
 						Arrays.asList(	new Point(372, 938),
 										new Point(372, 980)
 									), 1),
-				new SimulatorLabel			("35kv" + SimulatorMessages.FeedBackLine_Label + "5", 362, 990),
+				new SimulatorLabel			("35kV" + SimulatorMessages.FeedBackLine_Label + "5", 362, 990),
 				new LowVoltageLineFigure(15, 
 						Arrays.asList(	new Point(522, 938),
 										new Point(522, 980)
 									), 1),
-				new SimulatorLabel			("35kv" + SimulatorMessages.FeedBackLine_Label + "5", 512, 990),
+				new SimulatorLabel			("35kV" + SimulatorMessages.FeedBackLine_Label + "3", 512, 990),
 				new LowVoltageLineFigure(17, 
 						Arrays.asList(	new Point(672, 938),
 										new Point(672, 980)
 									), 1),
-				new SimulatorLabel			("35kv" + SimulatorMessages.FeedBackLine_Label + "1", 662, 990),
+				new SimulatorLabel			("35kV" + SimulatorMessages.FeedBackLine_Label + "1", 662, 990),
 				new SwitchFigure			(133, "3101", 800, 680, 1),
 				new SimulatorLabel			("3101", 840, 680),
 				new GroundFigure			(134, "3101E", 740, 680, 1),
@@ -417,7 +423,7 @@ public class SimulatorFiguresCollections implements StateListener, ValidateSwitc
 									), 1),
 									
 				//#2 High
-				new SwitchFigure			(137,  "1121", 1454, 150, 2),
+				new SwitchFigure			(137,  "1121", 1455, 150, 2),
 				new SimulatorLabel			("1121", 1414, 150),
 				new HighVoltageLineFigure(38, 
 						Arrays.asList(	new Point(1478, 198),
@@ -437,13 +443,13 @@ public class SimulatorFiguresCollections implements StateListener, ValidateSwitc
 				new	TwoPhaseTransformerFigure (0, 1410, 278),
 				new RightGroundFigure		(140, "1123E", 1492, 284, 2),
 				new SimulatorLabel			("1123E", 1532, 284),
-				new SwitchFigure			(141, "1123", 1454, 310, 2),
+				new SwitchFigure			(141, "1123", 1455, 310, 2),
 				new SimulatorLabel			("1123", 1414, 330),
 				new HighVoltageLineFigure(40, 
 						Arrays.asList(	new Point(1478, 358),
 										new Point(1478, 400)
 									 ), 2),
-				new SimulatorLabel			("110Kv2#" + SimulatorMessages.InputLine_Label, 1458, 410, 80, 12),
+				new SimulatorLabel			("110kV2#" + SimulatorMessages.InputLine_Label, 1458, 410, 80, 12),
 				new HighVoltageLineFigure(37, 
 						Arrays.asList(	new Point(1478, 150),
 										new Point(1478, 110),
@@ -459,8 +465,8 @@ public class SimulatorFiguresCollections implements StateListener, ValidateSwitc
 									 ), 2),	
 				new GroundFigure		(167, "1002E", 1048, 242, 2),
 				new SimulatorLabel			("1002E", 1008, 242),
-				new SwitchFigure			(165, "1021", 1156, 210, 2),
-				new SimulatorLabel			("1021", 1116, 210),
+				new SwitchFigure			(165, "1021", 1155, 210, 2),
+				new SimulatorLabel			("1021", 1176, 210),
 				new HighVoltageLineFigure(35, 
 						Arrays.asList(	new Point(1178, 258),
 										new Point(1178, 290),
@@ -477,7 +483,7 @@ public class SimulatorFiguresCollections implements StateListener, ValidateSwitc
 									 ), 2),
 				new RightGroundFigure		(162, "1023E",  1192, 344, 2),
 				new SimulatorLabel			("1023E", 1232, 344),
-				new SwitchFigure			(161,  "1023", 1154, 370, 2),
+				new SwitchFigure			(161,  "1023", 1155, 370, 2),
 				new SimulatorLabel			("1023", 1114, 370),
 				new HighVoltageLineFigure(33, 
 						Arrays.asList(	new Point(1178, 418),
@@ -551,7 +557,7 @@ public class SimulatorFiguresCollections implements StateListener, ValidateSwitc
 										new Point(1022, 780),
 										new Point(1000, 780)
 									), 2),
-				new SimulatorLabel			("35kvII" + SimulatorMessages.MotherLine_Label, 1620, 760, 80, 12),
+				new SimulatorLabel			("35kVII" + SimulatorMessages.MotherLine_Label, 1620, 760, 80, 12),
 				new SwitchFigure			(146, "3002", 1554, 810, 2),
 				new SimulatorLabel			("3002", 1594, 810),
 				new SwitchFigure			(149, "3231", 1404, 810, 2),
@@ -599,26 +605,26 @@ public class SimulatorFiguresCollections implements StateListener, ValidateSwitc
 				new GroundFigure			(153, "3211E", 1046, 890, 2),
 				new SimulatorLabel			("3211E", 1006, 890),
 				new MainSwitchFigure		(148,  "323", 1404, 890, 2),
-				new SimulatorLabel			("323", 1364, 890),
+				new SimulatorLabel			("323", 1374, 890),
 				new MainSwitchFigure		(150,  "322", 1254, 890, 2),
-				new SimulatorLabel			("322", 1214, 890),
+				new SimulatorLabel			("322", 1224, 890),
 				new MainSwitchFigure		(154,  "321", 1104, 890, 2),
-				new SimulatorLabel			("321", 1064, 890),
+				new SimulatorLabel			("321", 1074, 890),
 				new LowVoltageLineFigure(29, 
 						Arrays.asList(	new Point(1428, 938),
 										new Point(1428, 980)
 									), 2),
-				new SimulatorLabel			("35kv" + SimulatorMessages.FeedBackLine_Label + "6", 1418, 990),
+				new SimulatorLabel			("35kV" + SimulatorMessages.FeedBackLine_Label + "6", 1418, 990),
 				new LowVoltageLineFigure(27, 
 						Arrays.asList(	new Point(1278, 938),
 										new Point(1278, 980)
 									), 2),
-				new SimulatorLabel			("35kv" + SimulatorMessages.FeedBackLine_Label + "4", 1268, 990),
+				new SimulatorLabel			("35kV" + SimulatorMessages.FeedBackLine_Label + "4", 1268, 990),
 				new LowVoltageLineFigure(24, 
 						Arrays.asList(	new Point(1128, 938),
 										new Point(1128, 980)
 									), 2),
-				new SimulatorLabel			("35kv" + SimulatorMessages.FeedBackLine_Label + "2", 1118, 990),
+				new SimulatorLabel			("35kV" + SimulatorMessages.FeedBackLine_Label + "2", 1118, 990),
 				new SwitchFigure			(135, "3102", 1000, 680, 2),
 				new SimulatorLabel			("3102", 960, 680),
 				new GroundFigure			(136, "3102E", 1060, 680, 2),
@@ -653,6 +659,7 @@ public class SimulatorFiguresCollections implements StateListener, ValidateSwitc
 	}
 	
 	public void activate() {
+		layer.removeAll();
 		for (Figure figure : figures) {
 			layer.add(figure);	
 			
@@ -670,6 +677,7 @@ public class SimulatorFiguresCollections implements StateListener, ValidateSwitc
 
 	public void deactivate() {
 		layer.removeAll();
+		loadCover();
 	}
 	
 	@Override
@@ -956,8 +964,16 @@ public class SimulatorFiguresCollections implements StateListener, ValidateSwitc
 		
 		for (int i=0; i<input.length; i++) {
 			if(input[i] != switchStatus[i]) {
-				logger.info("Switch {} status does not match. Scanned: {}, Expected: {}.", i + SWITCH_OFFSET, input[i], switchStatus[i]);
-				return String.format(SimulatorMessages.ErrorSwitchRead_message, i + SWITCH_OFFSET, input[i], switchStatus[i]);
+				String switchName = "Unknown";
+				if (id2FigureMap.containsKey(i+SWITCH_OFFSET)) {
+					Figure stateFigure = id2FigureMap.get(i+SWITCH_OFFSET);
+					if (stateFigure instanceof StateFigure) {
+						switchName  = ((StateFigure)stateFigure).getLabel();
+					}			
+				}		
+				logger.info("Switch {}:{} status does not match. Scanned: {}, Expected: {}.", switchName, i + SWITCH_OFFSET, input[i], switchStatus[i]);
+				
+				return String.format(SimulatorMessages.ErrorSwitchRead_message, switchName, input[i], switchStatus[i]);
 			}
 		}
 		return null;

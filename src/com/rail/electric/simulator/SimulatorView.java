@@ -8,6 +8,7 @@ import org.eclipse.draw2d.FreeformLayout;
 import org.eclipse.draw2d.FreeformViewport;
 import org.eclipse.draw2d.ScalableFreeformLayeredPane;
 import org.eclipse.draw2d.geometry.Rectangle;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.DisposeEvent;
@@ -116,10 +117,14 @@ public class SimulatorView {
 		Menu zoomMenu = new Menu(shell, SWT.DROP_DOWN);
 		zoomMenuItem.setMenu(zoomMenu);
 		
+		MenuItem aboutMenuItem = new MenuItem(menuBar, SWT.CASCADE);
+		aboutMenuItem.setText(SimulatorMessages.About_menu); //$NON-NLS-1$
+				
 		// Create the File menu items
 		createStartTeacherMenuItem(operateMenu, shell);
 		createStartStudentMenuItem(operateMenu, shell);
 		createStopMenuItem(operateMenu, shell);
+		
 		
 		// Create import connections menu items.
 		createImportConnectionsMenuItem(connectionsMenu, shell);
@@ -131,6 +136,20 @@ public class SimulatorView {
 		
 		// Add "Scale to fit" menu item
 		createScaleToFitMenuItem(zoomMenu);
+		
+		createAboutMenuItem(aboutMenuItem, shell);
+	}
+	
+	private void createAboutMenuItem(MenuItem menuItem, final Shell shell) {		
+		menuItem.addSelectionListener(new SelectionListener() {
+			public void widgetSelected(SelectionEvent e) {
+				MessageDialog.openInformation(shell, SimulatorMessages.About_title, SimulatorMessages.Version_label + ": V1.0\n"
+						+ SimulatorMessages.Manufacturer_name);
+			}
+			public void widgetDefaultSelected(SelectionEvent e) {
+				widgetSelected(e);
+			}
+		});
 	}
 	
 	private void createImportConnectionsMenuItem(Menu menu, final Shell shell) {

@@ -60,11 +60,11 @@ private final static Logger logger =  LoggerFactory.getLogger(TeacherWorker.clas
 		this.manager = manager;
 	}
 	
-	public synchronized boolean isRunning() {
+	public boolean isRunning() {
 		return isRunning;
 	}
 	
-	private synchronized void setRunning(boolean isRunning) {
+	private void setRunning(boolean isRunning) {
 		this.isRunning = isRunning;
 	}	
 
@@ -123,15 +123,14 @@ private final static Logger logger =  LoggerFactory.getLogger(TeacherWorker.clas
 					final ByteBuffer bb = ByteBuffer.allocate(receivedBytes.length-1);
 					bb.put(receivedBytes, 1, receivedBytes.length-1);
 					logger.debug("Received switch status: {}", DataTypeConverter.bytesToHex(bb.array()));
-					
+					final int result = manager.validateAndUpdateSwitchStatus(bb.array());
+					respondSwitchValidation(result, dataOut);
+					sendLineStatus();
 					
 					Display.getDefault().asyncExec(new Runnable() {
 
 						@Override
-						public void run() {
-							int result = manager.validateAndUpdateSwitchStatus(bb.array());
-							respondSwitchValidation(result, dataOut);
-							sendLineStatus();
+						public void run() {							
 							if (result > 0) {
 								OperationInfoDialog dialog = new OperationInfoDialog(Display.getCurrent().getActiveShell(), 
 										SimulatorMessages.OperationFinished_Title, 
@@ -191,7 +190,7 @@ private final static Logger logger =  LoggerFactory.getLogger(TeacherWorker.clas
 						sendLineStatus();
 						hasInitSwitchStatus = true;
 					} else {
-						Display.getDefault().asyncExec(new Runnable() {
+						Display.getDefault().syncExec(new Runnable() {
 							
 							@Override
 							public void run() {
@@ -219,12 +218,12 @@ private final static Logger logger =  LoggerFactory.getLogger(TeacherWorker.clas
 		if (!commHelper.isCommPortConnected()) return;
 		byte[] result = manager.getLedLineBytes();
 		logger.debug("Line status: " + DataTypeConverter.bytesToHex(result));
-		for (int i=0; i<3; i++) {
+		//for (int i=0; i<3; i++) {
 			commHelper.writeBytes(result);
-			byte[] response = commHelper.readBytes(1);
+			/*byte[] response = commHelper.readBytes(1);
 			logger.debug("Response of line status: " + DataTypeConverter.bytesToHex(response));
 			if (response[0] == CORRECT_PACKET_BYTE) break;
-		}		
+		}*/		
 	}
 	
 	private void sendSwitchInitStatusRequest() {

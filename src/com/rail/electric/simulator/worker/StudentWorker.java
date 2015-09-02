@@ -25,6 +25,7 @@ import org.slf4j.LoggerFactory;
 import com.rail.electric.simulator.SimulatorManager;
 import com.rail.electric.simulator.SimulatorMessages;
 import com.rail.electric.simulator.helpers.DataTypeConverter;
+import com.rail.electric.simulator.util.SimulatorUtil;
 
 public class StudentWorker {
 	private final static Logger logger =  LoggerFactory.getLogger(StudentWorker.class);	
@@ -45,11 +46,11 @@ public class StudentWorker {
 		this.manager = manager;
 	}
 	
-	public synchronized boolean isRunning() {
+	public boolean isRunning() {
 		return isRunning;
 	}
 
-	public synchronized void setRunning(boolean isRunning) {
+	public void setRunning(boolean isRunning) {
 		this.isRunning = isRunning;
 	}
 
@@ -121,12 +122,15 @@ public class StudentWorker {
 					
 					break;	
 				case QUIZ_CORRECT_HEAD_BYTE:
+					logger.debug("Received quiz correct head.");
 					resultQueue.offer(0);
 					break;
 				case QUIZ_WRONG_HEAD_BYTE:
+					logger.debug("Received quiz wrong head.");
 					resultQueue.offer(-1);
 					break;
 				case QUIZ_PASS_HEAD_BYTE:
+					logger.debug("Received quiz pass head.");
 					resultQueue.offer(1);
 					break;
 				default:
@@ -137,14 +141,15 @@ public class StudentWorker {
 	
 	public int sendMessageAndWaitBooleanResult(byte[] message) {
 		if (serverSocket != null) {
-			try {
-				logger.debug("sendMessageAndWaitBooleanResult: {}", DataTypeConverter.bytesToHex(message));
+			try {				
 				serverSocket.getOutputStream().write(message);
 				serverSocket.getOutputStream().flush();
+				logger.debug("sendMessageAndWaitBooleanResult: {}", DataTypeConverter.bytesToHex(message));
 			} catch (IOException e) {
 				logger.error("Failed to write socket on student workstation. Caused by {}", e.toString());
 			}
 			try {
+				SimulatorUtil.sleepMilliSeconds(50);
 				int result = this.resultQueue.take();
 				if (result < 0) {
 					Display.getDefault().asyncExec(new Runnable() {
