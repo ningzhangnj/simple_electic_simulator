@@ -209,7 +209,7 @@ public class SimulatorFiguresCollections implements StateListener, ValidateSwitc
 										new Point(304, 230)
 									 ), 1),				
 				new LeftGroundFigure		(130, "1111E", 240, 208, 1),
-				new SimulatorLabel			("1111", 200, 208),
+				new SimulatorLabel			("1111E", 200, 208),
 				new MainSwitchFigure		(129,  "111", 298, 230, 1),
 				new SimulatorLabel			("111", 340, 230),
 				new HighVoltageLineFigure(2, 
@@ -711,7 +711,7 @@ public class SimulatorFiguresCollections implements StateListener, ValidateSwitc
 								if (state == 0) {
 									if (childState.getPower() == (1<<relationshipIndex)) {
 										childState.setPower(state);
-									} else if (childState.getPower() > 0){
+									} else if ((childState.getPower()&(1<<relationshipIndex)) != 0){
 										childState.setPower(childState.getPower() - (1<<relationshipIndex));
 									}									
 								} else {
