@@ -9,16 +9,13 @@ import java.util.List;
 
 import org.eclipse.draw2d.FreeformLayer;
 import org.eclipse.swt.widgets.Display;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.rail.electric.simulator.model.TeacherWorkstation.WorkMode;
 import com.rail.electric.simulator.worker.StudentWorker;
 import com.rail.electric.simulator.worker.TeacherWorker;
 
 public class SimulatorManager {
-	private final static Logger logger =  LoggerFactory.getLogger(SimulatorManager.class);
-	
+		
 	public static final byte BEGIN_BYTE = (byte)0xf5;
 	public static final byte END_BYTE = (byte)0xfa;
 	public static final byte CORRECT_PACKET_BYTE = (byte)0xf6;
@@ -192,4 +189,5 @@ public class SimulatorManager {
 	public enum WorkStatus {
 		IDLE, RUNNING_STUDENT, RUNNING_TEACHER;
 	}
+		
 }

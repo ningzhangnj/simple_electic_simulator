@@ -4,6 +4,7 @@ import org.eclipse.osgi.util.NLS;
 
 public class SimulatorMessages extends NLS {
 	public static String Simulator_title;
+	public static String LicenseError_message;
 	public static String Operate_menu;
 	public static String StartTeacher_menu;
 	public static String StartStudent_menu;

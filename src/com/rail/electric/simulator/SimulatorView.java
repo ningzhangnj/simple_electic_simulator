@@ -1,6 +1,12 @@
 package com.rail.electric.simulator;
 
 import java.io.File;
+import java.net.NetworkInterface;
+import java.net.SocketException;
+import java.net.UnknownHostException;
+import java.util.Arrays;
+import java.util.Enumeration;
+import java.util.List;
 
 import org.eclipse.draw2d.FigureCanvas;
 import org.eclipse.draw2d.FreeformLayer;
@@ -30,12 +36,16 @@ import org.slf4j.LoggerFactory;
 import com.rail.electric.simulator.SimulatorManager.WorkStatus;
 import com.rail.electric.simulator.dialogs.StartStudentDialog;
 import com.rail.electric.simulator.dialogs.StartTeacherDialog;
+import com.rail.electric.simulator.helpers.DataTypeConverter;
 
 public class SimulatorView {
 	private final static Logger logger =  LoggerFactory.getLogger(SimulatorView.class);
 	
 	private static final int VIEW_WIDTH = 1800;	
 	private static final int VIEW_HEIGHT = 1000;
+	
+	private static final List<Long> licenses = Arrays.asList(132837597590628L, 122178626107566L, 125099203868846L);
+	
 	private ScalableFreeformLayeredPane root;
 	private FreeformLayer primary;
 	private SimulatorManager simManager;
@@ -70,31 +80,35 @@ public class SimulatorView {
 		shell.setText(SimulatorMessages.Simulator_title); //$NON-NLS-1$
 		shell.setLayout(new GridLayout());
 		
-		FigureCanvas canvas = createDiagram(shell);
-		canvas.setLayoutData(new GridData(GridData.FILL_BOTH));
-		
-		simManager = SimulatorManager.getInstance(this, primary,
-			WorkStatus.IDLE);
-				
-		createMenuBar(shell);
-				
-		updateMenuItems();
-		
-		Display display = shell.getDisplay();
-		shell.addDisposeListener(new DisposeListener() {
-
-			@Override
-			public void widgetDisposed(DisposeEvent arg0) {
-				simManager.deactivate();
-			}
+		if (calculateLicense()) {
+			FigureCanvas canvas = createDiagram(shell);
+			canvas.setLayoutData(new GridData(GridData.FILL_BOTH));
 			
-		});
-		shell.open();
-		while (!shell.isDisposed()) {
-			while (!display.readAndDispatch()) {
-				display.sleep();
+			simManager = SimulatorManager.getInstance(this, primary,
+				WorkStatus.IDLE);
+					
+			createMenuBar(shell);
+					
+			updateMenuItems();
+			
+			Display display = shell.getDisplay();
+			shell.addDisposeListener(new DisposeListener() {
+
+				@Override
+				public void widgetDisposed(DisposeEvent arg0) {
+					simManager.deactivate();
+				}
+				
+			});
+			shell.open();
+			while (!shell.isDisposed()) {
+				while (!display.readAndDispatch()) {
+					display.sleep();
+				}
 			}
-		}
+		} else {
+			MessageDialog.openError(shell, SimulatorMessages.ErrorDialog_title, SimulatorMessages.LicenseError_message);
+		}		
 	}
 	
 	private void createMenuBar(Shell shell) {
@@ -306,6 +320,32 @@ public class SimulatorView {
 		double newScale = Math.min(wScale, hScale);
 		
 		root.setScale(newScale);
+	}
+	
+	private boolean calculateLicense() {		
+		try {			
+			for(Enumeration<NetworkInterface> e = NetworkInterface.getNetworkInterfaces();
+               e.hasMoreElements(); )
+			{
+				NetworkInterface ni = e.nextElement();
+				byte[] mac = ni.getHardwareAddress();
+				if (mac == null || mac.length != 6) continue;
+				logger.debug("Get mac address is : " + DataTypeConverter.bytesToHex(mac));				
+				long result = (convertByte2Long(mac[0])<<8) + convertByte2Long(mac[1])
+						+ (convertByte2Long(mac[2])<<24) + (convertByte2Long(mac[3])<<16) 
+						+ (convertByte2Long(mac[4])<<40) + (convertByte2Long(mac[5])<<32);
+				logger.debug("Computed license result is: " + result);
+				if (licenses.contains(result)) return true;
+			}			
+		} catch (SocketException e) {
+			logger.error("Critial error: can not get network info.");
+		}
+		
+		return false;
+	}
+	
+	private long convertByte2Long(byte b) {
+		return b&0xff;
 	}
 	
 	public static void main(String[] args) {
