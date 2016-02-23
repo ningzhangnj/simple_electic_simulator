@@ -1,10 +1,10 @@
 package com.rail.electric.simulator.worker;
 
-import static com.rail.electric.simulator.SimulatorManager.QUIZ_CORRECT_HEAD_BYTE;
-import static com.rail.electric.simulator.SimulatorManager.QUIZ_INITSTATE_HEAD_BYTE;
-import static com.rail.electric.simulator.SimulatorManager.QUIZ_PASS_HEAD_BYTE;
-import static com.rail.electric.simulator.SimulatorManager.QUIZ_SUBJECT_HEAD_BYTE;
-import static com.rail.electric.simulator.SimulatorManager.QUIZ_WRONG_HEAD_BYTE;
+import static com.rail.electric.simulator.manager.ConnectionsManager.QUIZ_CORRECT_HEAD_BYTE;
+import static com.rail.electric.simulator.manager.ConnectionsManager.QUIZ_INITSTATE_HEAD_BYTE;
+import static com.rail.electric.simulator.manager.ConnectionsManager.QUIZ_PASS_HEAD_BYTE;
+import static com.rail.electric.simulator.manager.ConnectionsManager.QUIZ_SUBJECT_HEAD_BYTE;
+import static com.rail.electric.simulator.manager.ConnectionsManager.QUIZ_WRONG_HEAD_BYTE;
 
 import java.io.DataInputStream;
 import java.io.IOException;
@@ -22,9 +22,9 @@ import org.eclipse.swt.widgets.Display;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.rail.electric.simulator.SimulatorManager;
 import com.rail.electric.simulator.SimulatorMessages;
 import com.rail.electric.simulator.helpers.DataTypeConverter;
+import com.rail.electric.simulator.manager.ConnectionsManager;
 import com.rail.electric.simulator.util.SimulatorUtil;
 
 public class StudentWorker {
@@ -32,7 +32,7 @@ public class StudentWorker {
 	
 	private int port = 9876;
 	private String ip = "127.0.0.1";
-	private SimulatorManager manager;
+	private ConnectionsManager manager;
 	private boolean isRunning = false;
 	@SuppressWarnings("rawtypes")
 	private Future clientFuture; 
@@ -40,7 +40,7 @@ public class StudentWorker {
 
 	private Socket serverSocket;
 	
-	public StudentWorker(String ip, int port, SimulatorManager manager) {
+	public StudentWorker(String ip, int port, ConnectionsManager manager) {
 		this.ip = ip;
 		this.port = port;
 		this.manager = manager;

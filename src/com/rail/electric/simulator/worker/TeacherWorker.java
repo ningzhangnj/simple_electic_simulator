@@ -1,13 +1,13 @@
 package com.rail.electric.simulator.worker;
 
 import static com.rail.electric.simulator.SimulatorFiguresCollections.SWITCH_NUMBERS;
-import static com.rail.electric.simulator.SimulatorManager.BEGIN_BYTE;
-import static com.rail.electric.simulator.SimulatorManager.CORRECT_PACKET_BYTE;
-import static com.rail.electric.simulator.SimulatorManager.QUIZ_CORRECT_HEAD_BYTE;
-import static com.rail.electric.simulator.SimulatorManager.QUIZ_PASS_HEAD_BYTE;
-import static com.rail.electric.simulator.SimulatorManager.QUIZ_WRONG_HEAD_BYTE;
-import static com.rail.electric.simulator.SimulatorManager.READ_SWITCH_BYTE;
-import static com.rail.electric.simulator.SimulatorManager.SWITCH_STATUS_HEAD_BYTE;
+import static com.rail.electric.simulator.manager.ConnectionsManager.BEGIN_BYTE;
+import static com.rail.electric.simulator.manager.ConnectionsManager.CORRECT_PACKET_BYTE;
+import static com.rail.electric.simulator.manager.ConnectionsManager.QUIZ_CORRECT_HEAD_BYTE;
+import static com.rail.electric.simulator.manager.ConnectionsManager.QUIZ_PASS_HEAD_BYTE;
+import static com.rail.electric.simulator.manager.ConnectionsManager.QUIZ_WRONG_HEAD_BYTE;
+import static com.rail.electric.simulator.manager.ConnectionsManager.READ_SWITCH_BYTE;
+import static com.rail.electric.simulator.manager.ConnectionsManager.SWITCH_STATUS_HEAD_BYTE;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -25,11 +25,11 @@ import org.eclipse.swt.widgets.Display;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.rail.electric.simulator.SimulatorManager;
 import com.rail.electric.simulator.SimulatorMessages;
 import com.rail.electric.simulator.dialogs.OperationInfoDialog;
 import com.rail.electric.simulator.helpers.CommHelper;
 import com.rail.electric.simulator.helpers.DataTypeConverter;
+import com.rail.electric.simulator.manager.ConnectionsManager;
 import com.rail.electric.simulator.model.TeacherWorkstation.WorkMode;
 import com.rail.electric.simulator.util.SimulatorUtil;
 
@@ -39,7 +39,7 @@ private final static Logger logger =  LoggerFactory.getLogger(TeacherWorker.clas
 	private int port = 9876;
 	private WorkMode mode;
 	private String commPort;
-	private SimulatorManager manager;
+	private ConnectionsManager manager;
 	private boolean isRunning = false;
 	private CommHelper commHelper = new CommHelper();
 	
@@ -53,7 +53,7 @@ private final static Logger logger =  LoggerFactory.getLogger(TeacherWorker.clas
 	@SuppressWarnings("rawtypes")
 	private Future commFuture;
 	
-	public TeacherWorker(int port, WorkMode mode, String commPort, SimulatorManager manager) {
+	public TeacherWorker(int port, WorkMode mode, String commPort, ConnectionsManager manager) {
 		this.port = port;
 		this.mode = mode;
 		this.commPort = commPort;

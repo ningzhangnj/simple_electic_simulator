@@ -6,12 +6,12 @@ import org.eclipse.jface.window.Window;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Display;
 
-import com.rail.electric.simulator.SimulatorManager;
-import com.rail.electric.simulator.SimulatorManager.WorkStatus;
 import com.rail.electric.simulator.SimulatorMessages;
 import com.rail.electric.simulator.dialogs.OperateConfirmationDialog;
 import com.rail.electric.simulator.listeners.StateListener;
 import com.rail.electric.simulator.listeners.ValidateSwitchListener;
+import com.rail.electric.simulator.manager.ConnectionsManager;
+import com.rail.electric.simulator.manager.ConnectionsManager.WorkStatus;
 
 public abstract class StateFigure extends BaseFigure {
 	protected boolean isOn = true;
@@ -29,7 +29,7 @@ public abstract class StateFigure extends BaseFigure {
 		this.icon_on = icon_on;
 		this.power = initialPower;
 		setIcon(isOn?icon_on:icon_off);
-		if (SimulatorManager.getInstance().getStatus() == WorkStatus.RUNNING_STUDENT) {
+		if (ConnectionsManager.getInstance().getStatus() == WorkStatus.RUNNING_STUDENT) {
 			this.addMouseListener(new MouseListener.Stub() {
 				public void mousePressed(MouseEvent me) {
 					if (me.button == 1) {

@@ -1,4 +1,4 @@
-package com.rail.electric.simulator;
+package com.rail.electric.simulator.manager;
 
 import static com.rail.electric.simulator.SimulatorFiguresCollections.SWITCH_OFFSET;
 
@@ -10,11 +10,14 @@ import java.util.List;
 import org.eclipse.draw2d.FreeformLayer;
 import org.eclipse.swt.widgets.Display;
 
+import com.rail.electric.simulator.SimulatorFiguresCollections;
+import com.rail.electric.simulator.SimulatorView;
 import com.rail.electric.simulator.model.TeacherWorkstation.WorkMode;
+import com.rail.electric.simulator.view.ConnectionsView;
 import com.rail.electric.simulator.worker.StudentWorker;
 import com.rail.electric.simulator.worker.TeacherWorker;
 
-public class SimulatorManager {
+public class ConnectionsManager {
 		
 	public static final byte BEGIN_BYTE = (byte)0xf5;
 	public static final byte END_BYTE = (byte)0xfa;
@@ -29,30 +32,30 @@ public class SimulatorManager {
 	public static final byte SWITCH_STATUS_HEAD_BYTE = (byte)0xf9;
 	
 	private SimulatorFiguresCollections simModel;
-	private SimulatorView simView;
+	private ConnectionsView connView;
 	private WorkStatus status;
 	private FreeformLayer primaryLayer;	
 	
 	private StudentWorker studentWorker;
 	private TeacherWorker teacherWorker;
 	
-	private static  SimulatorManager instance;
+	private static  ConnectionsManager instance;
 	
-	public static SimulatorManager getInstance(SimulatorView view, FreeformLayer layer,
+	public static ConnectionsManager getInstance(ConnectionsView view, FreeformLayer layer,
 			WorkStatus status) {
 		if (instance == null) {
-			instance = new SimulatorManager(view, layer, status);
+			instance = new ConnectionsManager(view, layer, status);
 		}
 		return instance;
 	}
 	
-	public static SimulatorManager getInstance() {
+	public static ConnectionsManager getInstance() {
 		return instance;
 	}
 	
-	private SimulatorManager(SimulatorView view, FreeformLayer layer,
+	private ConnectionsManager(ConnectionsView view, FreeformLayer layer,
 			WorkStatus status) {
-		this.simView = view;
+		this.connView = view;
 		this.primaryLayer = layer;
 		this.status = status;
 		simModel = new SimulatorFiguresCollections(primaryLayer, this);
@@ -62,7 +65,7 @@ public class SimulatorManager {
 		stop();
 		setStatus(WorkStatus.IDLE);
 		simModel.deactivate();		
-		simView.updateMenuItems();		
+		connView.updateMenuItems();		
 	}
 
 	public void importConnections(File file) {

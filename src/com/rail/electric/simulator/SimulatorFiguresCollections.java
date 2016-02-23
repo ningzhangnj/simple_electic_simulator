@@ -1,7 +1,7 @@
 package com.rail.electric.simulator;
 
-import static com.rail.electric.simulator.SimulatorManager.BEGIN_BYTE;
-import static com.rail.electric.simulator.SimulatorManager.END_BYTE;
+import static com.rail.electric.simulator.manager.ConnectionsManager.BEGIN_BYTE;
+import static com.rail.electric.simulator.manager.ConnectionsManager.END_BYTE;
 
 import java.io.DataOutputStream;
 import java.io.File;
@@ -48,6 +48,7 @@ import com.rail.electric.simulator.figures.UpGroundFigure;
 import com.rail.electric.simulator.helpers.DataTypeConverter;
 import com.rail.electric.simulator.listeners.StateListener;
 import com.rail.electric.simulator.listeners.ValidateSwitchListener;
+import com.rail.electric.simulator.manager.ConnectionsManager;
 import com.rail.electric.simulator.model.StateModel;
 import com.rail.electric.simulator.model.StateSequenceModel;
 
@@ -176,7 +177,7 @@ public class SimulatorFiguresCollections implements StateListener, ValidateSwitc
 	}
 	
 	private FreeformLayer layer;
-	private SimulatorManager manager;
+	private ConnectionsManager manager;
 	private byte[] switchStatus = new byte[SWITCH_NUMBERS]; 
 	
 	private List<Figure> figures;
@@ -190,7 +191,7 @@ public class SimulatorFiguresCollections implements StateListener, ValidateSwitc
 	private List<String> operationList;
 	private String operationScore = "100";
 	
-	SimulatorFiguresCollections(FreeformLayer layer, SimulatorManager manager) {
+	public SimulatorFiguresCollections(FreeformLayer layer, ConnectionsManager manager) {
 		this.manager = manager;
 		this.layer = layer;
 		loadCover();
