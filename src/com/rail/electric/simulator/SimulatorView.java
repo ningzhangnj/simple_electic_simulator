@@ -5,7 +5,6 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.widgets.Canvas;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
@@ -26,10 +25,11 @@ public class SimulatorView {
 		shell.setLayout(new GridLayout());
 		
 		if (SimulatorUtil.calculateLicense()) {
-			Composite viewArea = new Composite(shell, SWT.BORDER);
+			/*Composite viewArea = new Composite(shell, SWT.NONE);
 			viewArea.setLayout(new GridLayout());
 			viewArea.setBounds(shell.getBounds());
-			new CoverView(viewArea);			
+			viewArea.setSize(shell.getSize());*/
+			new CoverView(shell);			
 			
 			Display display = shell.getDisplay();
 			shell.addDisposeListener(new DisposeListener() {

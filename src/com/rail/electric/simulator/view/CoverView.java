@@ -41,17 +41,14 @@ public class CoverView implements IView {
 
 			@Override
 			public void onClick(String id) {
-				hide();				
+				canvas.dispose();			
+				new ConnectionsView(parent);
 			}
 			
 		});
 		primary.add(connectionsEntryFigure);
 	}
 	
-	private void hide() {
-		canvas.setVisible(false);
-	}
-
 	@Override
 	public void activate() {
 		createDiagram(parent);
@@ -72,14 +69,13 @@ public class CoverView implements IView {
 		// Create a layered pane along with primary and connection layers
 		root = new ScalableFreeformLayeredPane();
 		root.setFont(parent.getFont());
-
+		
 		primary = new FreeformLayer();
-		primary.setLayoutManager(new FreeformLayout());
+		primary.setLayoutManager(new FreeformLayout());	
 		root.add(primary, "Primary");
 
 		// Create the canvas and use it to show the root figure
-		canvas = new FigureCanvas(parent, SWT.DOUBLE_BUFFERED);
-		canvas.setBounds(parent.getBounds());
+		canvas = new FigureCanvas(parent, SWT.NONE);
 		canvas.setViewport(new FreeformViewport());
 		canvas.setBackground(new Color(null, 204, 232, 207));		
 		canvas.setContents(root);

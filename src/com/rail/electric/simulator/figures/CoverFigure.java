@@ -5,7 +5,7 @@ import org.eclipse.swt.widgets.Display;
 
 public class CoverFigure extends BaseFigure {
 	public static final Image LARGE_MAIN_COVER = new Image(Display.getCurrent(),			
-			CoverFigure.class.getResourceAsStream("icons/cover_title.png"));	
+			CoverFigure.class.getResourceAsStream("icons/cover_title.jpg"));	
 	
 	public static final int WIDTH = 1381;
 	public static final int HEIGHT = 800;

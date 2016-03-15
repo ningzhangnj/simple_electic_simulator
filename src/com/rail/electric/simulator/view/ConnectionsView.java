@@ -14,6 +14,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Menu;
@@ -35,8 +36,16 @@ public class ConnectionsView  implements IView {
 	private ScalableFreeformLayeredPane root;
 	private FreeformLayer primary;
 	private ConnectionsManager simManager;
+	private FigureCanvas canvas;
+	private Composite parent;
 	
-	private FigureCanvas createDiagram(Composite parent) {
+	public ConnectionsView(Composite parent) {
+		super();
+		this.parent = parent;
+		activate();
+	}
+	
+	private void createDiagram(Composite parent) {
 		
 		// Create a layered pane along with primary and connection layers
 		root = new ScalableFreeformLayeredPane();
@@ -47,11 +56,11 @@ public class ConnectionsView  implements IView {
 		root.add(primary, "Primary");
 
 		// Create the canvas and use it to show the root figure
-		FigureCanvas canvas = new FigureCanvas(parent, SWT.DOUBLE_BUFFERED);
+		canvas = new FigureCanvas(parent, SWT.DOUBLE_BUFFERED);
 		canvas.setViewport(new FreeformViewport());
 		canvas.setBackground(new Color(null, 204, 232, 207));
 		canvas.setContents(root);
-		return canvas;
+		canvas.setLayoutData(new GridData(GridData.FILL_BOTH));	
 	}
 	
 	private void createMenuBar(Shell shell) {
@@ -74,14 +83,15 @@ public class ConnectionsView  implements IView {
 		Menu zoomMenu = new Menu(shell, SWT.DROP_DOWN);
 		zoomMenuItem.setMenu(zoomMenu);
 		
-		MenuItem aboutMenuItem = new MenuItem(menuBar, SWT.CASCADE);
-		aboutMenuItem.setText(SimulatorMessages.About_menu); //$NON-NLS-1$
-				
+		MenuItem returnMenuItem = new MenuItem(menuBar, SWT.CASCADE);
+		returnMenuItem.setText(SimulatorMessages.Return_menu); //$NON-NLS-1$
+		
+		createReturnMenuItem(returnMenuItem, shell);
+		
 		// Create the File menu items
 		createStartTeacherMenuItem(operateMenu, shell);
 		createStartStudentMenuItem(operateMenu, shell);
-		createStopMenuItem(operateMenu, shell);
-		
+		createStopMenuItem(operateMenu, shell);		
 		
 		// Create import connections menu items.
 		createImportConnectionsMenuItem(connectionsMenu, shell);
@@ -95,6 +105,17 @@ public class ConnectionsView  implements IView {
 		createScaleToFitMenuItem(zoomMenu);
 	}
 		
+	private void createReturnMenuItem(MenuItem menuItem, final Shell shell) {		
+		menuItem.addSelectionListener(new SelectionListener() {
+			public void widgetSelected(SelectionEvent e) {
+				return2Cover();
+			}
+			public void widgetDefaultSelected(SelectionEvent e) {
+				widgetSelected(e);
+			}
+		});
+	}
+	
 	private void createImportConnectionsMenuItem(Menu menu, final Shell shell) {
 		importMenuItem = new MenuItem(menu, SWT.NULL);
 		importMenuItem.setText(SimulatorMessages.ImportConnections_menu); //$NON-NLS-1$
@@ -253,7 +274,14 @@ public class ConnectionsView  implements IView {
 
 	@Override
 	public void activate() {
-		// TODO Auto-generated method stub
+		createDiagram(parent);
+		
+		//canvas.setBounds(parent.getBounds());
+		canvas.setVisible(true);
+		
+		createMenuBar(parent.getShell());
+		
+		simManager = ConnectionsManager.getInstance(this, primary, WorkStatus.IDLE);
 		
 	}
 
@@ -261,6 +289,11 @@ public class ConnectionsView  implements IView {
 	public void deactivate() {
 		// TODO Auto-generated method stub
 		
+	}
+	
+	private void return2Cover() {
+		canvas.dispose();
+		new CoverView(parent);
 	}
 	
 }

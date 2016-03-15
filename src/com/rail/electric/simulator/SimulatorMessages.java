@@ -14,6 +14,7 @@ public class SimulatorMessages extends NLS {
 	public static String Connections_menu;
 	public static String ImportConnections_menu;
 	public static String About_menu;
+	public static String Return_menu;
 	public static String Manufacturer_name;
 	public static String About_title;
 	public static String Version_label;
