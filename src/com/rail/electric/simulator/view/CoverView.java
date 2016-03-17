@@ -18,51 +18,39 @@ import org.eclipse.swt.widgets.Shell;
 
 import com.rail.electric.simulator.SimulatorMessages;
 import com.rail.electric.simulator.figures.ConnectionsEntryFigure;
-import com.rail.electric.simulator.figures.CoverFigure;
 import com.rail.electric.simulator.listeners.FigureClickListener;
 
-public class CoverView implements IView {
+public class CoverView extends AbstractView implements IView {
 	
 	private ScalableFreeformLayeredPane root;
 	private FreeformLayer primary;
-	private Composite parent;
-	private FigureCanvas canvas;
 	
+	private FigureCanvas canvas;
+			
 	public CoverView(Composite parent) {
-		super();
-		this.parent = parent;
-		activate();
+		super(parent, null);
+		
+		createDiagram(parent);
+		
+		rootControl = canvas;
+		
+		loadCover();
 	}
 	
 	private void loadCover() {
-		primary.add(new CoverFigure(0, 210, 200));
+		//primary.add(new CoverFigure(0, 210, 200));
 		ConnectionsEntryFigure connectionsEntryFigure = new ConnectionsEntryFigure(0, 400, 400);
 		connectionsEntryFigure.addClickListener(new FigureClickListener() {
 
 			@Override
 			public void onClick(String id) {
-				canvas.dispose();			
-				new ConnectionsView(parent);
+				deactivate();
+				ViewsManager.getInstance().getView("connections", parent, CoverView.this).activate();
 			}
 			
 		});
 		primary.add(connectionsEntryFigure);
-	}
-	
-	@Override
-	public void activate() {
-		createDiagram(parent);
-		
-		loadCover();
-		
-		createMenuBar(parent.getShell());
-	}
-
-	@Override
-	public void deactivate() {
-		// TODO Auto-generated method stub
-		
-	}
+	}	
 	
 	private void createDiagram(Composite parent) {
 		
@@ -82,7 +70,7 @@ public class CoverView implements IView {
 		canvas.setLayoutData(new GridData(GridData.FILL_BOTH));	
 	}
 	
-	private void createMenuBar(Shell shell) {
+	protected void createMenuBar(Shell shell) {
 		final Menu menuBar = new Menu(shell, SWT.BAR);
 		shell.setMenuBar(menuBar);
 		MenuItem aboutMenuItem = new MenuItem(menuBar, SWT.CASCADE);
@@ -100,6 +88,11 @@ public class CoverView implements IView {
 				widgetSelected(e);
 			}
 		});
+	}
+	
+	@Override
+	public IView getParentView() {
+		return null;
 	}
 
 }

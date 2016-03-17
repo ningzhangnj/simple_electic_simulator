@@ -8,7 +8,6 @@ import org.eclipse.draw2d.FreeformLayout;
 import org.eclipse.draw2d.FreeformViewport;
 import org.eclipse.draw2d.ScalableFreeformLayeredPane;
 import org.eclipse.draw2d.geometry.Rectangle;
-import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionEvent;
@@ -27,7 +26,7 @@ import com.rail.electric.simulator.dialogs.StartTeacherDialog;
 import com.rail.electric.simulator.manager.ConnectionsManager;
 import com.rail.electric.simulator.manager.ConnectionsManager.WorkStatus;
 
-public class ConnectionsView  implements IView {
+public class ConnectionsView  extends AbstractView implements IView {
 	private MenuItem	startTeacherMenuItem;
 	private MenuItem	startStudentMenuItem;
 	private MenuItem	stopMenuItem;
@@ -37,12 +36,16 @@ public class ConnectionsView  implements IView {
 	private FreeformLayer primary;
 	private ConnectionsManager simManager;
 	private FigureCanvas canvas;
-	private Composite parent;
 	
-	public ConnectionsView(Composite parent) {
-		super();
-		this.parent = parent;
-		activate();
+	public ConnectionsView(Composite parent, IView parentView) {
+		super(parent, parentView);
+		createDiagram(parent);	
+		
+		createMenuBar(parent.getShell());
+		
+		simManager = ConnectionsManager.getInstance(this, primary, WorkStatus.IDLE);
+		
+		rootControl = canvas;
 	}
 	
 	private void createDiagram(Composite parent) {
@@ -63,7 +66,7 @@ public class ConnectionsView  implements IView {
 		canvas.setLayoutData(new GridData(GridData.FILL_BOTH));	
 	}
 	
-	private void createMenuBar(Shell shell) {
+	protected void createMenuBar(Shell shell) {
 
 		// Create menu bar with "File" and "Zoom" menus
 		final Menu menuBar = new Menu(shell, SWT.BAR);
@@ -108,7 +111,7 @@ public class ConnectionsView  implements IView {
 	private void createReturnMenuItem(MenuItem menuItem, final Shell shell) {		
 		menuItem.addSelectionListener(new SelectionListener() {
 			public void widgetSelected(SelectionEvent e) {
-				return2Cover();
+				return2ParentView();
 			}
 			public void widgetDefaultSelected(SelectionEvent e) {
 				widgetSelected(e);
@@ -274,26 +277,19 @@ public class ConnectionsView  implements IView {
 
 	@Override
 	public void activate() {
-		createDiagram(parent);
-		
-		//canvas.setBounds(parent.getBounds());
-		canvas.setVisible(true);
-		
-		createMenuBar(parent.getShell());
-		
-		simManager = ConnectionsManager.getInstance(this, primary, WorkStatus.IDLE);
-		
-	}
-
-	@Override
-	public void deactivate() {
-		// TODO Auto-generated method stub
-		
+		super.activate();
+		updateMenuItems();
 	}
 	
-	private void return2Cover() {
-		canvas.dispose();
-		new CoverView(parent);
+	@Override
+	public IView getParentView() {
+		return parentView;
+	}
+	
+	@Override
+	public void dispose() {
+		super.dispose();
+		simManager.deactivate();
 	}
 	
 }

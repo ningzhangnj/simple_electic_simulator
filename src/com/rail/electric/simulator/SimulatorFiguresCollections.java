@@ -194,7 +194,7 @@ public class SimulatorFiguresCollections implements StateListener, ValidateSwitc
 	public SimulatorFiguresCollections(FreeformLayer layer, ConnectionsManager manager) {
 		this.manager = manager;
 		this.layer = layer;
-		loadCover();
+		//loadCover();
 	}
 	
 	private void loadCover() {
