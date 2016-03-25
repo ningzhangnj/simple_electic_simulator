@@ -14,5 +14,8 @@
 	<classpathentry kind="lib" path="libs/log4j.jar"/>
 	<classpathentry kind="lib" path="libs/slf4j-api.jar"/>
 	<classpathentry kind="lib" path="libs/slf4j-log4j12.jar"/>
+	<classpathentry kind="lib" path="libs/jcommon-1.0.23.jar"/>
+	<classpathentry kind="lib" path="libs/jfreechart-1.0.19-swt.jar"/>
+	<classpathentry kind="lib" path="libs/jfreechart-1.0.19.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

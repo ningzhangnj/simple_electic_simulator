@@ -107,17 +107,6 @@ public class ConnectionsView  extends AbstractView implements IView {
 		// Add "Scale to fit" menu item
 		createScaleToFitMenuItem(zoomMenu);
 	}
-		
-	private void createReturnMenuItem(MenuItem menuItem, final Shell shell) {		
-		menuItem.addSelectionListener(new SelectionListener() {
-			public void widgetSelected(SelectionEvent e) {
-				return2ParentView();
-			}
-			public void widgetDefaultSelected(SelectionEvent e) {
-				widgetSelected(e);
-			}
-		});
-	}
 	
 	private void createImportConnectionsMenuItem(Menu menu, final Shell shell) {
 		importMenuItem = new MenuItem(menu, SWT.NULL);

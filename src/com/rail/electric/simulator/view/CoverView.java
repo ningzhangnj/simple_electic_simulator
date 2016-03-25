@@ -18,6 +18,7 @@ import org.eclipse.swt.widgets.Shell;
 
 import com.rail.electric.simulator.SimulatorMessages;
 import com.rail.electric.simulator.figures.ConnectionsEntryFigure;
+import com.rail.electric.simulator.figures.LoadCurveFigure;
 import com.rail.electric.simulator.listeners.FigureClickListener;
 
 public class CoverView extends AbstractView implements IView {
@@ -49,7 +50,18 @@ public class CoverView extends AbstractView implements IView {
 			}
 			
 		});
+		LoadCurveFigure loadCurveyFigure = new LoadCurveFigure(0, 800, 400);
+		loadCurveyFigure.addClickListener(new FigureClickListener() {
+
+			@Override
+			public void onClick(String id) {
+				deactivate();
+				ViewsManager.getInstance().getView("load", parent, CoverView.this).activate();
+			}
+			
+		});
 		primary.add(connectionsEntryFigure);
+		primary.add(loadCurveyFigure);
 	}	
 	
 	private void createDiagram(Composite parent) {

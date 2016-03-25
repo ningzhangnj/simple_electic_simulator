@@ -11,7 +11,6 @@ import org.eclipse.draw2d.FreeformLayer;
 import org.eclipse.swt.widgets.Display;
 
 import com.rail.electric.simulator.SimulatorFiguresCollections;
-import com.rail.electric.simulator.SimulatorView;
 import com.rail.electric.simulator.model.TeacherWorkstation.WorkMode;
 import com.rail.electric.simulator.view.ConnectionsView;
 import com.rail.electric.simulator.worker.StudentWorker;

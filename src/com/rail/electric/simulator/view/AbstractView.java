@@ -1,7 +1,10 @@
 package com.rail.electric.simulator.view;
 
+import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.Shell;
 
 public abstract class AbstractView implements IView {
@@ -42,4 +45,15 @@ public abstract class AbstractView implements IView {
 	}
 	
 	protected abstract void createMenuBar(Shell shell) ;
+	
+	protected void createReturnMenuItem(MenuItem menuItem, final Shell shell) {		
+		menuItem.addSelectionListener(new SelectionListener() {
+			public void widgetSelected(SelectionEvent e) {
+				return2ParentView();
+			}
+			public void widgetDefaultSelected(SelectionEvent e) {
+				widgetSelected(e);
+			}
+		});
+	}
 }

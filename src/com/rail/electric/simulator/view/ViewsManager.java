@@ -37,6 +37,9 @@ public class ViewsManager {
 			case "connections":
 				view = new ConnectionsView(parent, parentView);
 				break;
+			case "load":
+				view = new LoadCurveView(parent, parentView);
+				break;
 			default:
 				throw new UnsupportedOperationException("Invalid viewId: " + viewId);
 		}

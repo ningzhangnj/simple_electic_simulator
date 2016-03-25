@@ -678,7 +678,7 @@ public class SimulatorFiguresCollections implements StateListener, ValidateSwitc
 
 	public void deactivate() {
 		layer.removeAll();
-		loadCover();
+		//loadCover();
 	}
 	
 	@Override

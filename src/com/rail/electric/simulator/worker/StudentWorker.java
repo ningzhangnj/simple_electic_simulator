@@ -56,7 +56,7 @@ public class StudentWorker {
 
 	public void start() {
 		setRunning(true);
-		clientFuture = Executors.newCachedThreadPool().submit(new Runnable() {
+		clientFuture = Executors.newSingleThreadExecutor().submit(new Runnable() {
 
 			@Override
 			public void run() {

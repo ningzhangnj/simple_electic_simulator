@@ -33,7 +33,7 @@ import com.rail.electric.simulator.model.TeacherWorkstation.WorkMode;
 import com.rail.electric.simulator.util.SimulatorUtil;
 
 public class TeacherWorker {
-private final static Logger logger =  LoggerFactory.getLogger(TeacherWorker.class);
+	private final static Logger logger =  LoggerFactory.getLogger(TeacherWorker.class);
 	
 	private int port = 9876;
 	private WorkMode mode;
@@ -71,7 +71,7 @@ private final static Logger logger =  LoggerFactory.getLogger(TeacherWorker.clas
 		setRunning(true);
 		if (mode != WorkMode.STUDENT_TEACHER) {
 			if (commHelper.open(commPort)) {
-				commFuture = Executors.newCachedThreadPool().submit(new Runnable() {
+				commFuture = Executors.newSingleThreadExecutor().submit(new Runnable() {
 	
 					@Override
 					public void run() {
@@ -88,7 +88,7 @@ private final static Logger logger =  LoggerFactory.getLogger(TeacherWorker.clas
 			}
 		}
 		if (mode != WorkMode.TEACHER_SIMULATOR) {
-			serverFuture = Executors.newCachedThreadPool().submit(new Runnable() {
+			serverFuture = Executors.newSingleThreadExecutor().submit(new Runnable() {
 	
 				@Override
 				public void run() {
@@ -106,7 +106,7 @@ private final static Logger logger =  LoggerFactory.getLogger(TeacherWorker.clas
 						
 					} catch (IOException e) {
 						logger.error("Failed to create socket on teacher workstation. Caused by {}", e.toString());
-					}				
+					}
 				}
 				
 			});
@@ -299,6 +299,7 @@ private final static Logger logger =  LoggerFactory.getLogger(TeacherWorker.clas
 		if (serverFuture != null) {
 			serverFuture.cancel(true);
 		}
+		
 		
 		if (commHelper != null ) commHelper.close();
 	}
