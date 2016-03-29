@@ -66,6 +66,10 @@ public class SimulatorMessages extends NLS {
 	public static String OperationHistory_Label;
 	public static String OperationFinished_Title;
 	
+	public static String LoadCurve_Title;
+	public static String LoadCurveX_Label;
+	public static String LoadCurveY_Label;
+	
 	static {
 		NLS.initializeMessages(
 				"com.rail.electric.simulator.messages", SimulatorMessages.class); //$NON-NLS-1$

@@ -25,11 +25,11 @@ import org.jfree.ui.RectangleInsets;
 
 import com.rail.electric.simulator.SimulatorMessages;
 
-public class LoadCurveView extends AbstractView implements IView {
+public class FaultRecordView extends AbstractView implements IView {
 	
 	private ChartComposite frame;
 
-	public LoadCurveView(Composite parent, IView parentView) {
+	public FaultRecordView(Composite parent, IView parentView) {
 		super(parent, parentView);
 		
 		final JFreeChart chart = createChart(createDataset());

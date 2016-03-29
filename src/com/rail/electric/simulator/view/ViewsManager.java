@@ -40,6 +40,15 @@ public class ViewsManager {
 			case "load":
 				view = new LoadCurveView(parent, parentView);
 				break;
+			case "fault":
+				view = new FaultRecordView(parent, parentView);
+				break;
+			case "equipment":
+				view = new EquipmentConfigurationsView(parent, parentView);
+				break;
+			case "operations":
+				view = new OperationsRecordView(parent, parentView);
+				break;
 			default:
 				throw new UnsupportedOperationException("Invalid viewId: " + viewId);
 		}

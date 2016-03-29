@@ -18,7 +18,10 @@ import org.eclipse.swt.widgets.Shell;
 
 import com.rail.electric.simulator.SimulatorMessages;
 import com.rail.electric.simulator.figures.ConnectionsEntryFigure;
+import com.rail.electric.simulator.figures.EquipmentConfigurationsFigure;
+import com.rail.electric.simulator.figures.FaultRecordFigure;
 import com.rail.electric.simulator.figures.LoadCurveFigure;
+import com.rail.electric.simulator.figures.OperationsRecordFigure;
 import com.rail.electric.simulator.listeners.FigureClickListener;
 
 public class CoverView extends AbstractView implements IView {
@@ -60,8 +63,41 @@ public class CoverView extends AbstractView implements IView {
 			}
 			
 		});
+		FaultRecordFigure faultRecordFigure = new FaultRecordFigure(0, 1200, 400);
+		faultRecordFigure.addClickListener(new FigureClickListener() {
+
+			@Override
+			public void onClick(String id) {
+				deactivate();
+				ViewsManager.getInstance().getView("fault", parent, CoverView.this).activate();
+			}
+			
+		});
+		EquipmentConfigurationsFigure equipmentConfigurationsFigure = new EquipmentConfigurationsFigure(0, 400, 700);
+		equipmentConfigurationsFigure.addClickListener(new FigureClickListener() {
+
+			@Override
+			public void onClick(String id) {
+				deactivate();
+				ViewsManager.getInstance().getView("equipment", parent, CoverView.this).activate();
+			}
+			
+		});
+		OperationsRecordFigure operationsRecordFigure = new OperationsRecordFigure(0, 800, 700);
+		operationsRecordFigure.addClickListener(new FigureClickListener() {
+
+			@Override
+			public void onClick(String id) {
+				deactivate();
+				ViewsManager.getInstance().getView("operations", parent, CoverView.this).activate();
+			}
+			
+		});
 		primary.add(connectionsEntryFigure);
 		primary.add(loadCurveyFigure);
+		primary.add(faultRecordFigure);
+		primary.add(equipmentConfigurationsFigure);
+		primary.add(operationsRecordFigure);
 	}	
 	
 	private void createDiagram(Composite parent) {
