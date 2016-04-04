@@ -49,6 +49,9 @@ public class ViewsManager {
 			case "operations":
 				view = new OperationsRecordView(parent, parentView);
 				break;
+			case "communication":
+				view = new CommunicationStateView(parent, parentView);
+				break;
 			default:
 				throw new UnsupportedOperationException("Invalid viewId: " + viewId);
 		}

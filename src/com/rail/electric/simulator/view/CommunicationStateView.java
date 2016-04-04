@@ -16,11 +16,11 @@ import org.eclipse.swt.widgets.TableItem;
 
 import com.rail.electric.simulator.SimulatorMessages;
 
-public class OperationsRecordView extends AbstractView implements IView {
+public class CommunicationStateView extends AbstractView implements IView {
 	
 	private Group group;
 
-	public OperationsRecordView(Composite parent, IView parentView) {
+	public CommunicationStateView(Composite parent, IView parentView) {
 		super(parent, parentView);
 
 		group = new Group (parent, SWT.NULL);	

@@ -51,11 +51,12 @@ import com.rail.electric.simulator.listeners.ValidateSwitchListener;
 import com.rail.electric.simulator.manager.ConnectionsManager;
 import com.rail.electric.simulator.model.StateModel;
 import com.rail.electric.simulator.model.StateSequenceModel;
+import com.rail.electric.simulator.util.SimulatorUtil;
 
 public class SimulatorFiguresCollections implements StateListener, ValidateSwitchListener {
 	private final static Logger logger =  LoggerFactory.getLogger(SimulatorFiguresCollections.class);
 	
-	public static final int SWITCH_NUMBERS = 67;
+	public static final int SWITCH_NUMBERS = 69;
 	public static final int LEDLINE_NUMBERS = 40;
 	public static final int SWITCH_OFFSET = 101;	
 	
@@ -68,111 +69,111 @@ public class SimulatorFiguresCollections implements StateListener, ValidateSwitc
 				new HashMap<Integer, List<Integer>>(),
 				new HashMap<Integer, List<Integer>>());
 		//#1 input
-		relationShips.get(0).put(1, 	Arrays.asList(127));
-		relationShips.get(0).put(127, 	Arrays.asList(2));
-		relationShips.get(0).put(2, 	Arrays.asList(129));
-		relationShips.get(0).put(129, 	Arrays.asList(3));
-		relationShips.get(0).put(3, 	Arrays.asList(131));
-		relationShips.get(0).put(131, 	Arrays.asList(4));
-		relationShips.get(0).put(4, 	Arrays.asList(102,103));
-		relationShips.get(0).put(102, 	Arrays.asList(5));
-		relationShips.get(0).put(103, 	Arrays.asList(6));
-		relationShips.get(0).put(6, 	Arrays.asList(105));
-		relationShips.get(0).put(105, 	Arrays.asList(7));
-		relationShips.get(0).put(7, 	Arrays.asList(107));
-		relationShips.get(0).put(107, 	Arrays.asList(8,51,53));
-		relationShips.get(0).put(8, 	Arrays.asList(110));
-		relationShips.get(0).put(110, 	Arrays.asList(16));
-		relationShips.get(0).put(16, 	Arrays.asList(112));
-		relationShips.get(0).put(112, 	Arrays.asList(19));
-		relationShips.get(0).put(19, 	Arrays.asList(124,133,122,119,116,113));
-		relationShips.get(0).put(124, 	Arrays.asList(10));
-		relationShips.get(0).put(10, 	Arrays.asList(125));
-		relationShips.get(0).put(125, 	Arrays.asList(11));
-		relationShips.get(0).put(122, 	Arrays.asList(9));
-		relationShips.get(0).put(119, 	Arrays.asList(12));
-		relationShips.get(0).put(12, 	Arrays.asList(120));
-		relationShips.get(0).put(120, 	Arrays.asList(13));
-		relationShips.get(0).put(116, 	Arrays.asList(14));
-		relationShips.get(0).put(14, 	Arrays.asList(117));
-		relationShips.get(0).put(117, 	Arrays.asList(15));
-		relationShips.get(0).put(113, 	Arrays.asList(18));
-		relationShips.get(0).put(18, 	Arrays.asList(114));
-		relationShips.get(0).put(114, 	Arrays.asList(17));
-		relationShips.get(0).put(133, 	Arrays.asList(20));
-		relationShips.get(0).put(20, 	Arrays.asList(132));
-		relationShips.get(0).put(132, 	Arrays.asList(21));
-		relationShips.get(0).put(21, 	Arrays.asList(135));
-		relationShips.get(0).put(135, 	Arrays.asList(22));
-		relationShips.get(0).put(22, 	Arrays.asList(156,144,155,152,149,146));
-		relationShips.get(0).put(156, 	Arrays.asList(25));
-		relationShips.get(0).put(144, 	Arrays.asList(30));
-		relationShips.get(0).put(30, 	Arrays.asList(142));
-		relationShips.get(0).put(142, 	Arrays.asList(31));
+		relationShips.get(0).put(1, 	Arrays.asList(129));
+		relationShips.get(0).put(129, 	Arrays.asList(2));
+		relationShips.get(0).put(2, 	Arrays.asList(127));
+		relationShips.get(0).put(127, 	Arrays.asList(3));
+		relationShips.get(0).put(3, 	Arrays.asList(125));
+		relationShips.get(0).put(125, 	Arrays.asList(4));
+		relationShips.get(0).put(4, 	Arrays.asList(122,123));
+		relationShips.get(0).put(122, 	Arrays.asList(6));
+		relationShips.get(0).put(123, 	Arrays.asList(5));
+		relationShips.get(0).put(6, 	Arrays.asList(120));
+		relationShips.get(0).put(120, 	Arrays.asList(7));
+		relationShips.get(0).put(7, 	Arrays.asList(118));
+		relationShips.get(0).put(118, 	Arrays.asList(8,51,53));
+		relationShips.get(0).put(8, 	Arrays.asList(114));
+		relationShips.get(0).put(114, 	Arrays.asList(16));
+		relationShips.get(0).put(16, 	Arrays.asList(113));
+		relationShips.get(0).put(113, 	Arrays.asList(19));
+		relationShips.get(0).put(19, 	Arrays.asList(132,101,103,106,109,168));
+		relationShips.get(0).put(132, 	Arrays.asList(10));
+		relationShips.get(0).put(10, 	Arrays.asList(130));
+		relationShips.get(0).put(130, 	Arrays.asList(11));
+		relationShips.get(0).put(101, 	Arrays.asList(9));
+		relationShips.get(0).put(103, 	Arrays.asList(12));
+		relationShips.get(0).put(12, 	Arrays.asList(104));
+		relationShips.get(0).put(104, 	Arrays.asList(13));
+		relationShips.get(0).put(106, 	Arrays.asList(14));
+		relationShips.get(0).put(14, 	Arrays.asList(107));
+		relationShips.get(0).put(107, 	Arrays.asList(15));
+		relationShips.get(0).put(109, 	Arrays.asList(18));
+		relationShips.get(0).put(18, 	Arrays.asList(110));
+		relationShips.get(0).put(110, 	Arrays.asList(17));
+		relationShips.get(0).put(168, 	Arrays.asList(20));
+		relationShips.get(0).put(20, 	Arrays.asList(167));
+		relationShips.get(0).put(167, 	Arrays.asList(21));
+		relationShips.get(0).put(21, 	Arrays.asList(166));
+		relationShips.get(0).put(166, 	Arrays.asList(22));
+		relationShips.get(0).put(22, 	Arrays.asList(152,133,155,158,161,164));
+		relationShips.get(0).put(152, 	Arrays.asList(25));
+		relationShips.get(0).put(133, 	Arrays.asList(30));
+		relationShips.get(0).put(30, 	Arrays.asList(134));
+		relationShips.get(0).put(134, 	Arrays.asList(31));
 		relationShips.get(0).put(155, 	Arrays.asList(23));
-		relationShips.get(0).put(23, 	Arrays.asList(154));
-		relationShips.get(0).put(154, 	Arrays.asList(24));
-		relationShips.get(0).put(152, 	Arrays.asList(26));
-		relationShips.get(0).put(26, 	Arrays.asList(150));
-		relationShips.get(0).put(150, 	Arrays.asList(27));
-		relationShips.get(0).put(149, 	Arrays.asList(28));
-		relationShips.get(0).put(28, 	Arrays.asList(148));
-		relationShips.get(0).put(148, 	Arrays.asList(29));
-		relationShips.get(0).put(146, 	Arrays.asList(32));
+		relationShips.get(0).put(23, 	Arrays.asList(156));
+		relationShips.get(0).put(156, 	Arrays.asList(24));
+		relationShips.get(0).put(158, 	Arrays.asList(26));
+		relationShips.get(0).put(26, 	Arrays.asList(159));
+		relationShips.get(0).put(159, 	Arrays.asList(27));
+		relationShips.get(0).put(161, 	Arrays.asList(28));
+		relationShips.get(0).put(28, 	Arrays.asList(162));
+		relationShips.get(0).put(162, 	Arrays.asList(29));
+		relationShips.get(0).put(164, 	Arrays.asList(32));
 		
 		
 		//#2 input
-		relationShips.get(1).put(40, 	Arrays.asList(141));
-		relationShips.get(1).put(141, 	Arrays.asList(39));
-		relationShips.get(1).put(39, 	Arrays.asList(139));
-		relationShips.get(1).put(139, 	Arrays.asList(38));
-		relationShips.get(1).put(38, 	Arrays.asList(137));
-		relationShips.get(1).put(137, 	Arrays.asList(37));
-		relationShips.get(1).put(37, 	Arrays.asList(165,166));
-		relationShips.get(1).put(166, 	Arrays.asList(36));
-		relationShips.get(1).put(165, 	Arrays.asList(35));
-		relationShips.get(1).put(35, 	Arrays.asList(163));
-		relationShips.get(1).put(163, 	Arrays.asList(34));
-		relationShips.get(1).put(34, 	Arrays.asList(161));
-		relationShips.get(1).put(161, 	Arrays.asList(33,52,54));
-		relationShips.get(1).put(33, 	Arrays.asList(158));
-		relationShips.get(1).put(158, 	Arrays.asList(25));
-		relationShips.get(1).put(25, 	Arrays.asList(156));
-		relationShips.get(1).put(156, 	Arrays.asList(22));		
-		relationShips.get(1).put(22, 	Arrays.asList(135,144,155,152,149,146));
-		relationShips.get(1).put(144, 	Arrays.asList(30));
-		relationShips.get(1).put(30, 	Arrays.asList(142));
-		relationShips.get(1).put(142, 	Arrays.asList(31));
+		relationShips.get(1).put(40, 	Arrays.asList(136));
+		relationShips.get(1).put(136, 	Arrays.asList(39));
+		relationShips.get(1).put(39, 	Arrays.asList(138));
+		relationShips.get(1).put(138, 	Arrays.asList(38));
+		relationShips.get(1).put(38, 	Arrays.asList(140));
+		relationShips.get(1).put(140, 	Arrays.asList(37));
+		relationShips.get(1).put(37, 	Arrays.asList(142,143));
+		relationShips.get(1).put(142, 	Arrays.asList(36));
+		relationShips.get(1).put(143, 	Arrays.asList(35));
+		relationShips.get(1).put(35, 	Arrays.asList(145));
+		relationShips.get(1).put(145, 	Arrays.asList(34));
+		relationShips.get(1).put(34, 	Arrays.asList(147));
+		relationShips.get(1).put(147, 	Arrays.asList(33,52,54));
+		relationShips.get(1).put(33, 	Arrays.asList(151));
+		relationShips.get(1).put(151, 	Arrays.asList(25));
+		relationShips.get(1).put(25, 	Arrays.asList(152));
+		relationShips.get(1).put(152, 	Arrays.asList(22));		
+		relationShips.get(1).put(22, 	Arrays.asList(166,133,155,158,161,164));
+		relationShips.get(1).put(133, 	Arrays.asList(30));
+		relationShips.get(1).put(30, 	Arrays.asList(134));
+		relationShips.get(1).put(134, 	Arrays.asList(31));
 		relationShips.get(1).put(155, 	Arrays.asList(23));
-		relationShips.get(1).put(23, 	Arrays.asList(154));
-		relationShips.get(1).put(154, 	Arrays.asList(24));
-		relationShips.get(1).put(152, 	Arrays.asList(26));
-		relationShips.get(1).put(26, 	Arrays.asList(150));
-		relationShips.get(1).put(150, 	Arrays.asList(27));
-		relationShips.get(1).put(149, 	Arrays.asList(28));
-		relationShips.get(1).put(28, 	Arrays.asList(148));
-		relationShips.get(1).put(148, 	Arrays.asList(29));
-		relationShips.get(1).put(146, 	Arrays.asList(32));
-		relationShips.get(1).put(135, 	Arrays.asList(21));
-		relationShips.get(1).put(21, 	Arrays.asList(132));
-		relationShips.get(1).put(132, 	Arrays.asList(20));
-		relationShips.get(1).put(20, 	Arrays.asList(133));
-		relationShips.get(1).put(133, 	Arrays.asList(19));
-		relationShips.get(1).put(19, 	Arrays.asList(124,112,122,119,116,113));
-		relationShips.get(1).put(124, 	Arrays.asList(10));
-		relationShips.get(1).put(10, 	Arrays.asList(125));
-		relationShips.get(1).put(125, 	Arrays.asList(11));
-		relationShips.get(1).put(122, 	Arrays.asList(9));
-		relationShips.get(1).put(119, 	Arrays.asList(12));
-		relationShips.get(1).put(12, 	Arrays.asList(120));
-		relationShips.get(1).put(120, 	Arrays.asList(13));
-		relationShips.get(1).put(116, 	Arrays.asList(14));
-		relationShips.get(1).put(14, 	Arrays.asList(117));
-		relationShips.get(1).put(117, 	Arrays.asList(15));
-		relationShips.get(1).put(113, 	Arrays.asList(18));
-		relationShips.get(1).put(18, 	Arrays.asList(114));
-		relationShips.get(1).put(114, 	Arrays.asList(17));
-		relationShips.get(1).put(112, 	Arrays.asList(16));
+		relationShips.get(1).put(23, 	Arrays.asList(156));
+		relationShips.get(1).put(156, 	Arrays.asList(24));
+		relationShips.get(1).put(158, 	Arrays.asList(26));
+		relationShips.get(1).put(26, 	Arrays.asList(159));
+		relationShips.get(1).put(159, 	Arrays.asList(27));
+		relationShips.get(1).put(161, 	Arrays.asList(28));
+		relationShips.get(1).put(28, 	Arrays.asList(162));
+		relationShips.get(1).put(162, 	Arrays.asList(29));
+		relationShips.get(1).put(164, 	Arrays.asList(32));
+		relationShips.get(1).put(166, 	Arrays.asList(21));
+		relationShips.get(1).put(21, 	Arrays.asList(167));
+		relationShips.get(1).put(167, 	Arrays.asList(20));
+		relationShips.get(1).put(20, 	Arrays.asList(168));
+		relationShips.get(1).put(168, 	Arrays.asList(19));
+		relationShips.get(1).put(19, 	Arrays.asList(132,113,101,103,106,109));
+		relationShips.get(1).put(132, 	Arrays.asList(10));
+		relationShips.get(1).put(10, 	Arrays.asList(130));
+		relationShips.get(1).put(130, 	Arrays.asList(11));
+		relationShips.get(1).put(101, 	Arrays.asList(9));
+		relationShips.get(1).put(103, 	Arrays.asList(12));
+		relationShips.get(1).put(12, 	Arrays.asList(104));
+		relationShips.get(1).put(104, 	Arrays.asList(13));
+		relationShips.get(1).put(106, 	Arrays.asList(14));
+		relationShips.get(1).put(14, 	Arrays.asList(107));
+		relationShips.get(1).put(107, 	Arrays.asList(15));
+		relationShips.get(1).put(109, 	Arrays.asList(18));
+		relationShips.get(1).put(18, 	Arrays.asList(110));
+		relationShips.get(1).put(110, 	Arrays.asList(17));
+		relationShips.get(1).put(113, 	Arrays.asList(16));
 		
 	}
 	
@@ -194,11 +195,11 @@ public class SimulatorFiguresCollections implements StateListener, ValidateSwitc
 	public SimulatorFiguresCollections(FreeformLayer layer, ConnectionsManager manager) {
 		this.manager = manager;
 		this.layer = layer;
-		//loadCover();
+		loadCover();
 	}
 	
 	private void loadCover() {
-		layer.add(new CoverFigure(0, 210, 200));
+		layer.add(new CoverFigure(0, 0, 100));
 	}
 	
 	public void init() {
@@ -208,16 +209,16 @@ public class SimulatorFiguresCollections implements StateListener, ValidateSwitc
 		
 		this.figures = Arrays.asList(
 				//#1 High
-				new SwitchFigure			(131,  "1111", 299, 150, 1),
+				new SwitchFigure			(125,  "1111", 299, 150, 1),
 				new SimulatorLabel			("1111", 340, 150),
 				new HighVoltageLineFigure(3, 
 						Arrays.asList(	new Point(322, 198),
 										new Point(322, 230),
 										new Point(304, 230)
 									 ), 1),				
-				new LeftGroundFigure		(130, "1111E", 240, 208, 1),
+				new LeftGroundFigure		(126, "1111E", 240, 208, 1),
 				new SimulatorLabel			("1111E", 200, 208),
-				new MainSwitchFigure		(129,  "111", 298, 230, 1),
+				new MainSwitchFigure		(127,  "111", 298, 230, 1),
 				new SimulatorLabel			("111", 340, 230),
 				new HighVoltageLineFigure(2, 
 						Arrays.asList(	new Point(368, 278),
@@ -228,7 +229,7 @@ public class SimulatorFiguresCollections implements StateListener, ValidateSwitc
 				new	TwoPhaseTransformerFigure (0, 350, 278),
 				new LeftGroundFigure		(128, "1113E", 240, 288, 1),
 				new SimulatorLabel			("1113E", 200, 288),
-				new SwitchFigure			(127, "1113", 299, 310, 1),
+				new SwitchFigure			(129, "1113", 299, 310, 1),
 				new SimulatorLabel			("1113", 340, 330),
 				new HighVoltageLineFigure(1, 
 						Arrays.asList(	new Point(322, 358),
@@ -242,40 +243,40 @@ public class SimulatorFiguresCollections implements StateListener, ValidateSwitc
 										new Point(622, 210),
 										new Point(680, 210)
 									), 1),	
-				new ThreePahseTransformerFigure (102, "1001", 658, 210, 1),
+				new ThreePahseTransformerFigure (123, "1001", 658, 210, 1),
 				new SimulatorLabel			("1001", 680, 210),
 				new HighVoltageLineFigure(5, 
 						Arrays.asList(	new Point(698, 240),
 										new Point(732, 240)
 									 ), 1),	
-				new GroundFigure		(101, "1001E", 708, 242, 1),
+				new GroundFigure		(124, "1001E", 708, 242, 1),
 				new SimulatorLabel			("1001E", 748, 242),
-				new SwitchFigure			(103, "1011", 599, 210, 1),
+				new SwitchFigure			(122, "1011", 599, 210, 1),
 				new SimulatorLabel			("1011", 560, 210),
 				new HighVoltageLineFigure(6, 
 						Arrays.asList(	new Point(622, 258),
 										new Point(622, 290),
 										new Point(604, 290)
 									 ), 1),	
-				new LeftGroundFigure		(104, "1011E",  540, 268, 1),
+				new LeftGroundFigure		(121, "1011E",  540, 268, 1),
 				new SimulatorLabel			("1011E", 500, 268),
-				new MainSwitchFigure		(105,  "101", 598, 290, 1),
+				new MainSwitchFigure		(120,  "101", 598, 290, 1),
 				new SimulatorLabel			("101", 638, 290),
 				new HighVoltageLineFigure(7, 
 						Arrays.asList(	new Point(622, 338),
 										new Point(622, 370),
 										new Point(604, 370)
 									 ), 1),
-				new LeftGroundFigure		(106, "1013E",  540, 348, 1),
+				new LeftGroundFigure		(119, "1013E",  540, 348, 1),
 				new SimulatorLabel			("1013E", 500, 348),
-				new SwitchFigure			(107,  "1013", 599, 370, 1),
+				new SwitchFigure			(118,  "1013", 599, 370, 1),
 				new SimulatorLabel			("1013", 640, 370),
 				new HighVoltageLineFigure(8, 
 						Arrays.asList(	new Point(622, 418),
 										new Point(622, 450),
 										new Point(604, 450)
 									 ), 1),
-				new LeftGroundFigure		(108, "1014E",  540, 428, 1),
+				new LeftGroundFigure		(117, "1014E",  540, 428, 1),
 				new SimulatorLabel			("1014E", 500, 428),
 				new MainTransformerFigure   (0,    588, 450),
 				new SimulatorLabel			("1#" + SimulatorMessages.MainTransformer_Label, 540, 470),					 
@@ -283,7 +284,7 @@ public class SimulatorFiguresCollections implements StateListener, ValidateSwitc
 						Arrays.asList(	new Point(652, 470),
 										new Point(680, 470)
 									 ), 1),
-				new ComplexCircuitFigure	(109, "1010", 680, 467, 1),
+				new ComplexCircuitFigure	(115, "1010", 680, 467, 1),
 				new SimulatorLabel			("1010", 720, 467),
 				
 				//#1 Low
@@ -296,27 +297,27 @@ public class SimulatorFiguresCollections implements StateListener, ValidateSwitc
 						Arrays.asList(	new Point(322, 550),
 										new Point(322, 590)
 									 ), 1),
-				new MainSwitchFigure		(125,  "331", 298, 590, 1),
+				new MainSwitchFigure		(130,  "331", 298, 590, 1),
 				new SimulatorLabel			("331", 258, 590),
 				new LowVoltageLineFigure(10, 
 						Arrays.asList(	new Point(382, 638),
 										new Point(322, 638),
 										new Point(322, 680)
 									 ), 1),
-				new UpGroundFigure			(126, "3311E",  360, 578, 1),
+				new UpGroundFigure			(131, "3311E",  360, 578, 1),
 				new SimulatorLabel			("3311E", 400, 578),
-				new SwitchFigure			(124, "3311", 300, 680, 1),
+				new SwitchFigure			(132, "3311", 300, 680, 1),
 				new SimulatorLabel			("3311", 340, 680),
-				new MainSwitchFigure		(110,  "301", 598, 590, 1),
+				new MainSwitchFigure		(114,  "301", 598, 590, 1),
 				new SimulatorLabel			("301", 638, 590),
 				new LowVoltageLineFigure(16, 
 						Arrays.asList(	new Point(622, 638),
 										new Point(622, 680),
 										new Point(558, 680)
 									), 1),
-				new SwitchFigure			(112, "3011", 598, 680, 1),
+				new SwitchFigure			(113, "3011", 598, 680, 1),
 				new SimulatorLabel			("3011", 638, 680),
-				new GroundFigure			(111, "3011E", 536, 680, 1),
+				new GroundFigure			(112, "3011E", 536, 680, 1),
 				new SimulatorLabel			("3011E", 496, 680),
 				new LowVoltageLineFigure(19, 
 						Arrays.asList(	new Point(100, 780),
@@ -344,13 +345,13 @@ public class SimulatorFiguresCollections implements StateListener, ValidateSwitc
 										new Point(850, 780)
 									), 1),
 				new SimulatorLabel			("35kVI" + SimulatorMessages.MotherLine_Label, 100, 760, 80, 12),
-				new SwitchFigure			(122, "3001", 200, 810, 1),
+				new SwitchFigure			(101, "3001", 200, 810, 1),
 				new SimulatorLabel			("3001", 240, 810),
-				new SwitchFigure			(119, "3131", 350, 810, 1),
+				new SwitchFigure			(103, "3131", 350, 810, 1),
 				new SimulatorLabel			("3131", 390, 810),
-				new SwitchFigure			(116, "3121", 500, 810, 1),
+				new SwitchFigure			(106, "3121", 500, 810, 1),
 				new SimulatorLabel			("3121", 540, 810),
-				new SwitchFigure			(113, "3111", 650, 810, 1),
+				new SwitchFigure			(109, "3111", 650, 810, 1),
 				new SimulatorLabel			("3111", 690, 810),
 				new LowVoltageLineFigure(9, 
 						Arrays.asList(	new Point(222, 858),
@@ -382,19 +383,19 @@ public class SimulatorFiguresCollections implements StateListener, ValidateSwitc
 									), 1),									
 				new FlipGroundWithResistFigure (0, 140, 870),
 				new SmallThreePhaseTransformerFigure(0, 198, 874),
-				new GroundFigure			(123, "3001E", 260, 890, 1),
+				new GroundFigure			(102, "3001E", 260, 890, 1),
 				new SimulatorLabel			("3001E", 280, 890),
-				new GroundFigure			(121, "3131E", 410, 890, 1),
+				new GroundFigure			(105, "3131E", 410, 890, 1),
 				new SimulatorLabel			("3131E", 430, 890),
-				new GroundFigure			(118, "3121E", 560, 890, 1),
+				new GroundFigure			(108, "3121E", 560, 890, 1),
 				new SimulatorLabel			("3121E", 580, 890),
-				new GroundFigure			(115, "3111E", 710, 890, 1),
+				new GroundFigure			(111, "3111E", 710, 890, 1),
 				new SimulatorLabel			("3111E", 730, 890),
-				new MainSwitchFigure		(120,  "313", 348, 890, 1),
+				new MainSwitchFigure		(104,  "313", 348, 890, 1),
 				new SimulatorLabel			("313", 368, 890),
-				new MainSwitchFigure		(117,  "312", 498, 890, 1),
+				new MainSwitchFigure		(107,  "312", 498, 890, 1),
 				new SimulatorLabel			("312", 518, 890),
-				new MainSwitchFigure		(114,  "311", 648, 890, 1),
+				new MainSwitchFigure		(110,  "311", 648, 890, 1),
 				new SimulatorLabel			("311", 668, 890),
 				new LowVoltageLineFigure(13, 
 						Arrays.asList(	new Point(372, 938),
@@ -411,11 +412,11 @@ public class SimulatorFiguresCollections implements StateListener, ValidateSwitc
 										new Point(672, 980)
 									), 1),
 				new SimulatorLabel			("35kV" + SimulatorMessages.FeedBackLine_Label + "1", 662, 990),
-				new SwitchFigure			(133, "3101", 800, 680, 1),
+				new SwitchFigure			(168, "3101", 800, 680, 1),
 				new SimulatorLabel			("3101", 840, 680),
-				new GroundFigure			(134, "3101E", 740, 680, 1),
+				new GroundFigure			(169, "3101E", 740, 680, 1),
 				new SimulatorLabel			("3101E", 700, 680),
-				new MainSwitchFigure		(132,  "310", 798, 590, 3), //Special one
+				new MainSwitchFigure		(167,  "310", 798, 590, 3), //Special one
 				new SimulatorLabel			("310", 838, 590),
 				new LowVoltageLineFigure(20, 
 						Arrays.asList(	new Point(822, 638),
@@ -424,16 +425,16 @@ public class SimulatorFiguresCollections implements StateListener, ValidateSwitc
 									), 1),
 									
 				//#2 High
-				new SwitchFigure			(137,  "1121", 1455, 150, 2),
+				new SwitchFigure			(140,  "1121", 1455, 150, 2),
 				new SimulatorLabel			("1121", 1414, 150),
 				new HighVoltageLineFigure(38, 
 						Arrays.asList(	new Point(1478, 198),
 										new Point(1478, 230),
 										new Point(1492, 230)
 									 ), 2),				
-				new RightGroundFigure		(138, "1121E", 1492, 206, 2),
+				new RightGroundFigure		(139, "1121E", 1492, 206, 2),
 				new SimulatorLabel			("1121E", 1532, 206),
-				new MainSwitchFigure		(139,  "112", 1454, 230, 2),
+				new MainSwitchFigure		(138,  "112", 1454, 230, 2),
 				new SimulatorLabel			("112", 1414, 230),
 				new HighVoltageLineFigure(39, 
 						Arrays.asList(	new Point(1428, 278),
@@ -442,9 +443,9 @@ public class SimulatorFiguresCollections implements StateListener, ValidateSwitc
 										new Point(1492, 310)
 									 ), 2),	
 				new	TwoPhaseTransformerFigure (0, 1410, 278),
-				new RightGroundFigure		(140, "1123E", 1492, 284, 2),
+				new RightGroundFigure		(137, "1123E", 1492, 284, 2),
 				new SimulatorLabel			("1123E", 1532, 284),
-				new SwitchFigure			(141, "1123", 1455, 310, 2),
+				new SwitchFigure			(136, "1123", 1455, 310, 2),
 				new SimulatorLabel			("1123", 1414, 330),
 				new HighVoltageLineFigure(40, 
 						Arrays.asList(	new Point(1478, 358),
@@ -458,40 +459,40 @@ public class SimulatorFiguresCollections implements StateListener, ValidateSwitc
 										new Point(1178, 210),
 										new Point(1120, 210)
 									), 2),	
-				new FlipThreePahseTransformerFigure (166, "1002", 1100, 210, 2),
+				new FlipThreePahseTransformerFigure (142, "1002", 1100, 210, 2),
 				new SimulatorLabel			("1002", 1060, 210),
 				new HighVoltageLineFigure(36, 
 						Arrays.asList(	new Point(1102, 240),
 										new Point(1068, 240)
 									 ), 2),	
-				new GroundFigure		(167, "1002E", 1048, 242, 2),
+				new GroundFigure		(141, "1002E", 1048, 242, 2),
 				new SimulatorLabel			("1002E", 1008, 242),
-				new SwitchFigure			(165, "1021", 1155, 210, 2),
+				new SwitchFigure			(143, "1021", 1155, 210, 2),
 				new SimulatorLabel			("1021", 1176, 210),
 				new HighVoltageLineFigure(35, 
 						Arrays.asList(	new Point(1178, 258),
 										new Point(1178, 290),
 										new Point(1192, 290)
 									 ), 2),	
-				new RightGroundFigure		(164, "1021E",  1192, 264, 2),
+				new RightGroundFigure		(144, "1021E",  1192, 264, 2),
 				new SimulatorLabel			("1021E", 1232, 264),
-				new MainSwitchFigure		(163,  "102", 1154, 290, 2),
+				new MainSwitchFigure		(145,  "102", 1154, 290, 2),
 				new SimulatorLabel			("102", 1114, 290),
 				new HighVoltageLineFigure(34, 
 						Arrays.asList(	new Point(1178, 338),
 										new Point(1178, 370),
 										new Point(1192, 370)
 									 ), 2),
-				new RightGroundFigure		(162, "1023E",  1192, 344, 2),
+				new RightGroundFigure		(146, "1023E",  1192, 344, 2),
 				new SimulatorLabel			("1023E", 1232, 344),
-				new SwitchFigure			(161,  "1023", 1155, 370, 2),
+				new SwitchFigure			(147,  "1023", 1155, 370, 2),
 				new SimulatorLabel			("1023", 1114, 370),
 				new HighVoltageLineFigure(33, 
 						Arrays.asList(	new Point(1178, 418),
 										new Point(1178, 450),
 										new Point(1192, 450)
 									 ), 2),
-				new RightGroundFigure		(160, "1024E",  1192, 424, 2),
+				new RightGroundFigure		(148, "1024E",  1192, 424, 2),
 				new SimulatorLabel			("1024E", 1232, 424),
 				new FlipMainTransformerFigure   (0,    1148, 450),
 				new SimulatorLabel			("2#" + SimulatorMessages.MainTransformer_Label, 1188, 470),									 
@@ -499,7 +500,7 @@ public class SimulatorFiguresCollections implements StateListener, ValidateSwitc
 						Arrays.asList(	new Point(1148, 470),
 										new Point(1120, 470)
 									 ), 2),
-				new FlipComplexCircuitFigure	(159, "1020", 1056, 467, 2),
+				new FlipComplexCircuitFigure	(150, "1020", 1056, 467, 2),
 				new SimulatorLabel			("1020", 1016, 467),
 				//#2 Low
 				new LowVoltageLineFigure(52, 
@@ -511,27 +512,27 @@ public class SimulatorFiguresCollections implements StateListener, ValidateSwitc
 						Arrays.asList(	new Point(1478, 550),
 										new Point(1478, 590)
 									 ), 2),
-				new MainSwitchFigure		(142,  "341", 1454, 590, 2),
+				new MainSwitchFigure		(134,  "341", 1454, 590, 2),
 				new SimulatorLabel			("341", 1494, 590),
 				new LowVoltageLineFigure(30, 
 						Arrays.asList(	new Point(1422, 638),
 										new Point(1478, 638),
 										new Point(1478, 680)
 									 ), 2),
-				new UpGroundFigure			(143, "3411E",  1400, 578, 2),
+				new UpGroundFigure			(135, "3411E",  1400, 578, 2),
 				new SimulatorLabel			("3411E", 1360, 578),
-				new SwitchFigure			(144, "3411", 1454, 680, 2),
+				new SwitchFigure			(133, "3411", 1454, 680, 2),
 				new SimulatorLabel			("3411", 1494, 680),
-				new MainSwitchFigure		(158,  "302", 1154, 590, 2),
+				new MainSwitchFigure		(151,  "302", 1154, 590, 2),
 				new SimulatorLabel			("302", 1194, 590),
 				new LowVoltageLineFigure(25, 
 						Arrays.asList(	new Point(1178, 638),
 										new Point(1178, 680),
 										new Point(1246, 680)
 									), 2),
-				new SwitchFigure			(156, "3021", 1156, 680, 2),
+				new SwitchFigure			(152, "3021", 1156, 680, 2),
 				new SimulatorLabel			("3021", 1116, 710),
-				new GroundFigure			(157, "3021E",1224, 680, 2),
+				new GroundFigure			(153, "3021E",1224, 680, 2),
 				new SimulatorLabel			("3021E", 1264, 680),
 				new LowVoltageLineFigure(22, 
 						Arrays.asList(	new Point(1700, 780),
@@ -559,11 +560,11 @@ public class SimulatorFiguresCollections implements StateListener, ValidateSwitc
 										new Point(1000, 780)
 									), 2),
 				new SimulatorLabel			("35kVII" + SimulatorMessages.MotherLine_Label, 1620, 760, 80, 12),
-				new SwitchFigure			(146, "3002", 1554, 810, 2),
+				new SwitchFigure			(164, "3002", 1554, 810, 2),
 				new SimulatorLabel			("3002", 1594, 810),
-				new SwitchFigure			(149, "3231", 1404, 810, 2),
+				new SwitchFigure			(161, "3231", 1404, 810, 2),
 				new SimulatorLabel			("3231", 1444, 810),
-				new SwitchFigure			(152, "3221", 1254, 810, 2),
+				new SwitchFigure			(158, "3221", 1254, 810, 2),
 				new SimulatorLabel			("3221", 1294, 810),
 				new SwitchFigure			(155, "3211", 1104, 810, 2),
 				new SimulatorLabel			("3211", 1144, 810),
@@ -597,19 +598,19 @@ public class SimulatorFiguresCollections implements StateListener, ValidateSwitc
 									), 2),									
 				new GroundWithResistFigure (0, 1628, 870),
 				new SmallThreePhaseTransformerFigure(0, 1554, 874),
-				new GroundFigure			(145, "3002E", 1496, 890, 2),
+				new GroundFigure			(163, "3002E", 1496, 890, 2),
 				new SimulatorLabel			("3002E", 1456, 890),
-				new GroundFigure			(147, "3231E", 1346, 890, 2),
+				new GroundFigure			(160, "3231E", 1346, 890, 2),
 				new SimulatorLabel			("3231E", 1306, 890),
-				new GroundFigure			(151, "3221E", 1196, 890, 2),
+				new GroundFigure			(157, "3221E", 1196, 890, 2),
 				new SimulatorLabel			("3221E", 1156, 890),
-				new GroundFigure			(153, "3211E", 1046, 890, 2),
+				new GroundFigure			(154, "3211E", 1046, 890, 2),
 				new SimulatorLabel			("3211E", 1006, 890),
-				new MainSwitchFigure		(148,  "323", 1404, 890, 2),
+				new MainSwitchFigure		(162,  "323", 1404, 890, 2),
 				new SimulatorLabel			("323", 1374, 890),
-				new MainSwitchFigure		(150,  "322", 1254, 890, 2),
+				new MainSwitchFigure		(159,  "322", 1254, 890, 2),
 				new SimulatorLabel			("322", 1224, 890),
-				new MainSwitchFigure		(154,  "321", 1104, 890, 2),
+				new MainSwitchFigure		(156,  "321", 1104, 890, 2),
 				new SimulatorLabel			("321", 1074, 890),
 				new LowVoltageLineFigure(29, 
 						Arrays.asList(	new Point(1428, 938),
@@ -626,9 +627,9 @@ public class SimulatorFiguresCollections implements StateListener, ValidateSwitc
 										new Point(1128, 980)
 									), 2),
 				new SimulatorLabel			("35kV" + SimulatorMessages.FeedBackLine_Label + "2", 1118, 990),
-				new SwitchFigure			(135, "3102", 1000, 680, 2),
+				new SwitchFigure			(166, "3102", 1000, 680, 2),
 				new SimulatorLabel			("3102", 960, 680),
-				new GroundFigure			(136, "3102E", 1060, 680, 2),
+				new GroundFigure			(165, "3102E", 1060, 680, 2),
 				new SimulatorLabel			("3102E", 1100, 680),
 				new LowVoltageLineFigure(21, 
 						Arrays.asList(	new Point(822, 590),
@@ -654,7 +655,7 @@ public class SimulatorFiguresCollections implements StateListener, ValidateSwitc
 				id2FigureMap.put(id, figure);				
 			}
 		}
-		((StateFigure)id2FigureMap.get(132)).setOn(false);
+		((StateFigure)id2FigureMap.get(167)).setOn(false);
 		
 		activate();
 	}
@@ -674,6 +675,8 @@ public class SimulatorFiguresCollections implements StateListener, ValidateSwitc
 				}
 			}
 		}
+		switchStatus[15] = 1; //116:1
+		switchStatus[48] = 1; //149:1
 	}
 
 	public void deactivate() {
@@ -738,9 +741,9 @@ public class SimulatorFiguresCollections implements StateListener, ValidateSwitc
 	}
 	
 	public byte[] getLedLineBytes() {
-		byte[] result = new byte[LEDLINE_NUMBERS+2];
+		byte[] result = new byte[LEDLINE_NUMBERS+4];
 		result[0] = BEGIN_BYTE;
-		result[LEDLINE_NUMBERS+1] = END_BYTE;
+		result[LEDLINE_NUMBERS+3] = END_BYTE;
 		
 		for (Entry<Integer, Figure> entryId2Figure : id2FigureMap.entrySet()) {
 			if (entryId2Figure.getValue() instanceof LineFigure && ((LineFigure)entryId2Figure.getValue()).getPower()>0) {
@@ -844,8 +847,16 @@ public class SimulatorFiguresCollections implements StateListener, ValidateSwitc
 			operationList = new ArrayList<String>();
 			operationScore = "100";
 			quizName = connectionsFile.getName();
-			updatInitState(getInitStateBytes());
-			manager.sendLineStatus();
+			byte[] initBytes = getInitStateBytes();
+			updatInitState(initBytes);
+			for (int i=0; i<initBytes.length; ) {
+				byte[] bytes = new byte[2];
+				bytes[0] = initBytes[i];
+				bytes[1] = initBytes[i+1];
+				manager.sendLineAndSwitchStatus(bytes);
+				SimulatorUtil.sleepMilliSeconds(200);
+				i += 2;
+			}
 		} catch (IOException e) {
 			logger.error("Failed to load connections ini file {},  caused by {}", connectionsFile.getName(), e.toString());
 		}
@@ -916,7 +927,7 @@ public class SimulatorFiguresCollections implements StateListener, ValidateSwitc
 			if (id2FigureMap.containsKey(id)) {
 				Figure stateFigure = id2FigureMap.get(id);
 				if (stateFigure instanceof StateFigure) {
-					boolean isOn = initStateBytes[i] == 1?true:false;
+					boolean isOn = (initStateBytes[i] == 1?true:false);
 					if (isOn != ((StateFigure)stateFigure).isOn()) {
 						logger.debug("Will update switch {}:{} init status to {}.", ((StateFigure)stateFigure).getLabel(), 
 								id, isOn?"On":"Off");
@@ -934,7 +945,7 @@ public class SimulatorFiguresCollections implements StateListener, ValidateSwitc
 		if (id2FigureMap.containsKey(id)) {
 			Figure stateFigure = id2FigureMap.get(id);
 			if (stateFigure instanceof StateFigure) {
-				boolean isOn = switchBytes[1] == 1?true:false;
+				boolean isOn = (switchBytes[1] == 1?true:false);
 				if (isOn == ((StateFigure)stateFigure).isOn()) {
 					logger.debug("Will update switch {}:{} status to {}.", ((StateFigure)stateFigure).getLabel(), 
 							id, isOn?"Off":"On");

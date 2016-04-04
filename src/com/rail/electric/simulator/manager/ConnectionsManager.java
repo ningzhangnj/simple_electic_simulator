@@ -180,6 +180,12 @@ public class ConnectionsManager {
 		}
 	}
 	
+	public void sendLineAndSwitchStatus(byte[] switchState) { 
+		if (teacherWorker != null && teacherWorker.getMode() == WorkMode.STUDENT_TEACHER_SIMULATOR) {
+			teacherWorker.sendLineAndSwitchStatus(switchState);
+		}
+	}
+	
 	public WorkStatus getStatus() {
 		return status;
 	}

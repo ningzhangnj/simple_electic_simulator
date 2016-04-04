@@ -9,13 +9,13 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.rail.electric.simulator.helpers.CommHelper;
 import com.rail.electric.simulator.helpers.DataTypeConverter;
 
 public class SimulatorUtil {
-	private final static Logger logger =  LoggerFactory.getLogger(CommHelper.class);	
+	private final static Logger logger =  LoggerFactory.getLogger(SimulatorUtil.class);	
 	
-	private static final List<Long> licenses = Arrays.asList(132837597590628L, 122178626107566L, 125099203868846L);
+	private static final List<Long> licenses = Arrays.asList(132837597590628L, 122178626107566L, 125099203868846L, 
+												121488996188301L, 118933490647181L);
 	
 	public static void sleepSeconds(int seconds) {
 		try {
@@ -33,7 +33,7 @@ public class SimulatorUtil {
 		}
 	}
 	
-	public static  boolean calculateLicense() {		
+	public static  boolean calculateLicense() {	
 		try {			
 			for(Enumeration<NetworkInterface> e = NetworkInterface.getNetworkInterfaces();
                e.hasMoreElements(); )

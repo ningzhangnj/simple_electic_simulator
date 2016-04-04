@@ -24,6 +24,7 @@ import org.eclipse.swt.widgets.Display;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.rail.electric.simulator.SimulatorFiguresCollections;
 import com.rail.electric.simulator.SimulatorMessages;
 import com.rail.electric.simulator.dialogs.OperationInfoDialog;
 import com.rail.electric.simulator.helpers.CommHelper;
@@ -122,9 +123,12 @@ public class TeacherWorker {
 					final ByteBuffer bb = ByteBuffer.allocate(receivedBytes.length-1);
 					bb.put(receivedBytes, 1, receivedBytes.length-1);
 					logger.debug("Received switch status: {}", DataTypeConverter.bytesToHex(bb.array()));
+					
 					final int result = manager.validateAndUpdateSwitchStatus(bb.array());
 					respondSwitchValidation(result, dataOut);
-					sendLineStatus();
+					byte[] switchBytes = bb.array();
+					switchBytes[1] = (byte)(1 - switchBytes[1]);
+					sendLineAndSwitchStatus(switchBytes);
 					
 					Display.getDefault().asyncExec(new Runnable() {
 
@@ -213,10 +217,22 @@ public class TeacherWorker {
 		}
 	}
 	
+	public void sendLineAndSwitchStatus(byte[] switchState) {
+		if (!commHelper.isCommPortConnected()) return;
+		byte[] result = manager.getLedLineBytes();
+		result[SimulatorFiguresCollections.LEDLINE_NUMBERS+1] = switchState[0];
+		result[SimulatorFiguresCollections.LEDLINE_NUMBERS+2] = switchState[1];
+		logger.debug("Line status: " + DataTypeConverter.bytesToHex(result));		
+		commHelper.writeBytes(result);
+			
+	}
+	
 	public void sendLineStatus() {
 		if (!commHelper.isCommPortConnected()) return;
 		byte[] result = manager.getLedLineBytes();
 		logger.debug("Line status: " + DataTypeConverter.bytesToHex(result));
+		result[SimulatorFiguresCollections.LEDLINE_NUMBERS+1] = (byte) 0xff;
+		result[SimulatorFiguresCollections.LEDLINE_NUMBERS+2] = (byte) 0xff;
 		//for (int i=0; i<3; i++) {
 			commHelper.writeBytes(result);
 			/*byte[] response = commHelper.readBytes(1);
@@ -233,6 +249,7 @@ public class TeacherWorker {
 	
 	private String readSwitchInitStatus() {
 		byte[] result = commHelper.readBytes(1);
+		logger.debug("Read swtich init status head is: {}", DataTypeConverter.bytesToHex(result));
 		if (result[0] != BEGIN_BYTE ) {
 			commHelper.readBytes(1);
 		}

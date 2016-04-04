@@ -2,14 +2,13 @@ package com.rail.electric.simulator.view;
 
 import org.eclipse.draw2d.FigureCanvas;
 import org.eclipse.draw2d.FreeformLayer;
+import org.eclipse.draw2d.FreeformLayeredPane;
 import org.eclipse.draw2d.FreeformLayout;
 import org.eclipse.draw2d.FreeformViewport;
-import org.eclipse.draw2d.ScalableFreeformLayeredPane;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
-import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Menu;
@@ -17,7 +16,9 @@ import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.Shell;
 
 import com.rail.electric.simulator.SimulatorMessages;
+import com.rail.electric.simulator.figures.CommunicationStateFigure;
 import com.rail.electric.simulator.figures.ConnectionsEntryFigure;
+import com.rail.electric.simulator.figures.CoverFigure;
 import com.rail.electric.simulator.figures.EquipmentConfigurationsFigure;
 import com.rail.electric.simulator.figures.FaultRecordFigure;
 import com.rail.electric.simulator.figures.LoadCurveFigure;
@@ -26,7 +27,7 @@ import com.rail.electric.simulator.listeners.FigureClickListener;
 
 public class CoverView extends AbstractView implements IView {
 	
-	private ScalableFreeformLayeredPane root;
+	private FreeformLayeredPane root;
 	private FreeformLayer primary;
 	
 	private FigureCanvas canvas;
@@ -42,7 +43,7 @@ public class CoverView extends AbstractView implements IView {
 	}
 	
 	private void loadCover() {
-		//primary.add(new CoverFigure(0, 210, 200));
+		primary.add(new CoverFigure(0, 0, 100));
 		ConnectionsEntryFigure connectionsEntryFigure = new ConnectionsEntryFigure(0, 400, 400);
 		connectionsEntryFigure.addClickListener(new FigureClickListener() {
 
@@ -93,17 +94,28 @@ public class CoverView extends AbstractView implements IView {
 			}
 			
 		});
+		CommunicationStateFigure communicationStateFigure = new CommunicationStateFigure(0, 1200, 700);
+		communicationStateFigure.addClickListener(new FigureClickListener() {
+
+			@Override
+			public void onClick(String id) {
+				deactivate();
+				ViewsManager.getInstance().getView("communication", parent, CoverView.this).activate();
+			}
+			
+		});
 		primary.add(connectionsEntryFigure);
 		primary.add(loadCurveyFigure);
 		primary.add(faultRecordFigure);
 		primary.add(equipmentConfigurationsFigure);
 		primary.add(operationsRecordFigure);
+		primary.add(communicationStateFigure);
 	}	
 	
 	private void createDiagram(Composite parent) {
 		
 		// Create a layered pane along with primary and connection layers
-		root = new ScalableFreeformLayeredPane();
+		root = new FreeformLayeredPane();
 		root.setFont(parent.getFont());
 		
 		primary = new FreeformLayer();
@@ -112,10 +124,11 @@ public class CoverView extends AbstractView implements IView {
 
 		// Create the canvas and use it to show the root figure
 		canvas = new FigureCanvas(parent, SWT.NONE);
-		canvas.setViewport(new FreeformViewport());
-		canvas.setBackground(new Color(null, 204, 232, 207));		
+		FreeformViewport viewPort = new FreeformViewport();
+		canvas.setViewport(viewPort);
+		//canvas.setBackground(new Color(null, 204, 232, 207));		
 		canvas.setContents(root);
-		canvas.setLayoutData(new GridData(GridData.FILL_BOTH));	
+		canvas.setLayoutData(new GridData(GridData.FILL_BOTH));
 	}
 	
 	protected void createMenuBar(Shell shell) {
@@ -129,7 +142,7 @@ public class CoverView extends AbstractView implements IView {
 	private void createAboutMenuItem(MenuItem menuItem, final Shell shell) {		
 		menuItem.addSelectionListener(new SelectionListener() {
 			public void widgetSelected(SelectionEvent e) {
-				MessageDialog.openInformation(shell, SimulatorMessages.About_title, SimulatorMessages.Version_label + ": V1.0\n"
+				MessageDialog.openInformation(shell, SimulatorMessages.About_title, SimulatorMessages.Version_label + ": V2.0\n"
 						+ SimulatorMessages.Manufacturer_name);
 			}
 			public void widgetDefaultSelected(SelectionEvent e) {
