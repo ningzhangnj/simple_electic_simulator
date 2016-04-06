@@ -4,7 +4,7 @@ import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.swt.graphics.Image;
 
 public class EquipmentListLabelProvider extends LabelProvider {
-
+		
 	@Override
 	public Image getImage(Object element) {
 		return null;

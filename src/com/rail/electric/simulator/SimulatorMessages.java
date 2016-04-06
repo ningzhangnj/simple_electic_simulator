@@ -67,6 +67,7 @@ public class SimulatorMessages extends NLS {
 	public static String OperationFinished_Title;
 	
 	public static String LoadCurve_Title;
+	public static String LoadCurve_Name;
 	public static String LoadCurveX_Label;
 	public static String LoadCurveY_Label;
 	

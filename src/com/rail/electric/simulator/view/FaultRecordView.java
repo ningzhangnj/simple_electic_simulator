@@ -4,19 +4,24 @@ import java.awt.Color;
 import java.text.SimpleDateFormat;
 
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.SashForm;
+import org.eclipse.swt.custom.ViewForm;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.swt.widgets.ToolBar;
+import org.eclipse.swt.widgets.ToolItem;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.axis.DateAxis;
 import org.jfree.chart.plot.XYPlot;
 import org.jfree.chart.renderer.xy.XYItemRenderer;
 import org.jfree.chart.renderer.xy.XYLineAndShapeRenderer;
-import org.jfree.data.time.Month;
+import org.jfree.data.time.Millisecond;
 import org.jfree.data.time.TimeSeries;
 import org.jfree.data.time.TimeSeriesCollection;
 import org.jfree.data.xy.XYDataset;
@@ -27,20 +32,22 @@ import com.rail.electric.simulator.SimulatorMessages;
 
 public class FaultRecordView extends AbstractView implements IView {
 	
-	private ChartComposite frame;
-
+	private ViewForm form;
+	private SashForm contentForm;
+	
 	public FaultRecordView(Composite parent, IView parentView) {
 		super(parent, parentView);
 		
-		final JFreeChart chart = createChart(createDataset());
-
-		frame = new ChartComposite(parent.getShell(), SWT.NONE, chart, true);
+		form = new ViewForm(parent, SWT.VERTICAL);	
+		createToolBar(form);
+		contentForm = new SashForm(form, SWT.VERTICAL);
+		createVoltageChart(contentForm);
+		createCurrentChart(contentForm);
+			
+		contentForm.setWeights(new int[] {1, 1});
+		form.setContent(contentForm);
 		
-		frame.setDisplayToolTips(true);
-        frame.setHorizontalAxisTrace(false);
-        frame.setVerticalAxisTrace(false);
-		
-		rootControl = frame;
+		rootControl = form;
 	}
 	
 		
@@ -60,13 +67,44 @@ public class FaultRecordView extends AbstractView implements IView {
 		createReturnMenuItem(returnMenuItem, shell);
 		
 	}
+	
+	private static void createToolBar(ViewForm form) {
+		final ToolBar toolBar = new ToolBar(form, SWT.FLAT|SWT.WRAP|SWT.CENTER);
+		
+		ToolItem itemSave = new ToolItem(toolBar, SWT.PUSH);
+		itemSave.setText("导出数据");
+	    Image icon = new Image(Display.getCurrent(), EquipmentConfigurationsView.class.getResourceAsStream("equipment/icons/save_edit.gif"));
+	    itemSave.setImage(icon);
+	    
+	    form.setTopLeft(toolBar);		
+	}
+	
+	private static void createVoltageChart(SashForm form) {
+		final JFreeChart chart = createChart(createVoltageDataset(), "电压", "ms", "V");
 
-	private static JFreeChart createChart(XYDataset dataset) {
+		ChartComposite frame = new ChartComposite(form, SWT.NONE, chart, true);
+		
+		frame.setDisplayToolTips(true);
+        frame.setHorizontalAxisTrace(false);
+        frame.setVerticalAxisTrace(false);
+	}
+	
+	private static void createCurrentChart(SashForm form) {
+		final JFreeChart chart = createChart(createCurrentDataset(), "电流", "ms", "A");
+
+		ChartComposite frame = new ChartComposite(form, SWT.NONE, chart, true);
+		
+		frame.setDisplayToolTips(true);
+        frame.setHorizontalAxisTrace(false);
+        frame.setVerticalAxisTrace(false);
+	}
+
+	private static JFreeChart createChart(XYDataset dataset, String title, String xLabel, String yLabel) {
 
         JFreeChart chart = ChartFactory.createTimeSeriesChart(
-            SimulatorMessages.LoadCurve_Title,  // title
-            SimulatorMessages.LoadCurveX_Label,             // x-axis label
-            SimulatorMessages.LoadCurveY_Label,   // y-axis label
+            title,
+            xLabel,
+            yLabel,
             dataset,            // data
             true,               // create legend?
             true,               // generate tooltips?
@@ -91,58 +129,36 @@ public class FaultRecordView extends AbstractView implements IView {
         }
         
         DateAxis axis = (DateAxis) plot.getDomainAxis();
-        axis.setDateFormatOverride(new SimpleDateFormat("MMM-yyyy"));
+        axis.setDateFormatOverride(new SimpleDateFormat("SSS"));
         
         return chart;
 
     }
+        
+    private static XYDataset createCurrentDataset() {
+
+        TimeSeries s1 = new TimeSeries("Ia");
+        TimeSeries s2 = new TimeSeries("Ic");
+        for (int i = 0; i<100; i++) {
+        	s1.add(new Millisecond(i, 0, 0, 0, 2 ,3, 2015), 2*Math.cos(Math.PI*i/10));
+        	s2.add(new Millisecond(i, 0, 0, 0, 2 ,3, 2015), 2*Math.cos(Math.PI*i/10 + 2*Math.PI/3));
+        }
+        
+        TimeSeriesCollection dataset = new TimeSeriesCollection();
+        dataset.addSeries(s1);
+        dataset.addSeries(s2);
+        
+        return dataset;
+    }
     
-    /**
-     * Creates a dataset, consisting of two series of monthly data.
-     *
-     * @return The dataset.
-     */
-    private static XYDataset createDataset() {
+    private static XYDataset createVoltageDataset() {
 
-        TimeSeries s1 = new TimeSeries("L&G European Index Trust");
-        s1.add(new Month(2, 2001), 181.8);
-        s1.add(new Month(3, 2001), 167.3);
-        s1.add(new Month(4, 2001), 153.8);
-        s1.add(new Month(5, 2001), 167.6);
-        s1.add(new Month(6, 2001), 158.8);
-        s1.add(new Month(7, 2001), 148.3);
-        s1.add(new Month(8, 2001), 153.9);
-        s1.add(new Month(9, 2001), 142.7);
-        s1.add(new Month(10, 2001), 123.2);
-        s1.add(new Month(11, 2001), 131.8);
-        s1.add(new Month(12, 2001), 139.6);
-        s1.add(new Month(1, 2002), 142.9);
-        s1.add(new Month(2, 2002), 138.7);
-        s1.add(new Month(3, 2002), 137.3);
-        s1.add(new Month(4, 2002), 143.9);
-        s1.add(new Month(5, 2002), 139.8);
-        s1.add(new Month(6, 2002), 137.0);
-        s1.add(new Month(7, 2002), 132.8);
-
-        TimeSeries s2 = new TimeSeries("L&G UK Index Trust");
-        s2.add(new Month(2, 2001), 129.6);
-        s2.add(new Month(3, 2001), 123.2);
-        s2.add(new Month(4, 2001), 117.2);
-        s2.add(new Month(5, 2001), 124.1);
-        s2.add(new Month(6, 2001), 122.6);
-        s2.add(new Month(7, 2001), 119.2);
-        s2.add(new Month(8, 2001), 116.5);
-        s2.add(new Month(9, 2001), 112.7);
-        s2.add(new Month(10, 2001), 101.5);
-        s2.add(new Month(11, 2001), 106.1);
-        s2.add(new Month(12, 2001), 110.3);
-        s2.add(new Month(1, 2002), 111.7);
-        s2.add(new Month(2, 2002), 111.0);
-        s2.add(new Month(3, 2002), 109.6);
-        s2.add(new Month(4, 2002), 113.2);
-        s2.add(new Month(5, 2002), 111.6);
-        s2.add(new Month(6, 2002), 108.8);
-        s2.add(new Month(7, 2002), 101.6);
+        TimeSeries s1 = new TimeSeries("Uab");
+        TimeSeries s2 = new TimeSeries("Uca");
+        for (int i = 0; i<100; i++) {
+        	s1.add(new Millisecond(i, 0, 0, 0, 2 ,3, 2015), 95*Math.cos(Math.PI*i/10));
+        	s2.add(new Millisecond(i, 0, 0, 0, 2 ,3, 2015), 96*Math.cos(Math.PI*i/10 + 2*Math.PI/3));
+        }
         
         TimeSeriesCollection dataset = new TimeSeriesCollection();
         dataset.addSeries(s1);
@@ -157,16 +173,21 @@ public class FaultRecordView extends AbstractView implements IView {
      * @param args  ignored.
      */
     public static void main(String[] args) {
-        final JFreeChart chart = createChart(createDataset());
+        final JFreeChart chart = createChart(createVoltageDataset(), "电压", "ms", "V");
         final Display display = new Display();
         Shell shell = new Shell(display);
-        shell.setSize(600, 300);
+        shell.setSize(1800, 1000);
         shell.setLayout(new FillLayout());
         shell.setText("Time series demo for jfreechart running with SWT");
         ChartComposite frame = new ChartComposite(shell, SWT.NONE, chart, true);
         frame.setDisplayToolTips(true);
         frame.setHorizontalAxisTrace(false);
         frame.setVerticalAxisTrace(false);
+        
+        ChartComposite frame1 = new ChartComposite(shell, SWT.NONE, chart, true);
+        frame1.setDisplayToolTips(true);
+        frame1.setHorizontalAxisTrace(false);
+        frame1.setVerticalAxisTrace(false);
         shell.open();
         while (!shell.isDisposed()) {
             if (!display.readAndDispatch())
