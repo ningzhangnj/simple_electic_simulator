@@ -60,16 +60,98 @@ public class EquipmentConfigurationsView extends AbstractView implements IView {
 	}
 	
 	private void createEquipmentConfigurations() {
-		EquipmentConfigurations equip1 = new EquipmentConfigurations("LineProtection");
-		equip1.addConfigurationData(new EquipmentConfigurationData("name1", "oldValue1", "newValue1", "unit1", "range1", "resolution1"));
-		equip1.addConfigurationData(new EquipmentConfigurationData("name2", "oldValue2", "newValue2", "unit2", "range2", "resolution2"));
+		EquipmentConfigurations equip1 = new EquipmentConfigurations("母联");
+		equip1.addConfigurationData(new EquipmentConfigurationData("电压定值Udz1", "", "", "V", "2.00-120.00", "3.2"));
+		equip1.addConfigurationData(new EquipmentConfigurationData("电压定值Udz2", "", "", "V", "2.00-120.00", "3.2"));
+		equip1.addConfigurationData(new EquipmentConfigurationData("电压定值Udz3", "", "", "V", "2.00-120.00", "3.2"));
+		equip1.addConfigurationData(new EquipmentConfigurationData("电压定值Udz4", "", "", "V", "2.00-120.00", "3.2"));
+		equip1.addConfigurationData(new EquipmentConfigurationData("电压定值Udz5", "", "", "V", "2.00-120.00", "3.2"));
+		equip1.addConfigurationData(new EquipmentConfigurationData("电压定值Udz6", "", "", "V", "2.00-120.00", "3.2"));
+		equip1.addConfigurationData(new EquipmentConfigurationData("电流定值Idz1", "", "", "A", "0.02-100.00", "3.2"));
+		equip1.addConfigurationData(new EquipmentConfigurationData("电流定值Idz2", "", "", "A", "0.02-100.00", "3.2"));
+		equip1.addConfigurationData(new EquipmentConfigurationData("电流定值Idz3", "", "", "A", "0.02-100.00", "3.2"));
+		equip1.addConfigurationData(new EquipmentConfigurationData("电流定值Idz4", "", "", "A", "0.02-100.00", "3.2"));
+		equip1.addConfigurationData(new EquipmentConfigurationData("电流定值Idz5", "", "", "A", "0.02-100.00", "3.2"));
+		equip1.addConfigurationData(new EquipmentConfigurationData("电流定值Idz6", "", "", "A", "0.02-100.00", "3.2"));
+		equip1.addConfigurationData(new EquipmentConfigurationData("电流定值Idz7", "", "", "A", "0.02-100.00", "3.2"));
+		equip1.addConfigurationData(new EquipmentConfigurationData("时间定值T1", "", "", "S", "0.00-60.00", "3.2"));
+		equip1.addConfigurationData(new EquipmentConfigurationData("时间定值T2", "", "", "S", "0.00-60.00", "3.2"));
+		equip1.addConfigurationData(new EquipmentConfigurationData("时间定值T3", "", "", "S", "0.00-60.00", "3.2"));
+		equip1.addConfigurationData(new EquipmentConfigurationData("时间定值T4", "", "", "S", "0.00-60.00", "3.2"));
+		equip1.addConfigurationData(new EquipmentConfigurationData("时间定值T5", "", "", "S", "0.00-60.00", "3.2"));
+		equip1.addConfigurationData(new EquipmentConfigurationData("时间定值T6", "", "", "S", "0.00-60.00", "3.2"));
+		equip1.addConfigurationData(new EquipmentConfigurationData("时间定值T7", "", "", "S", "0.00-60.00", "3.2"));
+		equip1.addConfigurationData(new EquipmentConfigurationData("时间定值T8", "", "", "S", "0.00-60.00", "3.2"));
+		equip1.addConfigurationData(new EquipmentConfigurationData("CT变比", "", "", "", "0.00-10.00", "3.2"));
+		equip1.addConfigurationData(new EquipmentConfigurationData("PT变比", "", "", "", "0.01-10.00", "3.2"));
 		
-		EquipmentConfigurations equip2 = new EquipmentConfigurations("TransformerProtection");
-		equip2.addConfigurationData(new EquipmentConfigurationData("name3", "oldValue3", "newValue3", "unit3", "range3", "resolution3"));
-		equip2.addConfigurationData(new EquipmentConfigurationData("name4", "oldValue4", "newValue4", "unit4", "range4", "resolution4"));
+		EquipmentConfigurations equip2 = new EquipmentConfigurations("电源进线一");
+		equip2.addConfigurationData(new EquipmentConfigurationData("控制字一", "", "", "", "0x0000-0xFFFF", "5.0"));
+		equip2.addConfigurationData(new EquipmentConfigurationData("电压定值Udz1", "", "", "V", "2.00-120.00", "3.2"));
+		equip2.addConfigurationData(new EquipmentConfigurationData("电压定值Udz2", "", "", "V", "2.00-120.00", "3.2"));
+		equip2.addConfigurationData(new EquipmentConfigurationData("电压定值Udz3", "", "", "V", "2.00-120.00", "3.2"));
+		equip2.addConfigurationData(new EquipmentConfigurationData("电压定值Udz4", "", "", "V", "2.00-120.00", "3.2"));
+		equip2.addConfigurationData(new EquipmentConfigurationData("电压定值Udz5", "", "", "V", "2.00-120.00", "3.2"));
+		equip2.addConfigurationData(new EquipmentConfigurationData("电压定值Udz6", "", "", "V", "2.00-120.00", "3.2"));
+		equip2.addConfigurationData(new EquipmentConfigurationData("电流定值Idz1", "", "", "A", "0.02-100.00", "3.2"));
+		equip2.addConfigurationData(new EquipmentConfigurationData("电流定值Idz2", "", "", "A", "0.02-100.00", "3.2"));
+		equip2.addConfigurationData(new EquipmentConfigurationData("电流定值Idz3", "", "", "A", "0.02-100.00", "3.2"));
+		equip2.addConfigurationData(new EquipmentConfigurationData("电流定值Idz4", "", "", "A", "0.02-100.00", "3.2"));
+		equip2.addConfigurationData(new EquipmentConfigurationData("电流定值Idz5", "", "", "A", "0.02-100.00", "3.2"));
+		equip2.addConfigurationData(new EquipmentConfigurationData("电流定值Idz6", "", "", "A", "0.02-100.00", "3.2"));
+		equip2.addConfigurationData(new EquipmentConfigurationData("时间定值T1", "", "", "S", "0.00-60.00", "3.2"));
+		equip2.addConfigurationData(new EquipmentConfigurationData("时间定值T2", "", "", "S", "0.00-60.00", "3.2"));
+		equip2.addConfigurationData(new EquipmentConfigurationData("时间定值T3", "", "", "S", "0.00-60.00", "3.2"));
+		equip2.addConfigurationData(new EquipmentConfigurationData("时间定值T4", "", "", "S", "0.00-60.00", "3.2"));
+		equip2.addConfigurationData(new EquipmentConfigurationData("时间定值T5", "", "", "S", "0.00-60.00", "3.2"));
+		equip2.addConfigurationData(new EquipmentConfigurationData("时间定值T6", "", "", "S", "0.00-60.00", "3.2"));		
+		equip2.addConfigurationData(new EquipmentConfigurationData("CT变比", "", "", "", "0.00-10.00", "3.2"));
+		equip2.addConfigurationData(new EquipmentConfigurationData("PT变比", "", "", "", "0.01-10.00", "3.2"));
+		
+		EquipmentConfigurations equip3 = new EquipmentConfigurations("电源进线二");
+		equip3.addConfigurationData(new EquipmentConfigurationData("控制字一", "", "", "", "0x0000-0xFFFF", "5.0"));
+		equip3.addConfigurationData(new EquipmentConfigurationData("控制字二", "", "", "", "0x0000-0xFFFF", "5.0"));
+		equip3.addConfigurationData(new EquipmentConfigurationData("电压定值Udz1", "", "", "V", "2.00-120.00", "3.2"));
+		equip3.addConfigurationData(new EquipmentConfigurationData("电压定值Udz2", "", "", "V", "2.00-120.00", "3.2"));
+		equip3.addConfigurationData(new EquipmentConfigurationData("电压定值Udz3", "", "", "V", "2.00-120.00", "3.2"));
+		equip3.addConfigurationData(new EquipmentConfigurationData("电压定值Udz4", "", "", "V", "2.00-120.00", "3.2"));
+		equip3.addConfigurationData(new EquipmentConfigurationData("电压定值Udz5", "", "", "V", "2.00-120.00", "3.2"));
+		equip3.addConfigurationData(new EquipmentConfigurationData("电压定值Udz6", "", "", "V", "2.00-120.00", "3.2"));
+		equip3.addConfigurationData(new EquipmentConfigurationData("电流定值Idz1", "", "", "A", "0.02-100.00", "3.2"));
+		equip3.addConfigurationData(new EquipmentConfigurationData("电流定值Idz2", "", "", "A", "0.02-100.00", "3.2"));
+		equip3.addConfigurationData(new EquipmentConfigurationData("电流定值Idz3", "", "", "A", "0.02-100.00", "3.2"));
+		equip3.addConfigurationData(new EquipmentConfigurationData("电流定值Idz4", "", "", "A", "0.02-100.00", "3.2"));
+		equip3.addConfigurationData(new EquipmentConfigurationData("电流定值Idz5", "", "", "A", "0.02-100.00", "3.2"));
+		equip3.addConfigurationData(new EquipmentConfigurationData("时间定值T1", "", "", "S", "0.00-60.00", "3.2"));
+		equip3.addConfigurationData(new EquipmentConfigurationData("时间定值T2", "", "", "S", "0.00-60.00", "3.2"));
+		equip3.addConfigurationData(new EquipmentConfigurationData("时间定值T3", "", "", "S", "0.00-60.00", "3.2"));
+		equip3.addConfigurationData(new EquipmentConfigurationData("时间定值T4", "", "", "S", "0.00-60.00", "3.2"));
+		equip3.addConfigurationData(new EquipmentConfigurationData("时间定值T5", "", "", "S", "0.00-60.00", "3.2"));
+		equip3.addConfigurationData(new EquipmentConfigurationData("CT变比", "", "", "", "0.00-10.00", "3.2"));
+		equip3.addConfigurationData(new EquipmentConfigurationData("PT变比", "", "", "", "0.01-10.00", "3.2"));
+		
+		EquipmentConfigurations equip4 = new EquipmentConfigurations("变压器");
+		equip4.addConfigurationData(new EquipmentConfigurationData("控制字一", "", "", "", "0x0000-0xFFFF", "5.0"));
+		equip4.addConfigurationData(new EquipmentConfigurationData("控制字二", "", "", "", "0x0000-0xFFFF", "5.0"));
+		equip4.addConfigurationData(new EquipmentConfigurationData("电压定值Udz1", "", "", "V", "2.00-120.00", "3.2"));
+		equip4.addConfigurationData(new EquipmentConfigurationData("电压定值Udz2", "", "", "V", "2.00-120.00", "3.2"));
+		equip4.addConfigurationData(new EquipmentConfigurationData("电压定值Udz3", "", "", "V", "2.00-120.00", "3.2"));
+		equip4.addConfigurationData(new EquipmentConfigurationData("电压定值Udz4", "", "", "V", "2.00-120.00", "3.2"));		
+		equip4.addConfigurationData(new EquipmentConfigurationData("电流定值Idz1", "", "", "A", "0.02-100.00", "3.2"));
+		equip4.addConfigurationData(new EquipmentConfigurationData("电流定值Idz2", "", "", "A", "0.02-100.00", "3.2"));
+		equip4.addConfigurationData(new EquipmentConfigurationData("电流定值Idz3", "", "", "A", "0.02-100.00", "3.2"));		
+		equip4.addConfigurationData(new EquipmentConfigurationData("时间定值T1", "", "", "S", "0.00-60.00", "3.2"));
+		equip4.addConfigurationData(new EquipmentConfigurationData("时间定值T2", "", "", "S", "0.00-60.00", "3.2"));
+		equip4.addConfigurationData(new EquipmentConfigurationData("时间定值T3", "", "", "S", "0.00-60.00", "3.2"));
+		equip4.addConfigurationData(new EquipmentConfigurationData("时间定值T4", "", "", "S", "0.00-60.00", "3.2"));
+		equip4.addConfigurationData(new EquipmentConfigurationData("时间定值T5", "", "", "S", "0.00-60.00", "3.2"));
+		equip4.addConfigurationData(new EquipmentConfigurationData("CT变比", "", "", "", "0.00-10.00", "3.2"));
+		equip4.addConfigurationData(new EquipmentConfigurationData("PT变比", "", "", "", "0.01-10.00", "3.2"));
 		
 		equipConfs.add(equip1);
 		equipConfs.add(equip2);
+		equipConfs.add(equip3);
+		equipConfs.add(equip4);
 	}
 	
 	private void createLeftListViewer(SashForm form) {
@@ -105,7 +187,7 @@ public class EquipmentConfigurationsView extends AbstractView implements IView {
 		table.setHeaderVisible(true);
 		table.setLinesVisible(true);
 		table.setFont(new Font(form.getDisplay(),"宋体", 16, SWT.NORMAL));
-		table.setBounds(50, 100, 1150, 650);
+		table.setBounds(100, 100, 1150, 650);
 		
 		
 		String[] columnNames = new String[] {
@@ -131,11 +213,40 @@ public class EquipmentConfigurationsView extends AbstractView implements IView {
 		
 		ToolItem itemSave = new ToolItem(toolBar, SWT.PUSH);
 		itemSave.setText("保存定值");
-	    Image icon = new Image(Display.getCurrent(), EquipmentConfigurationsView.class.getResourceAsStream("equipment/icons/save_edit.gif"));
-	    itemSave.setImage(icon);
+	    Image saveIcon = new Image(Display.getCurrent(), EquipmentConfigurationsView.class.getResourceAsStream("equipment/icons/save_edit.gif"));
+	    itemSave.setImage(saveIcon);
 	    
-	    form.setTopLeft(toolBar);
-		
+	    ToolItem itemImport = new ToolItem(toolBar, SWT.PUSH);
+	    itemImport.setText("导入定值");
+	    Image importIcon = new Image(Display.getCurrent(), EquipmentConfigurationsView.class.getResourceAsStream("equipment/icons/import_wiz.gif"));
+	    itemImport.setImage(importIcon);
+	    
+	    ToolItem itemExport = new ToolItem(toolBar, SWT.PUSH);
+	    itemExport.setText("导出定值");
+	    Image exportIcon = new Image(Display.getCurrent(), EquipmentConfigurationsView.class.getResourceAsStream("equipment/icons/export_wiz.gif"));
+	    itemExport.setImage(exportIcon);
+	    
+	    ToolItem itemFault = new ToolItem(toolBar, SWT.PUSH);
+	    itemFault.setText("故障录波");
+	    Image faulttIcon = new Image(Display.getCurrent(), EquipmentConfigurationsView.class.getResourceAsStream("equipment/icons/problems_view.gif"));
+	    itemFault.setImage(faulttIcon);
+	    
+	    ToolItem itemZone = new ToolItem(toolBar, SWT.PUSH);
+	    itemZone.setText("定值区号");
+	    Image zoneIcon = new Image(Display.getCurrent(), EquipmentConfigurationsView.class.getResourceAsStream("equipment/icons/outline_co.gif"));
+	    itemZone.setImage(zoneIcon);
+	    
+	    ToolItem itemControl = new ToolItem(toolBar, SWT.PUSH);
+	    itemControl.setText("压板投退");
+	    Image controlIcon = new Image(Display.getCurrent(), EquipmentConfigurationsView.class.getResourceAsStream("equipment/icons/pin_editor.gif"));
+	    itemControl.setImage(controlIcon);
+	    
+	    ToolItem itemReset = new ToolItem(toolBar, SWT.PUSH);
+	    itemReset.setText("信号复归");
+	    Image resetIcon = new Image(Display.getCurrent(), EquipmentConfigurationsView.class.getResourceAsStream("equipment/icons/editor_area.gif"));
+	    itemReset.setImage(resetIcon);
+	    
+	    form.setTopLeft(toolBar);		
 	}
 				
 	@Override

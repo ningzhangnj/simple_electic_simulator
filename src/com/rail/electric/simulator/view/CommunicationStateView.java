@@ -1,9 +1,9 @@
 package com.rail.electric.simulator.view;
 
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.SelectionAdapter;
-import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.custom.ViewForm;
 import org.eclipse.swt.graphics.Font;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Group;
@@ -13,55 +13,69 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
+import org.eclipse.swt.widgets.ToolBar;
+import org.eclipse.swt.widgets.ToolItem;
 
 import com.rail.electric.simulator.SimulatorMessages;
 
 public class CommunicationStateView extends AbstractView implements IView {
-	
+	private ViewForm form;
 	private Group group;
 
 	public CommunicationStateView(Composite parent, IView parentView) {
 		super(parent, parentView);
 
-		group = new Group (parent, SWT.NULL);	
+		form = new ViewForm(parent, SWT.VERTICAL);	
+		createToolBar(form);
+		group = new Group (form, SWT.NULL);	
 		group.setBounds(200, 100, 1400, 800);
-		group.setText("Operations");
-		group.setFont(new Font(group.getDisplay(),"宋体", 20, SWT.BOLD));
+		group.setText("通信状态");
+		group.setFont(new Font(group.getDisplay(),"宋体", 24, SWT.BOLD));
 		
 		createOperationsTable(group);
 		
-		rootControl = group;
+		rootControl = form;
 	}
 	
+	private static void createToolBar(ViewForm form) {
+		final ToolBar toolBar = new ToolBar(form, SWT.FLAT|SWT.WRAP|SWT.CENTER|SWT.BORDER);
+	    
+	    ToolItem itemPrint = new ToolItem(toolBar, SWT.PUSH);
+	    itemPrint.setText("打印记录");
+	    Image printIcon = new Image(Display.getCurrent(), CommunicationStateView.class.getResourceAsStream("operations/icons/print_edit.gif"));
+	    itemPrint.setImage(printIcon);
+	    
+	    form.setTopLeft(toolBar);		
+	}
 	
 	private static void createOperationsTable(Group group) {
 		final Table table = new Table (group, 
 				SWT.SINGLE | SWT.BORDER | SWT.FULL_SELECTION);
 		table.setHeaderVisible (true);
 		table.setLinesVisible (true);
-		table.setFont(new Font(group.getDisplay(),"宋体", 16, SWT.BOLD));
-		table.setBounds(50, 50, 1000, 600);
-		TableColumn column1 = new TableColumn (table, SWT.NULL);
-		column1.setText("Name");
-		column1.pack();
-		TableColumn column2 = new TableColumn (table, SWT.NULL);
-		column2.setText("Age");
-		column2.pack();
+		table.setFont(new Font(group.getDisplay(),"宋体", 20, SWT.BOLD));
+		table.setBounds(200, 100, 1000, 600);
+		TableColumn column1 = new TableColumn (table, SWT.CENTER);
+		column1.setText("设备名称");
+		column1.setWidth(300);
+		TableColumn column2 = new TableColumn (table, SWT.CENTER);
+		column2.setText("IP地址");
+		column2.setWidth(400);
+		TableColumn column3 = new TableColumn (table, SWT.CENTER);
+		column3.setText("状态");
+		column3.setWidth(300);
+		
 		TableItem item1 = new TableItem (table, SWT.NULL);
-		item1.setText(new String[] {"Dan", "38"});
+		item1.setText(new String[] {"母联", "192.168.1.5", "连接"});
+		
 		TableItem item2 = new TableItem (table, SWT.NULL);
-		item2.setText(new String[] {"Eric", "39"});
-		table.addSelectionListener(new SelectionAdapter() {
-			public void widgetSelected(SelectionEvent event) {
-				TableItem[] selected = table.getSelection();
-				if (selected.length > 0) {
-					System.out.println("Name: " + 
-						selected[0].getText(0));
-					System.out.println("Age: " + 
-						selected[0].getText(1));
-				}
-			}
-		});		
+		item2.setText(new String[] {"电源进线一", "192.168.1.7", "断开"});
+		
+		TableItem item3 = new TableItem (table, SWT.NULL);
+		item3.setText(new String[] {"电源进线二", "192.168.1.8", "断开"});
+		
+		TableItem item4 = new TableItem (table, SWT.NULL);
+		item4.setText(new String[] {"变压器", "192.168.1.13", "连接"});
 	}
 		
 	@Override
@@ -90,12 +104,9 @@ public class CommunicationStateView extends AbstractView implements IView {
         final Display display = new Display();
         Shell shell = new Shell(display);
         shell.setSize(1800, 1000);
-        shell.setText("Operations record");
-        Group group = new Group (shell, SWT.NULL);
-        group.setBounds(200, 100, 1400, 800);
-        group.setText("Operations");		
-		group.setFont(new Font(group.getDisplay(),"宋体", 20, SWT.BOLD));
-		createOperationsTable(group);
+        shell.setText("Communication State");
+        CommunicationStateView view = new CommunicationStateView(shell, null);
+        view.activate();
         shell.open();
         while (!shell.isDisposed()) {
             if (!display.readAndDispatch())
