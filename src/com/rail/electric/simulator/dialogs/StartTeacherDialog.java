@@ -89,6 +89,7 @@ public class StartTeacherDialog extends TitleAreaDialog {
 	
 	    txtPassword = new Text(container, SWT.PASSWORD | SWT.BORDER);
 	    txtPassword.setLayoutData(dataIp);
+	    txtPassword.setFocus();
 	}
 	
 	private void createComPort(Composite container) {

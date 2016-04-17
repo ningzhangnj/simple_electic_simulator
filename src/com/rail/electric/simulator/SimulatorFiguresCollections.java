@@ -1,7 +1,6 @@
 package com.rail.electric.simulator;
 
 import static com.rail.electric.simulator.manager.ConnectionsManager.BEGIN_BYTE;
-import static com.rail.electric.simulator.manager.ConnectionsManager.END_BYTE;
 
 import java.io.DataOutputStream;
 import java.io.File;
@@ -51,7 +50,6 @@ import com.rail.electric.simulator.listeners.ValidateSwitchListener;
 import com.rail.electric.simulator.manager.ConnectionsManager;
 import com.rail.electric.simulator.model.StateModel;
 import com.rail.electric.simulator.model.StateSequenceModel;
-import com.rail.electric.simulator.util.SimulatorUtil;
 
 public class SimulatorFiguresCollections implements StateListener, ValidateSwitchListener {
 	private final static Logger logger =  LoggerFactory.getLogger(SimulatorFiguresCollections.class);
@@ -741,9 +739,8 @@ public class SimulatorFiguresCollections implements StateListener, ValidateSwitc
 	}
 	
 	public byte[] getLedLineBytes() {
-		byte[] result = new byte[LEDLINE_NUMBERS+4];
+		byte[] result = new byte[LEDLINE_NUMBERS+1];
 		result[0] = BEGIN_BYTE;
-		result[LEDLINE_NUMBERS+3] = END_BYTE;
 		
 		for (Entry<Integer, Figure> entryId2Figure : id2FigureMap.entrySet()) {
 			if (entryId2Figure.getValue() instanceof LineFigure && ((LineFigure)entryId2Figure.getValue()).getPower()>0) {
@@ -848,14 +845,11 @@ public class SimulatorFiguresCollections implements StateListener, ValidateSwitc
 			operationScore = "100";
 			quizName = connectionsFile.getName();
 			byte[] initBytes = getInitStateBytes();
-			updatInitState(initBytes);
-			for (int i=0; i<initBytes.length; ) {
-				byte[] bytes = new byte[2];
-				bytes[0] = initBytes[i];
-				bytes[1] = initBytes[i+1];
-				manager.sendLineAndSwitchStatus(bytes);
-				SimulatorUtil.sleepMilliSeconds(200);
-				i += 2;
+			if (initBytes.length < 1) {
+				manager.sendLineStatus();
+			} else {				
+				updatInitState(initBytes);
+				manager.sendLineAndSwitchStatus(initBytes);
 			}
 		} catch (IOException e) {
 			logger.error("Failed to load connections ini file {},  caused by {}", connectionsFile.getName(), e.toString());

@@ -22,7 +22,7 @@ public class ConnectionsManager {
 	public static final byte END_BYTE = (byte)0xfa;
 	public static final byte CORRECT_PACKET_BYTE = (byte)0xf6;
 	public static final byte READ_SWITCH_BYTE = (byte)0xf4;
-	
+		
 	public static final byte QUIZ_SUBJECT_HEAD_BYTE = (byte)0xf1;
 	public static final byte QUIZ_INITSTATE_HEAD_BYTE = (byte)0xf2;
 	public static final byte QUIZ_CORRECT_HEAD_BYTE = (byte)0xf7;

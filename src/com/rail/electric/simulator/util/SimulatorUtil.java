@@ -33,6 +33,36 @@ public class SimulatorUtil {
 		}
 	}
 	
+	public static String decodeUnicode(final String dataStr) {  
+        int start = 0;  
+        int end = 0;  
+        final StringBuilder buffer = new StringBuilder(); 
+        boolean foundUnicode = true;
+        while (start > -1 && start < dataStr.length()) {  
+            end = dataStr.indexOf("\\u", start);  
+            if (end > start || end == -1) {
+            	foundUnicode = false;
+            }
+            
+            if (foundUnicode) {
+            	String charStr = dataStr.substring(start + 2, start + 6);  
+                char letter = (char) Integer.parseInt(charStr, 16); 
+                buffer.append(new Character(letter).toString());  
+                end = start + 6;
+            } else {
+            	if (end == -1) {
+            		buffer.append(dataStr.substring(start, dataStr.length()));
+            	} else {
+            		buffer.append(dataStr.substring(start, end));
+            	}
+            }
+            
+            start = end;  
+            foundUnicode = true;
+        }  
+        return buffer.toString();  
+    }  
+	
 	public static  boolean calculateLicense() {	
 		try {			
 			for(Enumeration<NetworkInterface> e = NetworkInterface.getNetworkInterfaces();

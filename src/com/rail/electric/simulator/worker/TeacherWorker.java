@@ -3,6 +3,7 @@ package com.rail.electric.simulator.worker;
 import static com.rail.electric.simulator.SimulatorFiguresCollections.SWITCH_NUMBERS;
 import static com.rail.electric.simulator.manager.ConnectionsManager.BEGIN_BYTE;
 import static com.rail.electric.simulator.manager.ConnectionsManager.CORRECT_PACKET_BYTE;
+import static com.rail.electric.simulator.manager.ConnectionsManager.END_BYTE;
 import static com.rail.electric.simulator.manager.ConnectionsManager.QUIZ_CORRECT_HEAD_BYTE;
 import static com.rail.electric.simulator.manager.ConnectionsManager.QUIZ_PASS_HEAD_BYTE;
 import static com.rail.electric.simulator.manager.ConnectionsManager.QUIZ_WRONG_HEAD_BYTE;
@@ -24,7 +25,6 @@ import org.eclipse.swt.widgets.Display;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.rail.electric.simulator.SimulatorFiguresCollections;
 import com.rail.electric.simulator.SimulatorMessages;
 import com.rail.electric.simulator.dialogs.OperationInfoDialog;
 import com.rail.electric.simulator.helpers.CommHelper;
@@ -76,9 +76,9 @@ public class TeacherWorker {
 	
 					@Override
 					public void run() {
-						if (mode == WorkMode.TEACHER_SIMULATOR) {
-							sendSwitchInitStatusRequest();
-						}
+						
+						sendSwitchInitStatusRequest();
+						
 						commMessageHandlingLoop();
 					}
 					
@@ -177,7 +177,7 @@ public class TeacherWorker {
 	private void commMessageHandlingLoop() {
 		while (isRunning()) {
 			if (mode == WorkMode.STUDENT_TEACHER_SIMULATOR) {
-				while (commHelper.isDataAvailable()) {
+				if (commHelper.isDataAvailable()) {
 					readSwitchInitStatus();
 					SimulatorUtil.sleepMilliSeconds(100);
 				}
@@ -218,33 +218,35 @@ public class TeacherWorker {
 	}
 	
 	public void sendLineAndSwitchStatus(byte[] switchState) {
-		if (!commHelper.isCommPortConnected()) return;
-		byte[] result = manager.getLedLineBytes();
-		result[SimulatorFiguresCollections.LEDLINE_NUMBERS+1] = switchState[0];
-		result[SimulatorFiguresCollections.LEDLINE_NUMBERS+2] = switchState[1];
-		logger.debug("Line status: " + DataTypeConverter.bytesToHex(result));		
+		if (!commHelper.isCommPortConnected()) return;		
+		byte[] ledBytes = manager.getLedLineBytes();
+		ByteBuffer buf = ByteBuffer.allocate(ledBytes.length + switchState.length + 2);
+		buf.put(ledBytes);
+		buf.put((byte)(switchState.length/2));
+		buf.put(switchState);
+		buf.put(END_BYTE);
+		byte[] result = buf.array();
+		logger.debug("Line&Switch status: " + DataTypeConverter.bytesToHex(result));		
 		commHelper.writeBytes(result);
 			
 	}
 	
 	public void sendLineStatus() {
 		if (!commHelper.isCommPortConnected()) return;
-		byte[] result = manager.getLedLineBytes();
-		logger.debug("Line status: " + DataTypeConverter.bytesToHex(result));
-		result[SimulatorFiguresCollections.LEDLINE_NUMBERS+1] = (byte) 0xff;
-		result[SimulatorFiguresCollections.LEDLINE_NUMBERS+2] = (byte) 0xff;
-		//for (int i=0; i<3; i++) {
-			commHelper.writeBytes(result);
-			/*byte[] response = commHelper.readBytes(1);
-			logger.debug("Response of line status: " + DataTypeConverter.bytesToHex(response));
-			if (response[0] == CORRECT_PACKET_BYTE) break;
-		}*/		
+		byte[] ledBytes = manager.getLedLineBytes();		
+		ByteBuffer buf = ByteBuffer.allocate(ledBytes.length + 2);
+		buf.put(ledBytes);
+		buf.put((byte)0);
+		buf.put(END_BYTE);
+		byte[] result = buf.array();
+		logger.debug("Line status: " + DataTypeConverter.bytesToHex(result));		
+		commHelper.writeBytes(result);
 	}
 	
 	private void sendSwitchInitStatusRequest() {
 		byte[] request = new byte[] {READ_SWITCH_BYTE};
-		commHelper.writeBytes(request);
 		logger.debug("Request switch init status : {}", DataTypeConverter.bytesToHex(request));
+		commHelper.writeBytes(request);
 	}
 	
 	private String readSwitchInitStatus() {

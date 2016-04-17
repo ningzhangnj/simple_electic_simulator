@@ -15,16 +15,16 @@ public class EquipmentConfigurationsTableLabelProvider
 	public String getColumnText(Object element, int index) {
 		EquipmentConfigurationData configData = (EquipmentConfigurationData) element;
 		switch (index) {
-			case 0 :
+			case 0:
 				return configData.getName();
-			case 1 :
+			case 1:
 				return configData.getOldValue();
-			case 2 :
-				return configData.getNewValue();
-			case 3 :
-				return configData.getUnit();
-			case 4:
+			case 2:
+				return configData.getNewValue();			
+			case 3:
 				return configData.getRange();
+			case 4:
+				return configData.getUnit();
 			case 5:
 				return configData.getResolution();
 			default :

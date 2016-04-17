@@ -9,16 +9,16 @@ public class EquipmentConfigurationData {
 	private String resolution;
 	
 	public EquipmentConfigurationData(String name, String oldValue,
-			String newValue, String unit, String range, String resolution) {
+			String newValue, String range, String unit,  String resolution) {
 		super();
 		this.name = name;
 		this.oldValue = oldValue;
 		this.newValue = newValue;
-		this.unit = unit;
 		this.range = range;
+		this.unit = unit;		
 		this.resolution = resolution;
 	}
-
+	
 	public String getName() {
 		return name;
 	}
